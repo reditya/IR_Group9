@@ -5,12 +5,26 @@ class AllrecipesSpider(scrapy.Spider):
 	name = "Allrecipes"
 	# TODO : iterate over url_list.txt for all links
 	# This is just an example of scraping brood pages with max 38 page recipes
-	base_url = "http://allrecipes.nl/recepten/brood-recepten.aspx?page="
-	max_page = 38
-	page_list = range(1,max_page)
+	base_url = []
+	base_url_pages = []
+	with open("url_list.txt") as f:
+		next(f)
+		for line in f: 
+			content = line.split("|")
+			url = content[1]
+			pages = content[2]
+			base_url.append(url)
+			base_url_pages.append(pages)
+
+	#base_url = "http://allrecipes.nl/recepten/brood-recepten.aspx?page="
+	#max_page = 38
+	#page_list = range(1,max_page)
 	start_urls = []
-	for i in page_list:
-		start_urls.append(base_url + str(i))
+	counter = 0
+	for i in base_url:
+		for j in range(1, int(base_url_pages[counter])):
+			start_urls.append(i + str(j))
+		counter = counter + 1
 
 	# Entry point for spider
 	def parse(self, response):
@@ -28,6 +42,7 @@ class AllrecipesSpider(scrapy.Spider):
 		finish_time = response.css('#reviewsLink~ tr+ tr .accent::text').extract()
 		image_link = response.css('.active .xlargeImg::attr(src)').extract()
 		step_by_step = response.css('.recipeDirections li span::text').extract()
+		url = response.url
 
 		ingredients_list = "|".join(ingredients)
 		step_list = "|".join(step_by_step)
@@ -40,6 +55,7 @@ class AllrecipesSpider(scrapy.Spider):
 			'Preparation Time': preparation_time, 
 			'Finish Time': finish_time,
 			'Image Link': image_link,
-			'Step by step': step_list
+			'Step by step': step_list,
+			'URL': url
 		}
 
