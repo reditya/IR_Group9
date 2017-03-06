@@ -34,12 +34,13 @@ while IFS='' read -r line || [[ -n "$line" ]]; do
 
 	if [ "$relevant_tweet" = true ]; 
 		then location="$(echo "$line" | sed ':a;N;$!ba;s/\n/ /g' | sed -e 's/.*\"Polygon\", \"coordinates\": \(.*\)}, \"country_code\".*/\1/')"; 
+        #middle_point =
 		date="$(echo "$line" | sed ':a;N;$!ba;s/\n/ /g' |  sed 's/.\"created_at\":.*\, \"contributors_enabled\"//' | sed -e 's/.*\"created_at\": \"\(.*\)\", \"quoted_status_id_str\".*/\1/')";
 		if [ ${#date} != 30 ];
 			then date="$(echo "$line" | sed ':a;N;$!ba;s/\n/ /g' |  sed 's/.\"created_at\":.*\, \"contributors_enabled\"//' | sed -e 's/.*\"created_at\": \"\(.*\)\", \"filter_level\".*/\1/')";
 		fi
-		echo "{text: \"${TWEET}\", lang: \"$LANG\", sentiment: \"$sentiment\", coordinates: \"${location}\", created_at: \"$date\"}" >> $new_file  ;
-		relevant_tweet=false;
+		echo -e "{ \"text\":\"${TWEET}\", \"lang\": \"$LANG\", \"sentiment\": \"$sentiment\", \"coordinates\": \"${location}\", \"created_at\": \"$date\" }" >> $new_file  ;
+		relevant_tweet=false
 	fi
 
 done < "$1"
