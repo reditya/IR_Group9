@@ -3,7 +3,14 @@ import re
 
 class AllrecipesSpider(scrapy.Spider):
 	name = "Allrecipes"
-	start_urls = ["http://allrecipes.nl/recepten/salades-recepten.aspx?page=9"]
+	# TODO : iterate over url_list.txt for all links
+	# This is just an example of scraping brood pages with max 38 page recipes
+	base_url = "http://allrecipes.nl/recepten/brood-recepten.aspx?page="
+	max_page = 38
+	page_list = range(1,max_page)
+	start_urls = []
+	for i in page_list:
+		start_urls.append(base_url + str(i))
 
 	# Entry point for spider
 	def parse(self, response):
