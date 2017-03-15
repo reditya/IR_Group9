@@ -11,7 +11,7 @@ access_token="2700449264-FNgbYs2Kfqb970IGHia01lQ6larp28Fb7SdqFDj"
 access_token_secret="8hrvylo0ehUAZPBQ5cBNCh9Vv1lJ6oQMV1Aji3rOgfK2j"
 
 
-file = open('test_twitter_crawling.json', 'a')  # File in which the retrieved tweet data are stored.
+file = open('test_twitter_crawling_2.json', 'a')  # File in which the retrieved tweet data are stored.
 
 # Class used to get incoming tweets.
 class StdOutListener(StreamListener):
