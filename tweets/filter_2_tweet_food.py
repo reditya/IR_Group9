@@ -73,6 +73,11 @@ for line in open('test_twitter_crawling_2_clean.json', 'r'):
     	print('Wrong Language!!!')
     if food_term:
     	test['food'] = food_term
+        coor = test['coordinates'][0]
+        coor_1 = coor[0]
+        coor_2 = coor[2]
+        middle = [(coor_1[0] + coor_2[0]/2) , (coor_1[1] + coor_2[1]/2)]
+        test['middle'] = middle
     	json.dump(test, outfile)
     	outfile.write('\n')
 
