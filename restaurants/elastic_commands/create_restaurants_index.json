@@ -2,12 +2,12 @@
 	"mappings" : {
 		"restaurant" : {
 			"properties" : {
-				"name" : { "type" : "text"},
+				"name" : { "type" : "string"},
 				"location" : { "type" : "geo_point"},
-				"category" : { "type" : "text"},
-				"url" : { "type" : "keyword"},
-				"address" : { "type" : "text"},
-				"phone" : { "type" : "keyword"}
+				"category" : { "type" : "string"},
+				"url" : { "type" : "string", "analyzer" : "keyword"},
+				"address" : { "type" : "string"},
+				"phone" : { "type" : "string", "analyzer" : "keyword"}
 			}
 		}
 	}
