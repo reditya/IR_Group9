@@ -17,18 +17,73 @@
   // initialize the map
   var map = L.map('map').setView([52.3702, 4.8952], 13);
 
+
+var geojsonMarkerOptions = {
+    radius: 8,
+    fillColor: "#ff7800",
+    color: "#000",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
+};
+
+
+
   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         minZoom: 6,
         attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map);
 
+
+  
+    function onEachFeature(feature, layer) {
+    //bind click
+    layer.on('click', function (e) {
+      // e = event
+      console.log(e);
+      if (feature.properties && feature.properties.category) {
+        layer.bindPopup(feature.properties.category);
+    }
+      // You can make your ajax call declaration here
+      //$.ajax(... 
+    });
+
+  }
+
   // Load data to show on the map: example
    // load GeoJSON from an external file
-  $.getJSON("rodents.geojson",function(data){
+  $.getJSON("all_resto_geojson.geojson",function(data){
+    // Find number of clusters
+    var nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
+    var n = []; 
+    for(var i = 0; i < nb_clust.length; i++) 
+    {
+      if (n.indexOf(nb_clust[i]) == -1) n.push(nb_clust[i]);
+    }
+    nb_clust = n.length
+    //console.log(nb_clust);
+    color_clust = [];
+    // Associate random colors to clusters
+    for (i = 0; i < nb_clust; i++) {
+      // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
+      color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
+            //console.log(color_clust)
+
+    } 
     // add GeoJSON layer to the map once the file is loaded
-    L.geoJson(data).addTo(map);
-  });
+    
+    L.geoJson(data, {
+    pointToLayer: function (feature, latlng) {      console.log(feature)
+                onEachFeature: onEachFeature;
+
+      geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+    }
+    }).addTo(map);
+
+   })
+
 
   </script>
 </body>
