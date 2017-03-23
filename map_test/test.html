@@ -85,21 +85,11 @@
       //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);
     // add GeoJSON layer to the map once the file is loaded
+     L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {  
+                cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);}
+                })
     
-    L.geoJson(data, {
-      pointToLayer: function (feature, latlng) {   
-      
-        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
-        //console.log(cluster_list[Math.floor(feature.properties.cluster)]);//.push(latlng);
-        //console.log(cluster_list[Math.floor(feature.properties.cluster)]);
-        //(cluster_list[Math.floor(feature.properties.cluster)]).push([latlng.lat , latlng.lng]);
-        cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
-
-        //console.log(latlng);
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-      },
-      onEachFeature: onEachFeature  
-    }).addTo(map);
     //console.log(cluster_list[0][0]);
     collection_cluster = new Array(nb_clust);
     for (i = 0; i < nb_clust; i++) {
@@ -118,7 +108,14 @@
     }
 }).addTo(map);
     }
-
+      L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {   
+      
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      },
+      onEachFeature: onEachFeature  
+    }).addTo(map);
 
 })
 
