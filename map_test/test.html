@@ -80,7 +80,9 @@
 
     //console.log(data)
       var hull = turf.convex(data);
-      L.geoJson(hull).addTo(map);
+                            console.log(hull)
+
+      //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);
     // add GeoJSON layer to the map once the file is loaded
     
@@ -91,17 +93,34 @@
         //console.log(cluster_list[Math.floor(feature.properties.cluster)]);//.push(latlng);
         //console.log(cluster_list[Math.floor(feature.properties.cluster)]);
         //(cluster_list[Math.floor(feature.properties.cluster)]).push([latlng.lat , latlng.lng]);
-        cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lat , latlng.lng]);
+        cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
 
         //console.log(latlng);
         return L.circleMarker(latlng, geojsonMarkerOptions);
       },
       onEachFeature: onEachFeature  
     }).addTo(map);
-    console.log(cluster_list);
+    //console.log(cluster_list[0][0]);
+    collection_cluster = new Array(nb_clust);
+    for (i = 0; i < nb_clust; i++) {
+        //L.geoJson(turf.convex(cluster_list[i])).addTo(map);
+        test = [];
+      for (d in cluster_list[i]){test.push(turf.point(cluster_list[i][d]))}
+        collection_cluster[i] = turf.featurecollection(test)
+    }
+    for (d in collection_cluster){
+      var hull = turf.convex(collection_cluster[d]);
+      L.geoJson(turf.convex(collection_cluster[d]),{
+    style: function(feature) {
+        
+            return {color: color_clust[d]};
+        
+    }
+}).addTo(map);
+    }
 
-   
-  })
+
+})
 
     
 

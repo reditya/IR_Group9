@@ -39,7 +39,7 @@ for d in data['hits']['hits']:
 # The k value might have to change!
 wknn3 = pysal.weights.KNN(coor, k = 15)
 # The floor value should also be tuned.
-r = pysal.Maxp(wknn3, weight, floor = 3, floor_variable = np.ones((nb_data, 1)), initial = 99)
+r = pysal.Maxp(wknn3, weight, floor = 6, floor_variable = np.ones((nb_data, 1)), initial = 99)
 print r.regions
 
 ### Create geoson file for the map
