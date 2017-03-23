@@ -85,20 +85,20 @@
     // add GeoJSON layer to the map once the file is loaded
     
     L.geoJson(data, {
-      pointToLayer: function (feature, latlng) {      
-        //console.log(feature)
-        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
+      pointToLayer: function (feature, latlng) {   
+      
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
         //console.log(cluster_list[Math.floor(feature.properties.cluster)]);//.push(latlng);
-        console.log(cluster_list);
-        (cluster_list[Math.floor(feature.properties.cluster)]).push([latlng.lat , latlng.lng]);
-        //(cluster_list[Math.floor(feature.properties.cluster)]).push(latlng.lat);
+        //console.log(cluster_list[Math.floor(feature.properties.cluster)]);
+        //(cluster_list[Math.floor(feature.properties.cluster)]).push([latlng.lat , latlng.lng]);
+        cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lat , latlng.lng]);
 
         //console.log(latlng);
         return L.circleMarker(latlng, geojsonMarkerOptions);
       },
       onEachFeature: onEachFeature  
     }).addTo(map);
-            console.log(cluster_list);
+    console.log(cluster_list);
 
    
   })
