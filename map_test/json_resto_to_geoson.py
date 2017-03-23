@@ -37,10 +37,10 @@ for d in data['hits']['hits']:
     index = index + 1
 
 # The k value might have to change!
-wknn3 = pysal.weights.KNN(coor, k = 10)
+wknn3 = pysal.weights.KNN(coor, k = 15)
 # The floor value should also be tuned.
-r = pysal.Maxp(wknn3, weight, floor = 10, floor_variable = np.ones((nb_data, 1)), initial = 60)
-
+r = pysal.Maxp(wknn3, weight, floor = 3, floor_variable = np.ones((nb_data, 1)), initial = 99)
+print r.regions
 
 ### Create geoson file for the map
 cluster_id = np.zeros(shape=(nb_data,1))

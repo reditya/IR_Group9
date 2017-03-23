@@ -4,6 +4,8 @@
   <link rel="stylesheet" href="leaflet/leaflet.css" />
     <script src="leaflet/leaflet.js"></script> 
       <script src="jquery-2.1.1.min.js"></script>
+      <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
+      <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
   <style>
     #map{ height: 100% }
   </style>
@@ -13,6 +15,13 @@
   <div id="map"></div>
 
   <script>
+
+
+
+
+
+     // var bbox = turf.bbox(features);
+
 
   // initialize the map
   var map = L.map('map').setView([52.3702, 4.8952], 13);
@@ -48,8 +57,8 @@
 
   // Load data to show on the map: example
    // load GeoJSON from an external file
-  $.getJSON("all_resto_geojson.geojson",function(data){
-    // Find number of clusters
+  $.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
+    // Find number of clusters and create array of points with in clusters
     var nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
     var n = []; 
     for(var i = 0; i < nb_clust.length; i++) 
@@ -57,27 +66,44 @@
       if (n.indexOf(nb_clust[i]) == -1) n.push(nb_clust[i]);
     }
     nb_clust = n.length
+    console.log(nb_clust)
+    var cluster_list = new Array(nb_clust);
     //console.log(nb_clust);
     color_clust = [];
     // Associate random colors to clusters
     for (i = 0; i < nb_clust; i++) {
       // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
       color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
+      cluster_list[i] = new Array;
             //console.log(color_clust)
+    }
 
-    } 
+    //console.log(data)
+      var hull = turf.convex(data);
+      L.geoJson(hull).addTo(map);
+    //  L.polygon(hull).addTo(map);
     // add GeoJSON layer to the map once the file is loaded
     
     L.geoJson(data, {
       pointToLayer: function (feature, latlng) {      
-        console.log(feature)
+        //console.log(feature)
         geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
+        //console.log(cluster_list[Math.floor(feature.properties.cluster)]);//.push(latlng);
+        console.log(cluster_list);
+        (cluster_list[Math.floor(feature.properties.cluster)]).push([latlng.lat , latlng.lng]);
+        //(cluster_list[Math.floor(feature.properties.cluster)]).push(latlng.lat);
+
+        //console.log(latlng);
         return L.circleMarker(latlng, geojsonMarkerOptions);
       },
       onEachFeature: onEachFeature  
     }).addTo(map);
+            console.log(cluster_list);
+
+   
   })
 
+    
 
   </script>
 </body>
