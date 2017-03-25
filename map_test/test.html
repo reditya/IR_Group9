@@ -49,15 +49,29 @@
   function onEachFeature(feature, layer) {
     //bind click
     //alert(feature);
+
+
+    // For foursquare
+  /*
     if (feature.properties.category) {
-      //alert("halo");
       layer.bindPopup(feature.properties.category);
-    }
+    }*/
+          // For Instagram 
+          var food = feature.properties.category;
+          var list = '<ul class="myList"><li><a>' + food.join('</a></li><li>') + '</li></ul>';
+
+
+                layer.bindPopup(list);
+
+
   }
 
   // Load data to show on the map: example
    // load GeoJSON from an external file
-  $.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
+  //$.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
+      
+    $.getJSON("test_geojson.geojson",function(data){
+
     // Find number of clusters and create array of points with in clusters
     var nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
     var n = []; 
@@ -79,35 +93,43 @@
     }
 
     //console.log(data)
-      var hull = turf.convex(data);
-                            console.log(hull)
+    // var hull = turf.convex(data);
+    //                        console.log(hull)
 
-      //L.geoJson(hull).addTo(map);
+    //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);
     // add GeoJSON layer to the map once the file is loaded
-     L.geoJson(data, {
-      pointToLayer: function (feature, latlng) {  
-                cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);}
-                })
     
-    //console.log(cluster_list[0][0]);
+   
+     L.geoJson(data, {
+            pointToLayer: function (feature, latlng) {  
+                cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
+              }
+      })
+
     collection_cluster = new Array(nb_clust);
     for (i = 0; i < nb_clust; i++) {
         //L.geoJson(turf.convex(cluster_list[i])).addTo(map);
         test = [];
-      for (d in cluster_list[i]){test.push(turf.point(cluster_list[i][d]))}
+      for (d in cluster_list[i]){
+          test.push(turf.point(cluster_list[i][d]))
+        }
         collection_cluster[i] = turf.featurecollection(test)
-    }
-    for (d in collection_cluster){
-      var hull = turf.convex(collection_cluster[d]);
+      }
+      // Polygons
+    for (d in collection_cluster){      
+     // var hull = turf.convex(collection_cluster[d]);
+      
       L.geoJson(turf.convex(collection_cluster[d]),{
-    style: function(feature) {
+        style: function(feature) {
         
             return {color: color_clust[d]};
         
     }
-}).addTo(map);
+    }).addTo(map);
     }
+                 
+    // Points
       L.geoJson(data, {
       pointToLayer: function (feature, latlng) {   
       

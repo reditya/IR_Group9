@@ -17,7 +17,7 @@ data = json.load(open(in_file))
 
 # Extract all possible fields and construct weight matrix
 nb_data = 0;
-for d in data['hits']['hits']:
+for d in data:
     nb_data = nb_data + 1
 
 nb_type = 181 # This number should be retrieved from Elastic Search
