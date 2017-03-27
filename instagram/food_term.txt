@@ -3021,7 +3021,6 @@ emulsifying agents
 emulsifying salts
 emulsin
 emulsion
-en
 en papillote
 enantiomers
 encapsulation
@@ -3367,7 +3366,6 @@ fondue
 fonduta
 fonio
 foo-foo
-food
 food accounts
 food allergy
 food balance sheets
@@ -6956,7 +6954,6 @@ sulphuring
 sultanas
 sum-sum
 sumac
-summer
 summer pudding
 sunchokes
 sundae
