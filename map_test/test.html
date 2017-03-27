@@ -17,7 +17,12 @@
   <script>
 
   // initialize the map
-  var map = L.map('map').setView([52.3702, 4.8952], 13);
+  var southWest = L.latLng(52.29,4.73);
+  var northEast = L.latLng(52.42,4.98);
+  var bounds = L.latLngBounds(southWest, northEast)
+  var map = L.map('map', {
+    maxBounds: bounds
+  }).setView([52.3702, 4.8952], 13);
 
 
   var geojsonMarkerOptions = {
