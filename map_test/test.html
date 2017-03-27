@@ -16,13 +16,6 @@
 
   <script>
 
-
-
-
-
-     // var bbox = turf.bbox(features);
-
-
   // initialize the map
   var map = L.map('map').setView([52.3702, 4.8952], 13);
 
@@ -36,42 +29,61 @@
       fillOpacity: 0.8
   };
 
-  L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
-    attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-    subdomains: 'abcd',
-    minZoom: 0,
-    maxZoom: 20,
-    ext: 'png'
-  }).addTo(map);
-
-
   
-  function onEachFeature(feature, layer) {
-    //bind click
-    //alert(feature);
 
 
-    // For foursquare
-  /*
-    if (feature.properties.category) {
-      layer.bindPopup(feature.properties.category);
-    }*/
-          // For Instagram 
-          var food = feature.properties.category;
-          var list = '<ul class="myList"><li><a>' + food.join('</a></li><li>') + '</li></ul>';
-
-
-                layer.bindPopup(list);
-
-
+  function add_base_map(){
+    L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
+      attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+      ext: 'png'
+    }).addTo(map);
   }
 
-  // Load data to show on the map: example
-   // load GeoJSON from an external file
-  //$.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
-      
-    $.getJSON("test_geojson.geojson",function(data){
+  
+  function onEachFeature_insta(feature, layer) {
+  
+    var food = feature.properties.category;
+    var list = '<ul class="myList"><li><a>' + food.join('</a></li><li>') + '</li></ul>';
+    layer.bindPopup(list);
+  }
 
+  function onEachFeature_fours(feature, layer) {
+    
+    if (feature.properties.category) {
+      layer.bindPopup(feature.properties.category);
+    }   
+  }
+
+
+  function map_points_fours(data){
+    // Points
+      L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {   
+      
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      },
+          onEachFeature: onEachFeature_fours 
+    }).addTo(map);
+  }
+
+  function map_points_insta(data){
+    // Points
+      L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {   
+      
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      },
+          onEachFeature: onEachFeature_insta 
+    }).addTo(map);
+  }
+
+
+  function show_cluster(data){
     // Find number of clusters and create array of points with in clusters
     var nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
     var n = []; 
@@ -89,60 +101,57 @@
       // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
       color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
       cluster_list[i] = new Array;
-            //console.log(color_clust)
     }
 
-    //console.log(data)
     // var hull = turf.convex(data);
-    //                        console.log(hull)
-
     //L.geoJson(hull).addTo(map);
-    //  L.polygon(hull).addTo(map);
-    // add GeoJSON layer to the map once the file is loaded
-    
+    //  L.polygon(hull).addTo(map);    
    
-     L.geoJson(data, {
-            pointToLayer: function (feature, latlng) {  
-                cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
-              }
-      })
+    L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {  
+        cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
+      }
+    })
 
     collection_cluster = new Array(nb_clust);
     for (i = 0; i < nb_clust; i++) {
-        //L.geoJson(turf.convex(cluster_list[i])).addTo(map);
-        test = [];
+      test = [];
       for (d in cluster_list[i]){
           test.push(turf.point(cluster_list[i][d]))
-        }
-        collection_cluster[i] = turf.featurecollection(test)
       }
+      collection_cluster[i] = turf.featurecollection(test)
+    }
       // Polygons
     for (d in collection_cluster){      
-     // var hull = turf.convex(collection_cluster[d]);
-      
+     // var hull = turf.convex(collection_cluster[d]);     
       L.geoJson(turf.convex(collection_cluster[d]),{
         style: function(feature) {
-        
-            return {color: color_clust[d]};
-        
+          return {color: color_clust[d]};       
+        }
+      }).addTo(map);
     }
-    }).addTo(map);
-    }
-                 
-    // Points
-      L.geoJson(data, {
-      pointToLayer: function (feature, latlng) {   
-      
-        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
-        return L.circleMarker(latlng, geojsonMarkerOptions);
-      },
-      onEachFeature: onEachFeature  
-    }).addTo(map);
+  }
 
-})
+  
+  
+  // Instagram data    
+  
+  $.getJSON("test_geojson.geojson",function(data){
+    add_base_map();
+    show_cluster(data);          
+    map_points_insta(data);
 
-    
+  })
+  
+  // Foursquare data
+  /*
+  $.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
+    add_base_map();
+    show_cluster(data);          
+    map_points_fours(data);
 
+  })
+  */
   </script>
 </body>
 </html>
