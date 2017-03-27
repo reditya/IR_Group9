@@ -1,0 +1,13 @@
+{
+        "mappings" : {
+                "tweet" : {
+                        "properties" : {
+                                "text" : { "type" : "string", "analyzer" : "english"},
+                                "food" : { "type" : "string", "analyzer" : "keyword"},
+                                "createdTime" : { "type" : "date", "format" : "epoch_second"},
+                                "coordinate" : { "type" : "geo_point"}
+                        }
+                }
+
+        }
+}
