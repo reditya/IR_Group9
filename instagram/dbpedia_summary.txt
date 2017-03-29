@@ -1,0 +1,315 @@
+chocolate|390
+coffee|368
+salad|242
+cake|171
+sandwich|136
+bread|122
+pancake|116
+tea|97
+pizza|96
+pasta|95
+heineken|94
+soup|92
+pie|91
+hummus|82
+waffle|69
+caramel|68
+nutella|68
+ramen|63
+hamburger|59
+poffertjes|56
+curry|53
+ice cream|52
+toast|51
+pastry|49
+stroopwafel|48
+cookie|46
+tapas|44
+apple pie|42
+cappuccino|40
+falafel|39
+whipped cream|38
+cheesecake|32
+bagel|29
+bun|28
+dumpling|26
+taco|26
+tahini|26
+yogurt|26
+kas|23
+ravioli|23
+tart|23
+cheeseburger|22
+chutney|22
+pho|22
+pita|21
+white chocolate|19
+milkshake|18
+stew|18
+meringue|17
+croissant|16
+sourdough|16
+cola|15
+guacamole|15
+quiche|15
+baguette|14
+hot dog|14
+pudding|14
+spaghetti|14
+veggie burger|14
+mousse|13
+rijsttafel|13
+sorbet|13
+steak tartare|13
+ceviche|12
+fried chicken|12
+gnocchi|12
+halva|12
+satay|12
+candy|11
+kebab|11
+pretzel|11
+stamppot|11
+coleslaw|10
+cupcake|10
+foie gras|10
+french fries|10
+hot chocolate|10
+brigadeiro|9
+compote|9
+crumble|9
+tartufo|9
+tortilla|9
+brioche|8
+eggs benedict|8
+french toast|8
+muffin|8
+polenta|8
+porridge|8
+bonbon|7
+carrot cake|7
+cheese sandwich|7
+club sandwich|7
+coffee cake|7
+flatbread|7
+gazpacho|7
+gelato|7
+macaron|7
+oatmeal|7
+tagliatelle|7
+tajine|7
+tarte tatin|7
+toffee|7
+tzatziki|7
+banana bread|6
+burrito|6
+carbonara|6
+cornbread|6
+doughnut|6
+nachos|6
+peanut butter|6
+rendang|6
+sambal|6
+sprinkles|6
+viennoiserie|6
+arepa|5
+biscuit|5
+blt|5
+bouillabaisse|5
+caesar salad|5
+chocolate cake|5
+empanada|5
+fudge|5
+huevos rancheros|5
+kuchen|5
+paella|5
+piadina|5
+scone|5
+tiramisu|5
+tom yum|5
+baba ghanoush|4
+black pudding|4
+brown bread|4
+chicken sandwich|4
+fruit cake|4
+ganache|4
+marshmallow|4
+miso soup|4
+praline|4
+puff pastry|4
+pumpkin soup|4
+ratatouille|4
+torta|4
+tuna salad|4
+wafer|4
+apple cake|3
+baklava|3
+chicken salad|3
+cognac|3
+fattoush|3
+fondant|3
+frozen yogurt|3
+galette|3
+happy faces|3
+kruidnoten|3
+lasagne|3
+leffe|3
+lobster roll|3
+macaroon|3
+naan|3
+nasi goreng|3
+pea soup|3
+penne|3
+red curry|3
+rillettes|3
+shawarma|3
+smoked meat|3
+tapenade|3
+tomato soup|3
+turkish delight|3
+vinaigrette|3
+cannoli|2
+chicken soup|2
+chili oil|2
+churro|2
+ciabatta|2
+custard|2
+dal|2
+dosa|2
+fish soup|2
+focaccia|2
+fruit salad|2
+harira|2
+injera|2
+johnnie walker|2
+lassi|2
+linguine|2
+marble cake|2
+moussaka|2
+muhammara|2
+nasi lemak|2
+noodle soup|2
+pastilla|2
+patatas bravas|2
+peeps|2
+quesadilla|2
+red bull|2
+roti|2
+spotted dick|2
+takoyaki|2
+trifle|2
+wonton|2
+aperol|1
+apple butter|1
+apple strudel|1
+balsamic vinegar|1
+banoffee pie|1
+batagor|1
+bean salad|1
+beignet|1
+black bun|1
+bratwurst|1
+bread bowl|1
+bread roll|1
+breakfast sandwich|1
+bubblegum|1
+bundt cake|1
+butter chicken|1
+buttercream|1
+butterscotch|1
+cachapa|1
+caramel tart|1
+chapati|1
+char siu|1
+cheesesteak|1
+chicken tikka|1
+chocolate almonds|1
+chocolate balls|1
+chocolate chip|1
+chocolate tart|1
+christmas cake|1
+coconut cake|1
+cointreau|1
+corzetti|1
+cotton candy|1
+crisp bread|1
+cucurucho|1
+curry ketchup|1
+desem|1
+egg salad|1
+english muffin|1
+fajita|1
+frangipane|1
+frappuccino|1
+free beer|1
+fresca|1
+fritter|1
+fudge cake|1
+garlic bread|1
+ginger ale|1
+gingerbread|1
+ginger dressing|1
+goulash|1
+guinness|1
+ham sandwich|1
+hazelnut butter|1
+jeera rice|1
+jiaozi|1
+korma|1
+laksa|1
+leek soup|1
+lemon tart|1
+macaroni|1
+masala chai|1
+melona|1
+minestrone|1
+mooncake|1
+napolitains|1
+neapolitan pizza|1
+nougat|1
+nut butter|1
+oden|1
+okonomiyaki|1
+orecchiette|1
+panna cotta|1
+pannekoek|1
+papadum|1
+pasta salad|1
+pempek|1
+pepsi|1
+pierogi|1
+pistou|1
+prawn cracker|1
+pumpkin pie|1
+ragout|1
+rice bread|1
+rolling rock|1
+royal icing|1
+rye bread|1
+salmon burger|1
+sandwich wrap|1
+sayur lodeh|1
+scotch whisky|1
+shortbread|1
+shortcake|1
+soto ayam|1
+spanakopita|1
+speculoos|1
+spekkoek|1
+sponge cake|1
+steak sandwich|1
+strawberry delight|1
+strudel|1
+sundae|1
+taiyaki|1
+talo|1
+tandoori chicken|1
+thai curry|1
+tiropita|1
+torte|1
+tortellini|1
+vermicelli|1
+vichyssoise|1
+vla|1
+yellow curry|1
+yorkshire pudding|1
