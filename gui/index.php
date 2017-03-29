@@ -2,21 +2,35 @@
 
 require 'vendor/autoload.php';
 
-/*$hosts = [
-    // This is effectively equal to: "https://username:password!#$?*abc@foo.com:9200/"
-    // [
-    //     'host' => 'foo.com',
-    //     'port' => '9200',
-    //     'scheme' => 'https',
-    //     'user' => 'username',
-    //     'pass' => 'password!#$?*abc'
-    // ],
 
-    // This is equal to "http://localhost:9200/"
-    [
-        'host' => 'localhost',    // Only host is required
-    ]
-];
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 $client = ClientBuilder::create()           // Instantiate a new ClientBuilder
                     ->setHosts($hosts)      // Set the hosts
