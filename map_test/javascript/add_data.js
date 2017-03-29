@@ -123,7 +123,7 @@
   
   // Instagram data    
   
-  $.getJSON("test_mix_data.geojson",function(data){
+  $.getJSON("new_mix_data.geojson",function(data){
     add_base_map();
     show_cluster(data);          
     map_points_insta(data);

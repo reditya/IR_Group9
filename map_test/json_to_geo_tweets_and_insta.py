@@ -53,14 +53,14 @@ def pre_info_insta(in_file2):
     data = json.load(open(in_file2))
 
     nb_data = 0;
-    for d in data['hits']:
+    for d in data['hits']['hits']:
         nb_data = nb_data + 1
 
     ref_list = []
     nb_type = 0;
 
-    for d in data['hits']:
-        category = d['food']
+    for d in data['hits']['hits']:
+        category = d['_source']['food']
         for cat in category:
             if cat not in ref_list:
                 ref_list.append(cat)
@@ -69,10 +69,10 @@ def pre_info_insta(in_file2):
     coor = np.zeros(shape=(nb_data,2))
     weight = np.zeros(shape=(nb_data,nb_type))
     index = 0;
-    for d in data['hits']:
-        coor[index][0] = d["coordinate"]['lng']
-        coor[index][1] = d["coordinate"]['lat']
-        category = d['food']
+    for d in data['hits']['hits']:
+        coor[index][0] = d['_source']["coordinate"]['lon']
+        coor[index][1] = d['_source']["coordinate"]['lat']
+        category = d['_source']['food']
         for cat in category:
             i = ref_list.index(cat)    
             weight[index][i] = 1
@@ -150,7 +150,7 @@ def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
     #print wknn3
 
     # The floor value should also be tuned.
-    r = pysal.Maxp(wknn3, new_weight, floor = 5, floor_variable = np.ones((nb_data, 1)), initial = 99)
+    r = pysal.Maxp(wknn3, new_weight, floor = 3, floor_variable = np.ones((nb_data, 1)), initial = 99)
     print r.regions
 
 
@@ -167,7 +167,6 @@ def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
     idx = 0
     for feat in new_coor:
         food_list = []
-        print feat
         f_idx = 0
         for f in new_weight[idx]:
             if f > 0:
