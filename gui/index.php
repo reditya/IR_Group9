@@ -2,7 +2,7 @@
 
 require 'vendor/autoload.php';
 
-$hosts = [
+/*$hosts = [
     // This is effectively equal to: "https://username:password!#$?*abc@foo.com:9200/"
     // [
     //     'host' => 'foo.com',
@@ -33,8 +33,27 @@ try {
     if ($previous instanceof 'Elasticsearch\Common\Exceptions\MaxRetriesException') {
         echo "Max retries!";
     }
-}
+}*/
 
-echo "Test GUI";
+use Elasticsearch\ClientBuilder;
+
+$client = Elasticsearch\ClientBuilder::create()
+    ->setHosts(["54.171.151.130:9200"])
+    ->setRetries(0)
+    ->build();
+
+$params = [
+    'index' => 'restaurants',
+    'type' => 'restaurant',
+    'body' => [
+        'query' => [
+          "match_all" => new \stdClass()
+        ]
+    ]
+];
+
+$results = $client->search($params);
+
+echo $results['took'];
 
 ?>
