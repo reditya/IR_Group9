@@ -60,7 +60,7 @@
       pointToLayer: function (feature, latlng) {   
       
         geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
-        return L.circleMarker(latlng, geojsonMarkerOptions);
+        return L.circleMarker(latlng, geojsonMarkerOptions).setRadius(4);
       },
           onEachFeature: onEachFeature_insta 
     }).addTo(map);
@@ -108,11 +108,25 @@
       // Polygons
     for (d in collection_cluster){      
      // var hull = turf.convex(collection_cluster[d]);     
-      var h = turf.concave(collection_cluster[d],0.01,'miles');
-      //var h = turf.convex(collection_cluster[d]);      
+      //var h = turf.concave(collection_cluster[d],1,'miles');
+      //console.log(collection_cluster[d]);
+      var h = turf.convex(collection_cluster[d]);      
+      h['geometry']['type'] = "LineString";
+      //console.log(h['geometry']['coordinates'][0]);
+      h['geometry']['coordinates'] = h['geometry']['coordinates'][0];
+      console.log(h);
+      h = turf.bezier(h);
+      h = lineToPolygon(h);
+
+      console.log(h);
+
       L.geoJson(h,{
         style: function(feature) {
-          return {color: color_clust[d]};       
+          return {
+            color: color_clust[d],
+            weight: 0.2,
+            fillOpacity: 0.5
+          };       
         }
       }).addTo(map);
     }
@@ -126,7 +140,6 @@
     add_base_map();
     show_cluster(data);          
     //map_points_insta(data);
-
   })
   
   // Foursquare data
@@ -138,3 +151,41 @@
 
   })
   */
+function areIdentical(a,b) {
+  return a.length === b.length && a.every(function(v,i) {
+    return v === b[i];
+  });
+}
+
+// accepts a Feature with a or just a LineString geometry.
+function lineToPolygon(f) {
+  var geometry, firstVertex, lastVertex;
+
+  if (f.type === 'Feature'){
+    geometry = f.geometry;
+  } else {
+    geometry = f;
+  }
+
+  if (geometry.type !== 'LineString') {
+    throw new Error('Only Linestring geometry type is supported.');
+  }
+
+  if (geometry.coordinates.length === 0) {
+    throw new Error('Empty geometry.');
+  }
+
+  firstVertex = geometry.coordinates[0];
+  lastVertex = geometry.coordinates[geometry.coordinates.length - 1];
+
+  if (!areIdentical(firstVertex, lastVertex)) geometry.coordinates.push(firstVertex);
+
+  if (geometry.coordinates.length < 4) {
+    throw new Error('A Polygon needs to have 4 or more positions.')
+  }
+
+  geometry.type = 'Polygon';
+  geometry.coordinates = [geometry.coordinates];
+
+  return f;
+};
