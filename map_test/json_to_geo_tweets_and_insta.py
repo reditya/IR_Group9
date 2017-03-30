@@ -6,8 +6,10 @@ from os.path import exists
 import simplejson as json 
 import pysal
 import numpy as np
+import shapefile as sp
+import math
 
-script, in_file1, in_file2, out_file = argv
+script, in_file1, in_file2, out_file, out_file_2 = argv
 
 
 #def tweets_to_geo(in_file1,in_file2, out_file):
@@ -144,14 +146,14 @@ def remove_duplication_coor(coor, weight):
 
 
 
-def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
+def return_cluster(new_coor, new_weight, ref_list, nb_data, list_coor, out_file, out_file_2):
     # The k value might have to change!
     wknn3 = pysal.weights.KNN(new_coor, k = 5)
     #print wknn3
 
     # The floor value should also be tuned.
     r = pysal.Maxp(wknn3, new_weight, floor = 3, floor_variable = np.ones((nb_data, 1)), initial = 99)
-    print r.regions
+    #print r.regions
 
 
     ### Create geoson file for the map
@@ -161,9 +163,13 @@ def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
         nb_cluster = nb_cluster + 1
         for m_list in M_list:
             cluster_id[m_list] = nb_cluster
-   
+    print nb_cluster
     
+    # Centroid points
+    # Polygon preparation
+
     feature_list = []
+    polygon_list = []
     idx = 0
     for feat in new_coor:
         food_list = []
@@ -183,6 +189,18 @@ def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
                     "cluster": cluster_id[idx][0]
                 }
          })
+        polygon_list.append({
+            "type": "Feature",
+            "geometry" : {
+                "type": "Polygon",
+                "coordinates": [[list_coor[idx]]],
+                },
+            "properties" : {
+                    "category": food_list,
+                    "cluster": cluster_id[idx][0]
+                }
+
+            })
         idx = idx + 1
 
     geojson = {
@@ -190,13 +208,93 @@ def return_cluster(new_coor, new_weight, ref_list, nb_data, out_file):
         "features": feature_list
         }
 
+    geojson_2 = {
+        "type": "FeatureCollection",
+        "features": polygon_list
+        }
     output = open(out_file, 'w')
     json.dump(geojson, output)
+    output_2 = open(out_file_2, 'w')
+    json.dump(geojson_2, output_2)
 
 
 
 
 
+
+
+def grid_creation(coor, weight):
+    w = sp.Writer(sp.POLYGON)
+
+    # Grid definition
+    print "intitialisation"
+    #Position, decimal degrees
+    lat = 52.29
+    lon = 4.73
+    lat_max = 52.42
+    lon_max = 4.98
+
+    #Earth’s radius, sphere
+    R=6378137
+
+    #offsets in meters
+    dn = 200
+    de = 200
+
+    #Coordinate offsets in radians
+    dLat = dn/R
+    dLon = de/(R*math.cos(math.pi*lat/180))
+
+    #OffsetPosition, decimal degrees
+    lat_add = 0.001 #dLat * 180/math.pi
+    lon_add = dLon * 180/math.pi 
+    print lat_add
+    print lon_add
+    i = lon
+    j = lat
+    nb_data = 0
+    list_coor = []
+    list_centroid = np.array([0,0])
+    nb_i = 1
+    print "preparation of coordinates"
+    while (i < lon_max):
+        nb_j = 1
+        j = lat
+        while (j < lat_max):
+            nb_data = nb_data + 1
+            point = [[[i,j],[i+lon_add,j],[i+lon_add,j+lat_add],[i,j+lat_add],[i,j]]]
+            list_coor.append([[i,j],[i+lon_add,j+lat_add]])
+            list_centroid = np.vstack([list_centroid, [i+lon_add/2,j+lat_add/2]])
+            w.poly(parts=point, shapeType=sp.POLYLINE)
+            j = j + lat_add
+            nb_j = nb_j + 1
+        i = i + lon_add  
+        nb_i = nb_i + 1
+    print len(list_coor)
+    list_centroid = np.delete(list_centroid, (0), axis=0)
+    print nb_i, nb_j
+
+    print list_centroid.shape
+    print "preparation of weights"
+    print weight.shape[1]
+    new_weight = np.zeros(shape=(nb_data,weight.shape[1]))
+    idx_coor = 0
+    for coordinate in coor:
+        #print coordinate[0]
+        #print coordinate[1]
+        bool_test = False
+        list_idx = 0
+        while (not bool_test and list_idx < len(list_coor)):
+            #print list_coor[list_idx][1][0] , list_coor[list_idx][0][0], list_coor[list_idx][1][1], list_coor[list_idx][0][1]
+            if (coordinate[0] < list_coor[list_idx][1][0] and coordinate[0] >= list_coor[list_idx][0][0] and coordinate[1] < list_coor[list_idx][1][1] and coordinate[1] >= list_coor[list_idx][0][1]):
+                bool_test = True
+                new_weight[list_idx] = new_weight[list_idx] + weight[idx_coor]
+            list_idx = list_idx + 1
+        idx_coor = idx_coor + 1     
+    w.save("map_test/test_big_grid")
+
+    print new_weight
+    return new_weight, list_centroid, nb_data, list_coor    
 
 nb_data_1, nb_type_1, ref_list_1, coor_1, weight_1 = pre_info_tweets(in_file1)
 nb_data_2, nb_type_2, ref_list_2, coor_2, weight_2 = pre_info_insta(in_file2)
@@ -204,7 +302,10 @@ nb_data_2, nb_type_2, ref_list_2, coor_2, weight_2 = pre_info_insta(in_file2)
 new_coor, new_weight, new_ref_list, new_nb_data = merge_datasets(ref_list_1,ref_list_2, nb_data_1,nb_data_2,nb_type_1, nb_type_2, coor_1, coor_2, weight_1, weight_2)
 
 new_coor, new_weight = remove_duplication_coor(new_coor,new_weight)
-return_cluster(new_coor,new_weight, new_ref_list, new_nb_data, out_file)
+
+new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, new_weight)
+
+return_cluster(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
 
 
