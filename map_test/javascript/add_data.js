@@ -31,10 +31,11 @@
 
   
   function onEachFeature_insta(feature, layer) {
-  
+    if (feature.properties.category.length != 0){
     var food = feature.properties.category;
     var list = '<ul class="myList"><li><a>' + food.join('</a></li><li>') + '</li></ul>';
     layer.bindPopup(list);
+  }
   }
 
   function onEachFeature_fours(feature, layer) {
@@ -134,17 +135,19 @@
   
   
   // Instagram data    
-  $.getJSON("new_poly_data.geojson",function(data){
-    show_cluster(data);          
-  })
+  
   $.getJSON("new_mix_data.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
     //show_cluster(data);          
-    map_points_insta(data);
 
   })
-  
+  $.getJSON("new_poly_data.geojson",function(data){
+    show_cluster(data);          
+  })
+    $.getJSON("new_mix_data.geojson",function(data){
+          map_points_insta(data);
+})
   
   // Foursquare data
   /*

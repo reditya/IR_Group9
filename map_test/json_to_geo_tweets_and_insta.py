@@ -148,7 +148,7 @@ def remove_duplication_coor(coor, weight):
 
 def return_cluster(new_coor, new_weight, ref_list, nb_data, list_coor, out_file, out_file_2):
     # The k value might have to change!
-    wknn3 = pysal.weights.KNN(new_coor, k = 5)
+    wknn3 = pysal.weights.KNN(new_coor, k = 4)
     #print wknn3
 
     # The floor value should also be tuned.
