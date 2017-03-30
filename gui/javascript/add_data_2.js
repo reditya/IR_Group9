@@ -2,8 +2,16 @@
   var southWest = L.latLng(52.29,4.73);
   var northEast = L.latLng(52.42,4.98);
   var bounds = L.latLngBounds(southWest, northEast)
+  var default_map = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+      subdomains: 'abcd',
+      minZoom: 0,
+      maxZoom: 20,
+      ext: 'png'
+    });
   var map = L.map('map', {
-    maxBounds: bounds
+    maxBounds: bounds,
+    layers: default_map
   }).setView([52.3702, 4.8952], 13);
 
 
@@ -56,18 +64,30 @@
 
   function map_points_insta(data){
     // Points
-      L.geoJson(data, {
+    var insta_points = L.geoJson(data, {
       pointToLayer: function (feature, latlng) {   
       
         geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
         return L.circleMarker(latlng, geojsonMarkerOptions).setRadius(4);
       },
           onEachFeature: onEachFeature_insta 
-    }).addTo(map);
+    });
+    var overlay_points = L.layerGroup([insta_points]);
+    overlay_points = { "Points": overlay_points};
+    L.control.layers(overlay_points, overlay_points).addTo(map);      
   }
 
 
+
   function show_cluster(data){
+    var baseLayer = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
+          attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+          subdomains: 'abcd',
+          minZoom: 0,
+          maxZoom: 20,
+          ext: 'png'
+        });
+
     // Find number of clusters and create array of points with in clusters
     var nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
     var n = []; 
@@ -130,6 +150,20 @@
         }
       }).addTo(map);
     }
+
+    // Points layer
+    var insta_points = L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {   
+      
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+        return L.circleMarker(latlng, geojsonMarkerOptions).setRadius(4);
+      },
+          onEachFeature: onEachFeature_insta 
+    });
+    var base_maps = {"Maps": baseLayer};
+    var overlay_points = L.layerGroup([insta_points]);
+    overlay_points = { "Points": overlay_points};
+    L.control.layers(base_maps, overlay_points).addTo(map);      
   }
 
   
@@ -137,7 +171,7 @@
   // Instagram data    
   
   $.getJSON("test_mix_data.geojson",function(data){
-    add_base_map();
+    //add_base_map();
     show_cluster(data);          
     //map_points_insta(data);
   })
@@ -151,41 +185,47 @@
 
   })
   */
-function areIdentical(a,b) {
-  return a.length === b.length && a.every(function(v,i) {
-    return v === b[i];
-  });
-}
 
-// accepts a Feature with a or just a LineString geometry.
-function lineToPolygon(f) {
-  var geometry, firstVertex, lastVertex;
+  // Toggle layer
 
-  if (f.type === 'Feature'){
-    geometry = f.geometry;
-  } else {
-    geometry = f;
+
+
+  // from library lineToPolygon
+  function areIdentical(a,b) {
+    return a.length === b.length && a.every(function(v,i) {
+      return v === b[i];
+    });
   }
 
-  if (geometry.type !== 'LineString') {
-    throw new Error('Only Linestring geometry type is supported.');
-  }
+  // accepts a Feature with a or just a LineString geometry.
+  function lineToPolygon(f) {
+    var geometry, firstVertex, lastVertex;
 
-  if (geometry.coordinates.length === 0) {
-    throw new Error('Empty geometry.');
-  }
+    if (f.type === 'Feature'){
+      geometry = f.geometry;
+    } else {
+      geometry = f;
+    }
 
-  firstVertex = geometry.coordinates[0];
-  lastVertex = geometry.coordinates[geometry.coordinates.length - 1];
+    if (geometry.type !== 'LineString') {
+      throw new Error('Only Linestring geometry type is supported.');
+    }
 
-  if (!areIdentical(firstVertex, lastVertex)) geometry.coordinates.push(firstVertex);
+    if (geometry.coordinates.length === 0) {
+      throw new Error('Empty geometry.');
+    }
 
-  if (geometry.coordinates.length < 4) {
-    throw new Error('A Polygon needs to have 4 or more positions.')
-  }
+    firstVertex = geometry.coordinates[0];
+    lastVertex = geometry.coordinates[geometry.coordinates.length - 1];
 
-  geometry.type = 'Polygon';
-  geometry.coordinates = [geometry.coordinates];
+    if (!areIdentical(firstVertex, lastVertex)) geometry.coordinates.push(firstVertex);
 
-  return f;
-};
+    if (geometry.coordinates.length < 4) {
+      throw new Error('A Polygon needs to have 4 or more positions.')
+    }
+
+    geometry.type = 'Polygon';
+    geometry.coordinates = [geometry.coordinates];
+
+    return f;
+  };
