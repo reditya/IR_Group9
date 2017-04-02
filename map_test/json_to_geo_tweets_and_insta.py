@@ -12,7 +12,7 @@ import clusterpy as cp
 import csv
 import sklearn.decomposition as sc
 from sklearn.feature_selection import SelectKBest
-
+from sklearn.cluster import DBSCAN
 
 script, in_file1, in_file2, out_file, out_file_2 = argv
 
@@ -584,6 +584,87 @@ def grid_creation(coor, weight):
 
     return new_weight, list_centroid, nb_data, list_coor    
 
+
+
+
+def unique_food(coor, weight, ref_list, term):
+    idx = ref_list.index(term)
+    coor_list = []
+    for i in range(weight.shape[0]):
+        if weight[i][idx] > 0:
+            coor_list.append(coor[i])
+    # DBSCAN use
+    db = DBSCAN(eps=0.003, min_samples=2).fit(coor_list)        
+    labels = db.labels_
+    print len(labels)
+    unique_labels = set(labels)
+    n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+
+    print('Estimated number of clusters: %d' % n_clusters_)
+
+    list_list = []
+    for k in range(len(unique_labels)):
+        list_list.append([])
+    idx = -1    
+    for k in labels:
+        idx = idx + 1
+        if k >= 0:
+            list_list[k].append([coor[idx][0], coor[idx][1]])
+
+
+    # Centroid points
+    # Polygon preparation
+
+    feature_list = []
+    polygon_list = []
+    idx = 0
+    food_list = [term]
+
+    for feat in coor_list:
+        if labels[idx] >= 0:
+            feature_list.append({
+                "type": "Feature",
+                "geometry" : {
+                    "type": "Point",
+                    "coordinates": [feat[0], feat[1]],
+                    },
+                "properties" : {
+                        "category": food_list,
+                        "cluster": labels[idx]
+                    }
+             })
+        idx = idx + 1
+    
+    for i in range(len(list_list)):
+        polygon_list.append({
+                "type": "Feature",
+                "geometry" : {
+                    "type": "Polygon",
+                    "coordinates": [[list_list[i]]],
+                    },
+                "properties" : {
+                        "category": food_list,
+                        "cluster": i
+                    }
+
+                })    
+
+    geojson = {
+        "type": "FeatureCollection",
+        "features": feature_list
+        }
+
+    geojson_2 = {
+        "type": "FeatureCollection",
+        "features": polygon_list
+        }
+    output = open(out_file, 'w')
+    json.dump(geojson, output)
+    output_2 = open(out_file_2, 'w')
+    json.dump(geojson_2, output_2)
+    
+
+
 nb_data_1, nb_type_1, ref_list_1, coor_1, weight_1 = pre_info_tweets(in_file1)
 nb_data_2, nb_type_2, ref_list_2, coor_2, weight_2 = pre_info_insta(in_file2)
 
@@ -592,12 +673,13 @@ new_coor, new_weight, new_ref_list, new_nb_data = merge_datasets(ref_list_1,ref_
 new_coor, new_weight = remove_duplication_coor(new_coor,new_weight)
 print new_coor.shape, new_weight.shape
 new_nb_data = new_coor.shape[0]
-new_weight, new_ref_list = PCA_use(new_weight, new_ref_list)
-new_ref_list, new_weight = cluster_with_several_max(new_coor, new_weight, new_ref_list, new_nb_data)
+
+#new_weight, new_ref_list = PCA_use(new_weight, new_ref_list)
+#new_ref_list, new_weight = cluster_with_several_max(new_coor, new_weight, new_ref_list, new_nb_data)
 
 new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, new_weight)
 
-cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
+#cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
 
 
@@ -606,7 +688,7 @@ cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_
 
 #cluster_with_max(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
-
+unique_food(list_centroid, new_weight, new_ref_list, 'coffee')
 
 
 
