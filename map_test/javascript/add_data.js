@@ -44,14 +44,19 @@
       layer.bindPopup(feature.properties.category);
     }   
   }
-
+  function onEachFeature_poly(feature, layer) {
+    
+    if (feature.properties.category) {
+      layer.bindPopup(feature.properties.category);
+    }   
+  }
 
   function map_points_fours(data){
     // Points
       L.geoJson(data, {
       pointToLayer: function (feature, latlng) {   
       
-        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+        geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
         return L.circleMarker(latlng, geojsonMarkerOptions);
       },
           onEachFeature: onEachFeature_fours 
@@ -63,7 +68,7 @@
       L.geoJson(data, {
       pointToLayer: function (feature, latlng) {   
         if (feature.properties.category.length != 0){
-          geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)-1];
+          geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
           return L.circleMarker(latlng, geojsonMarkerOptions);
         }
         
@@ -83,14 +88,13 @@
     }
     nb_clust = n.length
     console.log(nb_clust)
-    cluster_list = new Array(nb_clust);
+    
     //console.log(nb_clust);
     color_clust = [];
     // Associate random colors to clusters
     for (i = 0; i < nb_clust; i++) {
       // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
       color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
-      cluster_list[i] = new Array;
     }
     
 
@@ -98,7 +102,11 @@
   }
 
   function show_cluster(data){
-    
+    cluster_list = new Array(nb_clust);
+    for (i = 0; i < nb_clust; i++) {
+      // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
+      cluster_list[i] = new Array;
+    }
     // var hull = turf.convex(data);
     //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);  
@@ -124,6 +132,7 @@
       //console.log((collection_cluster[d]))
      // var hull = turf.convex(collection_cluster[d]);     
       L.geoJson(turf.convex(collection_cluster[d]),{
+        onEachFeature: onEachFeature_poly,
         style: function(feature) {
           return {color: color_clust[d]};       
         }
@@ -132,7 +141,45 @@
     
   }
 
+  function show_cluster_max(data){
+    cluster_list = new Array(nb_clust);
+    for (i = 0; i < nb_clust; i++) {
+      // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
+      cluster_list[i] = new Array;
+    }
+    // var hull = turf.convex(data);
+    //L.geoJson(hull).addTo(map);
+    //  L.polygon(hull).addTo(map);  
+     
+    L.geoJson(data, {
+      filter: function (feature, layer) {  
+        //console.log(feature.geometry.coordinates[0][0][0])
+        cluster_list[Math.floor(feature.properties.cluster)].push([feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][1][1]],[feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][1][1]]);
+      }
+    })
   
+    
+    collection_cluster = new Array(nb_clust);
+    for (i = 0; i < nb_clust; i++) {
+      test = [];
+      for (d in cluster_list[i]){
+          test.push(turf.point(cluster_list[i][d]))
+      }
+      collection_cluster[i] = turf.featurecollection(test)
+    }
+     // Polygons
+    for (d in collection_cluster){      
+      //console.log((collection_cluster[d]))
+     // var hull = turf.convex(collection_cluster[d]);     
+      L.geoJson(turf.convex(collection_cluster[d]),{
+        onEachFeature: onEachFeature_poly,
+        style: function(feature) {
+          return {color: color_clust[d]};       
+        }
+      }).addTo(map);
+    }
+    
+  }
   
   // Instagram data    
   
@@ -143,8 +190,11 @@
 
   })
   $.getJSON("new_poly_data.geojson",function(data){
-    show_cluster(data);          
+    show_cluster(data);  
+    //     show_cluster(data);          
+        
   })
+
     $.getJSON("new_mix_data.geojson",function(data){
           map_points_insta(data);
 })
