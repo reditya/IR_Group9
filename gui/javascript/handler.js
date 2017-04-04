@@ -18,8 +18,7 @@ function onMapClick(e) {
 
 	                    }
 	        }
-	    )
-      	"Restaurants " + e.latlng.toString())
+	    ))
       .openOn(map);
 }
 
