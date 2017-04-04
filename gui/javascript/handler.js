@@ -8,6 +8,7 @@ function onMapClick(e) {
 }
 
 function fetchData(){
+	var result = "";
 	$.ajax(
 		{
 			url:"getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5", 
@@ -16,10 +17,10 @@ function fetchData(){
 			data:{some_string:"resturants"},
 			dataType:"json",
 			success:function(data){
-				return('Success');
+				result = "Success";
 			},
 			error: function() {
-				return('Error occurs!');
+				result = "Error occurs!";
 			}
 		}
 	)
