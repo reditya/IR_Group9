@@ -8,7 +8,7 @@ function onMapClick(e) {
 }
 
 function fetchData(){
-	var result = "";
+	var result = "TEST";
 	$.ajax(
 		{
 			url:"getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5", 
