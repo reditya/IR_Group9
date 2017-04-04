@@ -67,6 +67,5 @@
     <script src="javascript/feedback.js"></script>
     <script src="javascript/leaflet.customsearchbox.min.js"></script>
     <script src="javascript/leaflet-sidebar.js"></script>
-    <script src="javascript/sidebar.js"></script> 
 </body>
 </html>
