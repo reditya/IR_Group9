@@ -7,9 +7,9 @@ import simplejson as json
 import pysal
 import numpy as np
 
-in_file, out_file = argv
+script, in_file, out_file = argv
 
-def to_foursquare_geo(in_file, out_file, nb_type):
+def to_foursquare_geo(in_file, out_file):
 
     data = json.load(open(in_file))
 
@@ -38,7 +38,7 @@ def to_foursquare_geo(in_file, out_file, nb_type):
         weight[index][i] = 1
         index = index + 1
     # The k value might have to change!
-    wknn3 = pysal.weights.KNN(coor, k = 15)
+    wknn3 = pysal.weights.KNN(coor, k = 3)
     # The floor value should also be tuned.
     r = pysal.Maxp(wknn3, weight, floor = 6, floor_variable = np.ones((nb_data, 1)), initial = 99)
     print r.regions

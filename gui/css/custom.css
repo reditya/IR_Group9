@@ -1,0 +1,7 @@
+#floating-panel {
+  position: absolute;
+  top: 10px;
+  left: 5%;
+  z-index: 1000;
+  background-color: #fff;
+}
