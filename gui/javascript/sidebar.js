@@ -16,7 +16,7 @@ var map = L.map('map', {
 }).setView([52.3702, 4.8952], 13);
 
 L.control.zoom({
-  position: 'topright'
+  position: 'topleft'
 }).addTo(map);
 
 var options = {
@@ -32,6 +32,12 @@ var options = {
   },
   theme: "square"
 };
+
+var jsonurl = 'http://176.34.152.42/gui/experiment/query.php?food=pizza';
+
+$.getJSON(jsonurl,function(data){
+  alert(data);
+});
 
 $("#countries").easyAutocomplete(options);
 var sidebar = L.control.sidebar('sidebar').addTo(map);

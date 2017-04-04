@@ -4,14 +4,13 @@
   position: relative;
 }
 
-#map{ 
+html, body,#map{ 
 	height: 100%;
-	position: relative;
- }
+}
 
- p.feedback {
- 	margin-top: 10%;
- 	font-weight: bold;
- 	font-size: 12pt;
- 	color: #186bf2;
- }
+p.feedback {
+	margin-top: 10%;
+	font-weight: bold;
+	font-size: 12pt;
+	color: #186bf2;
+}

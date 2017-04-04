@@ -125,7 +125,7 @@
 
 .sidebar-close {
   position: absolute;
-  top: 0;
+  top: 10px;
   width: 40px;
   height: 40px;
   text-align: center;
