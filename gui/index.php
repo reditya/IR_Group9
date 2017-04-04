@@ -65,6 +65,7 @@
     <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="javascript/jquery.easy-autocomplete.min.js"></script>    
     <script src="javascript/feedback.js"></script>
+    <script src="javascript/handler.js"></script>
     <script src="javascript/leaflet.customsearchbox.min.js"></script>
     <script src="javascript/leaflet-sidebar.js"></script>
 </body>
