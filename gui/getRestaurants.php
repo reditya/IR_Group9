@@ -38,9 +38,32 @@ if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset(
 	    ]
 	];
 
-	$results = $client->search($params);
+	$result = $client->search($params);
 
-	file_put_contents('data/es_out.json', json_encode($results));
+	// Rewrite to GEOJSON
+	$geoJson = [
+		'type' => 'FeatureCollection',
+		'features' => []
+	];
+	foreach($result['hits']['hits'] as $hit) {
+		$geoJson['features'][] = [
+			'geometry' => [
+                        	'type' => 'Point',
+                        	'coordinates' => [
+                                	$hit['_source']['location']['lon'],
+                                	$hit['_source']['location']['lat'] 
+                        	]
+               		 ],
+			'type' => 'Feature',
+			'properties' => [
+				'name' => $hit['_source']['name'],
+				'category' => $hit['_source']['category']
+			]
+		];
+	}
+
+
+	echo json_encode($geoJson);	
 	
 } else {
 	$return = [
