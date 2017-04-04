@@ -1,5 +1,10 @@
 [ 
   {"name": "Pizza", "code": "PZ"}, 
-  {"name": "Chocolate", "code": "AZ"}, 
-  {"name": "Coffee", "code": "AK"}   
- ]
+  {"name": "Beer", "code": "PZ"},
+  {"name": "Wine", "code": "PZ"},
+  {"name": "Strawberry", "code": "PZ"},
+  {"name": "Chocolate", "code": "PZ"},
+  {"name": "Burger", "code": "PZ"},
+  {"name": "Banana", "code": "PZ"},
+  {"name": "Coffee", "code": "PZ"} 
+]
