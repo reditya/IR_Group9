@@ -12,9 +12,9 @@ def convert_to_csv(inp_file):
 		list_e = line.get('_source').get('food')
 		list_n = []
 		for i in list_e:
-			list_n.append(i.encode('unicode_escape'))
+			list_n.append(i.encode('utf-8'))
 
-		writer.writerow([line.get('_source').get('text').encode('unicode_escape'),list_n])
+		writer.writerow([line.get('_source').get('text').encode('utf-8'),list_n])
 
 
 csv_out = open(out, mode='w') #opens csv file
