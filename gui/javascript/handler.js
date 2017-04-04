@@ -16,7 +16,10 @@ function fetchData(){
 			data:{some_string:"resturants"},
 			dataType:"json",
 			success:function(data){
-				return "success";
+				return('Success');
+			},
+			error: function() {
+				return('Error occurs!');
 			}
 		}
 	)
