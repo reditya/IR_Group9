@@ -12,7 +12,7 @@ function onMapClick(e) {
 	                    data:{some_string:"resturants"},
 	                    dataType:"json",
 	                    success:function(data){
-	                    	"Restaurants" + data;
+	                    	alert(data);
 	                    }
 	        }
 	    ))
