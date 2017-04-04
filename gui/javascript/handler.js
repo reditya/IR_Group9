@@ -8,24 +8,12 @@ function onMapClick(e) {
 }
 
 function fetchData(){
-	var result = "TEST";
-	$.ajax(
-		{
-			url:"getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5", 
-			type:"POST",
-			contentType:"application/json; charset=utf-8",
-			data:{some_string:"resturants"},
-			dataType:"json",
-			success:function(data){
-				result = "Success";
-			},
-			error: function() {
-				result = "Error occurs!";
-			}
-		}
-	)
+	var query = 'getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5';
+	$.getJSON(query,function(data){
+		return "Success";
+	});
 
-	return result;
+	return "Fail";
 }
 
 map.on('click', onMapClick);
