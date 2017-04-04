@@ -24,6 +24,8 @@ function fetchData(){
 			}
 		}
 	)
+
+	return result;
 }
 
 map.on('click', onMapClick);
