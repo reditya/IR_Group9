@@ -21,24 +21,7 @@
     <div class="container-fluid">
         <div id="floating-panel">
             <input id="countries"/>
-        </div>
-        <div class="map">
-            <div class="row-fluid" id="map"></div>
-        </div> 
-        <div id="feedback">
-            <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
-                <p class="feedback"><img src="../images/thumb.png" height="10%"> our app?</p>
-                <form method="POST" action="/feedback" class="form panel-body" role="form">
-                    <label>
-                        <input type="radio" name="optradio"> Yes
-                    </label>
-                    <label>
-                        <input type="radio" name="optradio"> No
-                    </label>
-                </form>
-            </div>
-            <div id="feedback-tab">Feedback</div>
-        </div>        
+        </div>   
         <div id="sidebar" class="sidebar collapsed">
             <!-- Nav tabs -->
             <div class="sidebar-tabs">
@@ -86,9 +69,25 @@
                 </div>
             </div>
         </div>   
+        <div class="map">
+            <div class="row-fluid sidebar-map" id="map"></div>
+        </div> 
+        <div id="feedback">
+            <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
+                <p class="feedback"><img src="../images/thumb.png" height="10%"> our app?</p>
+                <form method="POST" action="/feedback" class="form panel-body" role="form">
+                    <label>
+                        <input type="radio" name="optradio"> Yes
+                    </label>
+                    <label>
+                        <input type="radio" name="optradio"> No
+                    </label>
+                </form>
+            </div>
+            <div id="feedback-tab">Feedback</div>
+        </div>             
     </div>
 
-    <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="../javascript/jquery.easy-autocomplete.min.js"></script>    
     <script src="../javascript/feedback.js"></script>
     <script src="../javascript/leaflet.customsearchbox.min.js"></script>

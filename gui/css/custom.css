@@ -5,3 +5,8 @@
   z-index: 1000;
   background-color: #fff;
 }
+
+body {
+	padding: 0;
+	margin: 0;
+}
