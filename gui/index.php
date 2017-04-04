@@ -1,25 +1,25 @@
 <?php
 
-require 'vendor/autoload.php';
+// require 'vendor/autoload.php';
 
-use Elasticsearch\ClientBuilder;
+// use Elasticsearch\ClientBuilder;
 
-$client = Elasticsearch\ClientBuilder::create()
-    ->setHosts(["54.171.151.130:9200"])
-    ->setRetries(0)
-    ->build();
+// $client = Elasticsearch\ClientBuilder::create()
+//     ->setHosts(["54.171.151.130:9200"])
+//     ->setRetries(0)
+//     ->build();
 
-$params = [
-    'index' => 'restaurants',
-    'type' => 'restaurant',
-    'body' => [
-        'query' => [
-          "match_all" => new \stdClass()
-        ]
-    ]
-];
+// $params = [
+//     'index' => 'restaurants',
+//     'type' => 'restaurant',
+//     'body' => [
+//         'query' => [
+//           "match_all" => new \stdClass()
+//         ]
+//     ]
+// ];
 
-$results = $client->search($params);
+// $results = $client->search($params);
 
 //echo $results['took'];
 
@@ -56,8 +56,9 @@ $results = $client->search($params);
         <div class="map" id="map"></div>
     </div>
 
-    <script src="javascript/add_data.js"></script>
+    <script src="javascript/add_data_2.js"></script>
     <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="javascript/feedback.js"></script>
+    <script src="javascript/handler.js"></script>
 </body>
 </html>

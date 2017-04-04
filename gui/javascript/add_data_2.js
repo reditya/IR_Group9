@@ -109,8 +109,7 @@
 
     // var hull = turf.convex(data);
     //L.geoJson(hull).addTo(map);
-    //  L.polygon(hull).addTo(map);    
-    alert("haha23456");
+    //  L.polygon(hull).addTo(map);
     L.geoJson(data, {
       pointToLayer: function (feature, latlng) {  
         cluster_list[Math.floor(feature.properties.cluster)-1].push([latlng.lng , latlng.lat]);
