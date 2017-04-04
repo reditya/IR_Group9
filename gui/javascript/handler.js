@@ -6,16 +6,13 @@ function onMapClick(e) {
       .setContent(
       	$.ajax(
 	        {
-	        	url:"index.php/a", 
+	        	url:"getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5", 
 	        	type:"POST",
 	        	contentType:"application/json; charset=utf-8",
 	                    data:{some_string:"resturants"},
 	                    dataType:"json",
 	                    success:function(data){
 	                    	"Restaurants" + data;
-	                    },
-	                    error:function(a,b,c){
-
 	                    }
 	        }
 	    ))
