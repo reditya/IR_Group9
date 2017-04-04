@@ -30,11 +30,16 @@
     <title>A Leaflet map!</title>
     <link rel="stylesheet" href="leaflet/leaflet.css" />
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/feedback.css" />
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/custom.css" />    
+    <link rel="stylesheet" href="css/easy-autocomplete.min.css" />
+    <link rel="stylesheet" href="css/easy-autocomplete.themes.min.css" />      
+    <link rel="stylesheet" href="css/leaflet-sidebar.css" />       
     <script src="leaflet/leaflet.js"></script> 
     <script src="jquery-2.1.1.min.js"></script>
-    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
 </head>
 <body>
@@ -58,7 +63,10 @@
 
     <script src="javascript/add_data_2.js"></script>
     <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="javascript/jquery.easy-autocomplete.min.js"></script>    
     <script src="javascript/feedback.js"></script>
-    <script src="javascript/handler.js"></script>
+    <script src="javascript/leaflet.customsearchbox.min.js"></script>
+    <script src="javascript/leaflet-sidebar.js"></script>
+    <script src="javascript/sidebar.js"></script> 
 </body>
 </html>
