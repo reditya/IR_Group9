@@ -24,6 +24,74 @@
       fillOpacity: 0.8
   };
 
+var markerGroup = L.layerGroup().addTo(map);
+
+// attaching function on map click
+map.on('click', onMapClick);
+
+// Script for adding marker on map click
+function onMapClick(e) {
+		markerGroup.clearLayers();
+    var geojsonFeature = {
+        "type": "Feature",
+            "properties": {},
+            "geometry": {
+                "type": "Point",
+                "coordinates": [e.latlng.lat, e.latlng.lng]
+        }
+    }
+
+    var marker;
+
+    L.geoJson(geojsonFeature, {
+        
+        pointToLayer: function(feature, latlng){
+            
+            marker = L.marker(e.latlng, {
+                
+                title: "Resource Location",
+                alt: "Resource Location",
+                riseOnHover: true,
+                draggable: true,
+
+            }).bindPopup("<input type='button' value='Search nearby restaurant' class='marker-delete-button'/>");
+
+            marker.on("popupopen", onPopupOpen);
+       
+            return marker;
+        }
+    }).addTo(markerGroup);
+}
+
+// Function to handle delete as well as other events on marker popup open
+function onPopupOpen() {
+    var tempMarker = this;
+
+    // To remove marker on click of delete
+    $(".marker-delete-button:visible").click(function () {
+        getAllMarkers();
+    });
+}
+// Dummy function to test popup marker 
+function getAllMarkers() {
+    
+    var allMarkersObjArray = [];//new Array();
+    var allMarkersGeoJsonArray = [];//new Array();
+
+    $.each(map._layers, function (ml) {
+        //console.log(map._layers)
+        if (map._layers[ml].feature) {
+            
+            allMarkersObjArray.push(this)
+                                    allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+        }
+    })
+
+    console.log(allMarkersObjArray);
+    alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
+}
+
+
   function add_base_map(){
     L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
