@@ -10,14 +10,19 @@ maxZoom: 20,
 ext: 'png'
 });
 var map = L.map('map', {
-maxBounds: bounds,
-layers: default_map,
-zoomControl: false,
+  maxBounds: bounds,
+  layers: default_map,
+  zoomControl: false,
 }).setView([52.3702, 4.8952], 13);
 
 L.control.zoom({
-position: 'topleft'
+  position: 'topleft'
 }).addTo(map);
+
+// add Amsterdam border
+$.getJSON("Amsterdam_AL8.GeoJson",function(data){
+  L.geoJSON(data).addTo(map);
+});
 
 var pointMarker = new Array();
 
@@ -53,7 +58,6 @@ var options = {
       $.getJSON(food_query,function(data){
         for(var i=0; i < data.length; i++)
         {
-          //alert(data[i][0]);
           var latlng = L.latLng(data[i][0], data[i][1]);
           marker = new L.circleMarker(latlng, geojsonMarkerOptions);
           pointMarker.push(marker);
@@ -63,17 +67,34 @@ var options = {
 
       var recipes_query = 'query.php?query=recipes&food='+foodterm;
       $.getJSON(recipes_query,function(data){
-        var recipes_html = '<ul>';
+        //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
+        var recipes_html = '<p>';
+        //recipes_html = recipes_html + '<ul>';
         for(var i=0; i < data.length; i++)
         {
-          //alert(data[i][0]);
-          recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
-          alert(data[i]['title']);
+          recipes_html = recipes_html 
+            + "<div class='card w-100'>" +
+                "<div class='card-block'>" + 
+                  "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+                  "<p class='card-text'>description of recipes here</p>" + 
+                  "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
+                "</div>" + 
+              "</div><br>";          
+          console.log(recipes_html);
+          //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
         }
-        recipes_html = recipes_html + '</ul>';
+        recipes_html = recipes_html + '</p>';
+        //recipes_html = recipes_html + '</ul>';
         $("#span_recipes").html('');
         $("#span_recipes").html(recipes_html);        
-      });      
+      });
+
+      var detail_query = 'query.php?query=recipesDetail&food='+foodterm;
+      $.get(detail_query,function(data){
+        $('#modalCollection').html('');
+        $('#modalCollection').html(data);
+        console.log(data);
+      });
     }
   },
   theme: "square"
