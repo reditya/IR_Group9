@@ -36,6 +36,14 @@
   background-color: #fff;
 }
 
+#select-panel {
+  position: absolute;
+  top: 100px;
+  left: 70%;
+  z-index: 1000;
+  background-color: #fff;
+}
+
 body {
 	padding: 0;
 	margin: 0;
