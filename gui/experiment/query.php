@@ -30,19 +30,28 @@
 
 		// instagram
 		$params['index'] = 'instagram';
-		$results = $client->search($params);
-		file_put_contents('clustering/ES_instagram.json', json_encode($results));
+		$instagram_results = $client->search($params);
+		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
-		$results = $client->search($params);
-		file_put_contents('clustering/ES_english_tweets.json', json_encode($results));
-		exec('python clustering/food_term_cluster.py "pizza" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/tweets.geojson clustering/instagram.geojson', $output);
+		$twitter_results = $client->search($params);
+		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
 
-		//print_r($output);
+		exec('python clustering/food_term_cluster.py "pizza" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
 
-		$ar_results = $results['hits']['hits'];
+		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
+		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
+	
+		$merge = [
+			'points' => $points,
+			'clusters' => $clusters
+		];
+		
+		//echo json_encode($merge);	
+
+		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
 
 		$coordinate = array();
 		foreach($ar_results as $i)
