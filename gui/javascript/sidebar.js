@@ -65,35 +65,35 @@ var options = {
         }
       });
 
-      var recipes_query = 'query.php?query=recipes&food='+foodterm;
-      $.getJSON(recipes_query,function(data){
-        //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
-        var recipes_html = '<p>';
-        //recipes_html = recipes_html + '<ul>';
-        for(var i=0; i < data.length; i++)
-        {
-          recipes_html = recipes_html 
-            + "<div class='card w-100'>" +
-                "<div class='card-block'>" + 
-                  "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
-                  "<p class='card-text'>description of recipes here</p>" + 
-                  "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
-                "</div>" + 
-              "</div><br>";          
-          console.log(recipes_html);
-          //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
-        }
-        recipes_html = recipes_html + '</p>';
-        //recipes_html = recipes_html + '</ul>';
-        $("#span_recipes").html('');
-        $("#span_recipes").html(recipes_html);        
-      });
-
       var detail_query = 'query.php?query=recipesDetail&food='+foodterm;
       $.get(detail_query,function(data){
         $('#modalCollection').html('');
         $('#modalCollection').html(data);
         console.log(data);
+        var recipes_query = 'query.php?query=recipes&food='+foodterm;
+        $.getJSON(recipes_query,function(data){
+          //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
+          var recipes_html = '<p>';
+          //recipes_html = recipes_html + '<ul>';
+          for(var i=0; i < data.length; i++)
+          {
+            recipes_html = recipes_html 
+              + "<div class='card w-100'>" +
+                  "<div class='card-block'>" + 
+                    "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+                    "<p class='card-text'>description of recipes here</p>" + 
+                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
+                  "</div>" + 
+                "</div><br>";          
+            console.log(recipes_html);
+            //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
+          }
+          recipes_html = recipes_html + '</p>';
+          //recipes_html = recipes_html + '</ul>';
+          $("#span_recipes").html('');
+          $("#span_recipes").html(recipes_html);        
+        });
+        
       });
     }
   },
