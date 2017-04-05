@@ -7,7 +7,7 @@ class AllrecipesSpider(scrapy.Spider):
 	# This is just an example of scraping brood pages with max 38 page recipes
 	base_url = []
 	base_url_pages = []
-	with open("url_list.txt") as f:
+	with open("du_url_list.txt") as f:
 		next(f)
 		for line in f: 
 			content = line.split("|")
@@ -42,6 +42,7 @@ class AllrecipesSpider(scrapy.Spider):
 		finish_time = response.css('#reviewsLink~ tr+ tr .accent::text').extract()
 		image_link = response.css('.active .xlargeImg::attr(src)').extract()
 		step_by_step = response.css('.recipeDirections li span::text').extract()
+		description = response.css('.truncateHeight span::text').extract()
 		url = response.url
 
 		ingredients_list = "|".join(ingredients)
@@ -56,6 +57,7 @@ class AllrecipesSpider(scrapy.Spider):
 			'Finish Time': finish_time,
 			'Image Link': image_link,
 			'Step by step': step_list,
-			'URL': url
+			'URL': url,
+			'Description': description
 		}
 
