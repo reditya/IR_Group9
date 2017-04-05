@@ -1,5 +1,5 @@
-var markerGroup = L.layerGroup().addTo(map);
-
+var markerGroup = L.layerGroup([]).addTo(map);
+var restaurantGroup = L.layerGroup([]).addTo(map);
 // attaching function on map click
 map.on('click', onMapClick);
 
@@ -28,7 +28,7 @@ function onMapClick(e) {
                 riseOnHover: true,
                 draggable: true,
 
-            }).bindPopup("<input type='button' value='Search nearby restaurant' class='marker-search-button'/>");
+            }).bindPopup("<input type='button' value='Search nearby restaurant' class='marker-delete-button'/>");
 
             marker.on("popupopen", onPopupOpen);
        
@@ -42,26 +42,12 @@ function onMapClick(e) {
 // Function to handle delete as well as other events on marker popup open
 function onPopupOpen() {
     var tempMarker = this;
-
     // To remove marker on click of delete
-    $(".marker-search-button:visible").click(function () {
-        getAllMarkers();
+    $(".marker-delete-button:visible").click(function () {
+        map.removeLayer(tempMarker);
     });
 }
 
-// Dummy function to test popup marker 
-function getAllMarkers() {
-    // Get coordinates where was clicked 
-    var markersGeoJsonArray = markerGroup.toGeoJSON();
-    coord = markersGeoJsonArray["features"][0]["features"][0]["geometry"]["coordinates"]
-    lon = coord[0];
-    lat = coord[1];
-    
-    // Get nearby restaurants in GeoJSON
-    $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lon + "&size=10", function(data, status) {
-        L.geoJSON(data).addTo(markerGroup);
-    });
-}
 
 // Populate restaurants data into sidebar
 function populateRestaurants(lat, lng){
@@ -74,6 +60,8 @@ function populateRestaurants(lat, lng){
             + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
         }
         $("#restaurant_cards").html('');
-        $("#restaurant_cards").html(restaurant_html); 
+        $("#restaurant_cards").html(restaurant_html);
+        L.geoJSON(data).addTo(markerGroup);
+        console.log(markerGroup)
     });
 }
