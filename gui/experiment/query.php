@@ -17,21 +17,31 @@
 		$food = $_GET['food'];
 
 		$params = [
-		    'index' => 'instagram',
 		    'type' => 'post',
 		    'body' => [
 		        'size' => '10000',
 		        'query' => [
-		        	'bool' => [
-		        		'filter' => [
-		        			'term' => ['food' => $food],
-		        		]
+		        	'match' => [
+		        		'food' => $food
 		        	]
 		        ]
 		    ]
 		];
 
+		// instagram
+		$params['index'] = 'instagram';
 		$results = $client->search($params);
+		file_put_contents('clustering/ES_instagram.json', json_encode($results));
+
+		// tweets
+		$params['index']  = 'english_tweets';
+		$params['type'] = 'tweet';
+		$results = $client->search($params);
+		file_put_contents('clustering/ES_english_tweets.json', json_encode($results));
+		exec('python clustering/food_term_cluster.py "pizza" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/tweets.geojson clustering/instagram.geojson', $output);
+
+		//print_r($output);
+
 		$ar_results = $results['hits']['hits'];
 
 		$coordinate = array();
@@ -42,22 +52,22 @@
 		}
 
 		echo json_encode($coordinate);
+
 	}
 
 	// query for recipes
 	else if($query == "recipes")
 	{
 		$food = $_GET['food'];
+
 		$params = [
 		    'index' => 'english_recipes',
 		    'type' => 'recipe',
 		    'body' => [
 		        'size' => '10',
 		        'query' => [
-		        	'bool' => [
-		        		'filter' => [
-		        			'term' => ['title' => $food],
-		        		]
+		        	'match' => [
+		        		'title' => $food
 		        	]
 		        ]
 		    ]
@@ -90,10 +100,8 @@
 		    'body' => [
 		        'size' => '10',
 		        'query' => [
-		        	'bool' => [
-		        		'filter' => [
-		        			'term' => ['title' => $food],
-		        		]
+		        	'match' => [
+		        		'title' => $food
 		        	]
 		        ]
 		    ]
@@ -113,23 +121,23 @@
 			// print_r($r);
 			// create a div class of modal
 			$output = $output . '<div class="modal fade" id="recipeModal' . $counter . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-				  <div class="modal-dialog" role="document">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <h5 class="modal-title" id="exampleModalLabel">' . $r['title'] . '</h5>
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-				          <span aria-hidden="true">&times;</span>
-				        </button>
-				      </div>
-				      <div class="modal-body">
-				      	' . $r["step_by_step"] . '
-				      </div>
-				      <div class="modal-footer">
-				        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-				      </div>
-				    </div>
-				  </div>
-				</div>';
+								  <div class="modal-dialog" role="document">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title" id="exampleModalLabel">' . $r['title'] . '</h5>
+								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true">&times;</span>
+								        </button>
+								      </div>
+								      <div class="modal-body">
+								      	' . $r["step_by_step"] . '
+								      </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								      </div>
+								    </div>
+								  </div>
+								</div>';
 			$counter++;
 		}		
 		echo $output;

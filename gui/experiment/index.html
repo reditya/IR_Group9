@@ -13,15 +13,19 @@
     <link rel="stylesheet" href="../css/custom.css" />    
     <link rel="stylesheet" href="../css/easy-autocomplete.min.css" />
     <link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css" />      
-    <link rel="stylesheet" href="../css/leaflet-sidebar.css" />       
+    <link rel="stylesheet" href="../css/leaflet-sidebar.css" />      
+    <link rel="stylesheet" href="../css/chosen.min.css" />           
     <script src="../leaflet/leaflet.js"></script> 
     <script src="../jquery-2.1.1.min.js"></script>
+    <script src="../javascript/chosen.jquery.min.js"></script>    
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
 </head>
 <body>
     <div id="floating-panel">
         <input id="countries" placeholder="Type food here"/>
+    </div>
+    <div id="select-panel">
     </div>
     <div id="feedback">
         <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
@@ -54,21 +58,12 @@
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
                 <p>
-                    <div id="restaurant_cards">
-                        <div class="card w-100">
-                          <div class="card-block">
-                            <h3 class="card-title">Card title</h3>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Button</a>
-                          </div>
-                        </div>
-                        <div class="card w-100">
-                          <div class="card-block">
-                            <h3 class="card-title">Card title</h3>
-                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                            <a href="#" class="btn btn-primary">Button</a>
-                          </div>
-                        </div>
+                    <div class="card w-100">
+                      <div class="card-block">
+                        <h3 class="card-title">Card title</h3>
+                        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                        <a href="#" class="btn btn-primary">Button</a>
+                      </div>
                     </div>
                 </p>
             </div>
