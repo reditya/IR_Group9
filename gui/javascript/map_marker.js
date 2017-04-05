@@ -66,14 +66,13 @@ function getAllMarkers() {
 // Populate restaurants data into sidebar
 function populateRestaurants(lat, lng){
     $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10", function(data, status) {
-        var restaurant_html = '<ul>';
+        var restaurant_html = '';
         for(var i=0; i < data['features'].length; i++)
         {
           restaurant_html = restaurant_html + '<div class="card-block"><h3 class="card-title">' 
             + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
-            + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a>';
+            + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div>';
         }
-        restaurant_html = restaurant_html + '</ul>';
         $("#restaurant_cards").html('');
         $("#restaurant_cards").html(restaurant_html); 
     });
