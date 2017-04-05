@@ -3,7 +3,10 @@
 <head>
     <title>A Leaflet map!</title>
     <link rel="stylesheet" href="../leaflet/leaflet.css" />
-    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/feedback.css" />
     <link rel="stylesheet" href="../css/style.css" />
@@ -50,6 +53,24 @@
                     Restaurant List
                     <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
                 </h1>
+                <p>
+                    <div id="restaurant_cards">
+                        <div class="card w-100">
+                          <div class="card-block">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-primary">Button</a>
+                          </div>
+                        </div>
+                        <div class="card w-100">
+                          <div class="card-block">
+                            <h3 class="card-title">Card title</h3>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-primary">Button</a>
+                          </div>
+                        </div>
+                    </div>
+                </p>
             </div>
 
             <div class="sidebar-pane" id="profile">
@@ -62,11 +83,12 @@
         </div>
     </div>   
     <div class="sidebar-map" id="map"></div>
+    <div id="modalCollection" style="z-index:10000000"></div>
 
-    <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
     <script src="../javascript/jquery.easy-autocomplete.min.js"></script>    
     <script src="../javascript/feedback.js"></script>
     <script src="../javascript/leaflet.customsearchbox.min.js"></script>
     <script src="../javascript/leaflet-sidebar.js"></script>
     <script src="../javascript/sidebar.js"></script> 
+    <script src="../javascript/map_marker.js"></script> 
 </body>
