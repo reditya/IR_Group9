@@ -40,13 +40,13 @@ if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset(
 
 	$results = $client->search($params);
 
-	return json_encode($results);
+	echo json_encode($results);
 	
 } else {
 	$return = [
     		'error' => 'Parameter missing.',
 	];
 
-	return json_encode($return);
+	echo json_encode($return);
 }
 ?>

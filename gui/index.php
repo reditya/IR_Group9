@@ -43,7 +43,9 @@
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
 </head>
 <body>
-    <div class="container">
+        <div id="floating-panel">
+            <input id="countries" placeholder="Type food here"/>
+        </div>
         <div id="feedback">
             <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
                 <p class="feedback"><img src="images/thumb.png" height="10%"> our app?</p>
@@ -58,8 +60,34 @@
             </div>
             <div id="feedback-tab">Feedback</div>
         </div>
+        <div id="sidebar" class="sidebar collapsed">
+            <!-- Nav tabs -->
+            <div class="sidebar-tabs">
+                <ul role="tablist">
+                    <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+                    <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
+                </ul>
+            </div>
+
+            <!-- Tab panes -->
+            <div class="sidebar-content">
+                <div class="sidebar-pane" id="home">
+                    <h1 class="sidebar-header">
+                        Restaurant List
+                        <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
+                    </h1>
+                </div>
+
+                <div class="sidebar-pane" id="profile">
+                    <h1 class="sidebar-header">Recipes List<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+                    <span id='span_recipes'>
+
+                    </span>                
+                </div>
+
+            </div>
+        </div>
         <div class="map" id="map"></div>
-    </div>
 
     <script src="javascript/add_data_2.js"></script>
     <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>

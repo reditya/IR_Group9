@@ -1,20 +1,20 @@
 var popup = L.popup();
 
 function onMapClick(e) {
-  popup
-      .setLatLng(e.latlng)
-      .setContent(fetchData())
-      .openOn(map);
+	var latlng = e.latlng;
+
+	popup
+	.setLatLng(e.latlng)
+	.setContent(fetchData(latlng.lat, latlng.lng))
+	.openOn(map);
 }
 
-function fetchData(){
-	var query = 'http://176.34.152.42/gui/getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5';
-	$.getJSON(query,function(data){
-		alert("A");
-		return "Success";
-	});
-
-	return "Fail";
+function fetchData(lat, lng){
+	var query = 'getDetails.php?range=10km&lat=' + lat + '&lon=' + lng + '&size=5';
+	$.getJSON(query, function(data) {
+	})
+	.success(function() { return("success"); })
+	.error(function() { return("error"); });
 }
 
 map.on('click', onMapClick);
