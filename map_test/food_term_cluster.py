@@ -713,7 +713,7 @@ new_coor, new_weight = remove_duplication_coor(new_coor,new_weight)
 new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, new_weight)
 
 
-unique_food(new_coor, new_weight, new_ref_list, term)
+unique_food(list_centroid, new_weight, new_ref_list, term)
 
 
 
