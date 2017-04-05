@@ -8,7 +8,7 @@ function onMapClick(e) {
 }
 
 function fetchData(){
-	var query = 'getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5';
+	var query = 'http://176.34.152.42/gui/getDetails.php?range=1km&lat=52.379189&lon=4.899431&size=5';
 	$.getJSON(query,function(data){
 		alert("A");
 		return "Success";
