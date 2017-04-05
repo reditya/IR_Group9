@@ -48,10 +48,14 @@ function onPopupOpen() {
 }
 // Dummy function to test popup marker 
 function getAllMarkers() {
+    // Get coordinates where was clicked 
     var markersGeoJsonArray = markerGroup.toGeoJSON();
     coord = markersGeoJsonArray["features"][0]["features"][0]["geometry"]["coordinates"]
     lon = coord[0];
     lat = coord[1];
-    console.log(coord);
-    alert("coordinate : " + coord + "\nlon : " + lon + "\nlat :" + lat);
+    
+    // Get nearby restaurants in GeoJSON
+    $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lon + "&size=10", function(data, status) {
+        L.geoJSON(data).addTo(markerGroup);
+    });
 }
