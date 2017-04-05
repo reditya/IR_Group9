@@ -5,7 +5,7 @@ map.on('click', onMapClick);
 
 // Script for adding marker on map click
 function onMapClick(e) {
-		markerGroup.clearLayers();
+    markerGroup.clearLayers();
     var geojsonFeature = {
         "type": "Feature",
             "properties": {},
@@ -35,6 +35,8 @@ function onMapClick(e) {
             return marker;
         }
     }).addTo(markerGroup);
+
+    populateRestaurants(e.latlng.lat, e.latlng.lng);
 }
 
 // Function to handle delete as well as other events on marker popup open
@@ -46,6 +48,7 @@ function onPopupOpen() {
         getAllMarkers();
     });
 }
+
 // Dummy function to test popup marker 
 function getAllMarkers() {
     // Get coordinates where was clicked 
@@ -57,5 +60,19 @@ function getAllMarkers() {
     // Get nearby restaurants in GeoJSON
     $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lon + "&size=10", function(data, status) {
         L.geoJSON(data).addTo(markerGroup);
+    });
+}
+
+// Populate restaurants data into sidebar
+function populateRestaurants(lat, lng){
+    $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lon + "&size=10", function(data, status) {
+        var restaurant_html = '<ul>';
+        for(var i=0; i < data['features'].length; i++)
+        {
+          restaurant_html = restaurant_html + '<li>' + data['features'][i]['properties']['name'] + '</li>';
+        }
+        restaurant_html = restaurant_html + '</ul>';
+        $("#span_restaurants").html('');
+        $("#span_restaurants").html(restaurant_html); 
     });
 }
