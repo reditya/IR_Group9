@@ -74,21 +74,12 @@ function onPopupOpen() {
 }
 // Dummy function to test popup marker 
 function getAllMarkers() {
-    
-    var allMarkersObjArray = [];//new Array();
-    var allMarkersGeoJsonArray = [];//new Array();
-
-    $.each(map._layers, function (ml) {
-        //console.log(map._layers)
-        if (map._layers[ml].feature) {
-            
-            allMarkersObjArray.push(this)
-                                    allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
-        }
-    })
-
-    console.log(allMarkersObjArray);
-    alert("total Markers : " + allMarkersGeoJsonArray.length + "\n\n" + allMarkersGeoJsonArray + "\n\n Also see your console for object view of this array" );
+    var markersGeoJsonArray = markerGroup.toGeoJSON();
+    coord = markersGeoJsonArray["features"][0]["features"][0]["geometry"]["coordinates"]
+    lon = coord[0];
+    lat = coord[1];
+    console.log(coord);
+    alert("coordinate : " + coord + "\nlon : " + lon + "\nlat :" + lat);
 }
 
 
