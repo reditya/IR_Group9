@@ -588,11 +588,16 @@ def grid_creation(coor, weight):
 
 
 def unique_food(coor, weight, ref_list, term):
-    idx = ref_list.index(term)
+    idx_f = ref_list.index(term)
     coor_list = []
+    int_list = []
+    nb_p = 0
     for i in range(weight.shape[0]):
-        if weight[i][idx] > 0:
+        if weight[i][idx_f] > 0:
             coor_list.append(coor[i])
+            int_list.append(weight[i][idx_f])
+            if nb_p < weight[i][idx_f]:
+                nb_p = weight[i][idx_f]
     # DBSCAN use
     db = DBSCAN(eps=0.003, min_samples=2).fit(coor_list)        
     labels = db.labels_
@@ -619,7 +624,6 @@ def unique_food(coor, weight, ref_list, term):
     polygon_list = []
     idx = 0
     food_list = [term]
-
     for feat in coor_list:
         if labels[idx] >= 0:
             feature_list.append({
@@ -630,7 +634,8 @@ def unique_food(coor, weight, ref_list, term):
                     },
                 "properties" : {
                         "category": food_list,
-                        "cluster": labels[idx]
+                        "cluster": labels[idx],
+                        "intensity":int_list[idx]/nb_p*10
                     }
              })
         idx = idx + 1
@@ -705,7 +710,7 @@ nb_data_2, nb_type_2, ref_list_2, coor_2, weight_2 = pre_info_insta(in_file2)
 new_coor, new_weight, new_ref_list, new_nb_data = merge_datasets(ref_list_1,ref_list_2, nb_data_1,nb_data_2,nb_type_1, nb_type_2, coor_1, coor_2, weight_1, weight_2)
 
 new_coor, new_weight = remove_duplication_coor(new_coor,new_weight)
-
+new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, new_weight)
 
 
 unique_food(new_coor, new_weight, new_ref_list, term)

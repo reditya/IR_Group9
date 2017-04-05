@@ -17,7 +17,7 @@
   };
 
   
-
+  var data_list = []
 
   function add_base_map(){
     L.tileLayer('http://stamen-tiles-{s}.a.ssl.fastly.net/toner/{z}/{x}/{y}.{ext}', {
@@ -66,7 +66,8 @@
   function map_points_insta(data){
     // Points
       L.geoJson(data, {
-      pointToLayer: function (feature, latlng) {   
+      pointToLayer: function (feature, latlng) { 
+      data_list.push([latlng.lat, latlng.lng,feature.properties.intensity])  
         if (feature.properties.category.length != 0){
           geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
           return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -75,6 +76,7 @@
       },
           onEachFeature: onEachFeature_insta 
     }).addTo(map);
+      console.log(data_list)
   }
 
 
@@ -114,7 +116,8 @@
     L.geoJson(data, {
       filter: function (feature, layer) {  
         //console.log(feature.geometry.coordinates[0][0][0])
-        cluster_list[Math.floor(feature.properties.cluster)-1].push([feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][1][1]],[feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][1][1]]);
+        console.log(Math.floor(feature.properties.cluster))
+        cluster_list[Math.floor(feature.properties.cluster)].push([feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][1][1]],[feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][1][1]]);
       }
     })
   
@@ -181,8 +184,39 @@
     
   }
   
+
+  function show_heatmap(data){
+    /*
+    L.geoJson(data, {
+      pointToLayer: function (feature, latlng) {   
+        if (feature.properties.category.length != 0){
+          geojsonMarkerOptions.fillColor = color_clust[Math.floor(feature.properties.cluster)];
+          return L.circleMarker(latlng, geojsonMarkerOptions);
+        }
+        
+      },
+          onEachFeature: onEachFeature_insta 
+    }).addTo(map);
+  */
+    var heat = L.heatLayer(data_list, {radius: 30, maxZoom: 15}).addTo(map);
+  }
+
+
+
+  // For one specific food term
+  $.getJSON("new_mix_data.geojson",function(data){
+    add_base_map();
+    prepare_cluster_color(data);
+    map_points_insta(data);
+    show_heatmap(data)
+
+    //show_cluster(data);          
+
+  })
+
   // Instagram data    
   
+  /*
   $.getJSON("new_mix_data.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
@@ -190,15 +224,16 @@
 
   })
   $.getJSON("new_poly_data.geojson",function(data){
-    show_cluster(data);  
+    //show_cluster(data);  
     //     show_cluster(data);          
         
   })
 
     $.getJSON("new_mix_data.geojson",function(data){
           map_points_insta(data);
+
 })
-  
+  */
   // Foursquare data
   /*
   $.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
