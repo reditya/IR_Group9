@@ -4,18 +4,20 @@
     <title>A Leaflet map!</title>
     <link rel="stylesheet" href="../leaflet/leaflet.css" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
-    <script src="http://code.jquery.com/jquery-1.12.3.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>    
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../css/feedback.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/custom.css" />    
+    <link rel="stylesheet" href="../css/slider.css" />    
     <link rel="stylesheet" href="../css/easy-autocomplete.min.css" />
     <link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css" />      
     <link rel="stylesheet" href="../css/leaflet-sidebar.css" />       
-    <script src="../leaflet/leaflet.js"></script> 
-    <script src="../jquery-2.1.1.min.js"></script>
+    <script src="../leaflet/leaflet.js"></script>
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
 </head>
@@ -36,7 +38,7 @@
             </form>
         </div>
         <div id="feedback-tab">Feedback</div>
-    </div>        
+    </div>  
     <div id="sidebar" class="sidebar collapsed">
         <!-- Nav tabs -->
         <div class="sidebar-tabs">
@@ -81,7 +83,17 @@
             </div>
 
         </div>
-    </div>   
+    </div>
+    <div id="slider">
+        <div id="slider-form">
+            <div id="time-range">
+                <p>Time Range: <span class="slider-time">10:00 AM</span> - <span class="slider-time2">12:00 PM</span></p>
+                <div class="sliders_step1">
+                    <div id="slider-range"></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="sidebar-map" id="map"></div>
     <div id="modalCollection" style="z-index:10000000"></div>
 
@@ -90,5 +102,6 @@
     <script src="../javascript/leaflet.customsearchbox.min.js"></script>
     <script src="../javascript/leaflet-sidebar.js"></script>
     <script src="../javascript/sidebar.js"></script> 
+    <script src="../javascript/slider.js"></script> 
     <script src="../javascript/map_marker.js"></script> 
 </body>

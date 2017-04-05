@@ -33,7 +33,7 @@ var options = {
     match: {
       enabled: true
     },
-    onKeyEnterEvent : function() {
+    onChooseEvent : function() {
 
       for(i=0; i<pointMarker.length; i++)
       {
