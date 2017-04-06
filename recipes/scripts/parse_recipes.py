@@ -1,11 +1,17 @@
+from __future__ import division
 import requests
 import csv
 import re
 import json
+import sys
 
 non_decimal = re.compile(r'[^\d.]+')
 
-with open('../data/du_recipes.csv', 'rb') as du_recipes_file:
+input = sys.argv[1]
+
+# order Step by step,Rating,Image Link,Count Rating,Description,Title,URL,Ingredients,Preparation Time,Finish Time
+
+with open(input, 'rb') as du_recipes_file:
 	du_recipes_reader = csv.reader(du_recipes_file, delimiter=',', quotechar='"')
 	header = du_recipes_reader.next()
 	for recipe in du_recipes_reader:
@@ -22,7 +28,7 @@ with open('../data/du_recipes.csv', 'rb') as du_recipes_file:
 			# process the rating
 			if header[i] == 'rating':
 				rat = re.findall(r"([0-9][0-9]*)", recipe[i])
-				if(rat[0]>10):
+				if(int(rat[0])>10):
 					rat[0] = int(rat[0])/10
 				recipe[i] = str(rat[0])
 			if header[i] == 'count_rating':
