@@ -1,17 +1,24 @@
 var markerGroup = L.layerGroup().addTo(map);
 var restaurantGroup = L.layerGroup().addTo(map);
-var LeafIcon = L.Icon.extend({
-    options: {
-        shadowUrl: 'leaf-shadow.png',
-        iconSize:     [38, 95],
-        shadowSize:   [50, 64],
-        iconAnchor:   [22, 94],
-        shadowAnchor: [4, 62],
-        popupAnchor:  [-3, -76]
-    }
+var icon1 = L.icon({
+    iconUrl: 'http://www.freeiconspng.com/uploads/pink-restaurants-icon-19.png',
+    iconSize:     [40,50], // size of the icon
+    iconAnchor:   [20,45], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0,-10] // point from which the popup should open relative to the iconAnchor
 });
-var smallIcon = new LeafIcon({
-    iconUrl: 'http://www.freeiconspng.com/uploads/map-navigation-pin-point-restaurant-icon--14.png'
+
+var icon2 = L.icon({
+    iconUrl: 'https://cdn4.iconfinder.com/data/icons/home3/102/Untitled-12-512.png',
+    iconSize:     [40,50], // size of the icon
+    iconAnchor:   [20,45], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0,-10] // point from which the popup should open relative to the iconAnchor
+});
+
+var icon3 = L.icon({
+    iconUrl: 'https://cdn4.iconfinder.com/data/icons/location-vol-4/128/location-03-512.png',
+    iconSize:     [40,50], // size of the icon
+    iconAnchor:   [20,45], // point of the icon which will correspond to marker's location
+    popupAnchor:  [0,-10] // point from which the popup should open relative to the iconAnchor
 });
 
 
@@ -32,25 +39,18 @@ function onMapClick(e) {
 
     var marker;
 
-    L.geoJson(geojsonFeature, {
-        
+    L.geoJson(geojsonFeature, { 
         pointToLayer: function(feature, latlng){
-            
             marker = L.marker(e.latlng, {
-                
                 title: "Resource Location",
                 alt: "Resource Location",
                 riseOnHover: true,
                 draggable: true,
-
-            }).bindPopup("<input type='button' value='Search nearby restaurant' class='marker-search-button'/>");
-
+            }).bindPopup("Your Selected Location");
             marker.on("popupopen", onPopupOpen);
-       
             return marker;
         }
     }).addTo(markerGroup);
-
     populateRestaurants(e.latlng.lat, e.latlng.lng);
 }
 
@@ -59,53 +59,39 @@ function onPopupOpen() {
     var tempMarker = this;
 
     // To remove marker on click of delete
-    $(".marker-search-button:visible").click(function () {
-        getAllMarkers();
-    });
+    //$(".marker-delete-button:visible").click(function () {
+        //getAllMarkers();
+    //});
 }
 
-// Dummy function to test popup marker 
-function getAllMarkers() {
-    // Get coordinates where was clicked 
-    var markersGeoJsonArray = markerGroup.toGeoJSON();
-    coord = markersGeoJsonArray["features"][0]["features"][0]["geometry"]["coordinates"]
-    lon = coord[0];
-    lat = coord[1];
-    
-    // Get nearby restaurants in GeoJSON
-    $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lon + "&size=10", function(data, status) {
-        L.geoJSON(data).addTo(markerGroup);
-    });
+function onEachFeature(feature, layer) {
+    // does this feature have a property named popupContent?
+    if (feature.properties && feature.properties.name) {
+        layer.bindPopup(feature.properties.name);
+    }
 }
 
 // Populate restaurants data into sidebar
 function populateRestaurants(lat, lng){
     restaurantGroup.clearLayers();
-    var restaurantArray = [];
     $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10", function(data, status) {
         var restaurant_html = '';
         for(var i=0; i < data['features'].length; i++)
         {
-            restaurant_html = restaurant_html + '<div class="card w-100"><div class="card-block"><h3 class="card-title">' 
-                + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
-                + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
-            coord = data['features'][i]['geometry']['coordinates'];
-            console.log(coord);
-            restaurantMarker = L.marker(coord, {
-                title: "Resource Location",
-                alt: "Resource Location",
-                riseOnHover: true,
-                draggable: true,
-            }).bindPopup(data['features'][i]['properties']['name']);
-            restaurantMarker.on('mouseover', function (e) {
-                L.popup().openOn(map);
-            });
-            restaurantArray.push(restaurantMarker);
-            markerGroup.addLayer(restaurantMarker).addTo(map);
+            restaurant_html = restaurant_html + '<div class="card w-100"><div class="card-block"><h3 class="card-title">'
+            + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
+            + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
+
+            L.geoJson(data, {
+                pointToLayer: function(feature, latlng) {
+                    return L.marker(latlng, {
+                        icon: icon1
+                    });
+                },
+                onEachFeature: onEachFeature
+            }).addTo(restaurantGroup);
         }
         $("#restaurant_cards").html('');
         $("#restaurant_cards").html(restaurant_html);
-
-        L.geoJSON(data).addTo(restaurantGroup);
     });
 }
