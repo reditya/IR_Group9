@@ -3,7 +3,8 @@
 		"recipe" : {
 			"properties" : {
 				"step_by_step" : { "type" : "string", "analyzer" : "dutch"},
-				"rating" : { "type" : "string"},
+				"rating" : { "type" : "float"},
+				"description" : { "type" : "string", "analyzer" : "dutch"},
 				"image_link" : { "type" : "string", "analyzer" : "keyword"},
 				"count_rating" : { "type" : "integer" },
 				"title" : { "type" : "string", "analyzer" : "dutch"},
