@@ -87,8 +87,8 @@ function populateRestaurants(lat, lng){
         for(var i=0; i < data['features'].length; i++)
         {
             restaurant_html = restaurant_html + '<div class="card w-100"><div class="card-block"><h3 class="card-title">' 
-            + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
-            + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
+                + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
+                + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
             coord = data['features'][i]['geometry']['coordinates'];
             console.log(coord);
             restaurantMarker = L.marker(coord, {
@@ -106,6 +106,6 @@ function populateRestaurants(lat, lng){
         $("#restaurant_cards").html('');
         $("#restaurant_cards").html(restaurant_html);
 
-        //L.geoJSON(data).addTo(restaurantGroup);
+        L.geoJSON(data).addTo(restaurantGroup);
     });
 }

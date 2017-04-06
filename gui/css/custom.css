@@ -6,21 +6,21 @@
   height: 60px;
   margin-left: 70px;
   margin-bottom: 13px;
-  z-index: 2000;
+  z-index: 500;
 }
 
 #slider-form {
   float: left;
   width: 250px;
   height: 100%;
-  z-index: 2000;
+  z-index: 500;
   padding-left: 5px;
   padding-right: 5px;
   background-clip: 'padding-box';
   border: 1px solid rgba(0,0,0,.2);
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
-  border-radius: 0px;
+  border-radius: 4px;
   -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
   box-shadow: 0 5px 10px rgba(0,0,0,.2);
