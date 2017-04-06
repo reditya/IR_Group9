@@ -13,8 +13,10 @@ import csv
 import sklearn.decomposition as sc
 from sklearn.feature_selection import SelectKBest
 from sklearn.cluster import DBSCAN
+import matplotlib.pyplot as plt
 
-script, in_file1, in_file2, out_file, out_file_2 = argv
+
+script, in_file1, in_file2, out_file, out_file_2 , cat_file = argv
 
 
 #def tweets_to_geo(in_file1,in_file2, out_file):
@@ -119,7 +121,7 @@ def merge_datasets(ref_list1,ref_list2, nb_data1,nb_data2,nb_type_1, nb_type_2, 
     return new_coor, new_weight, new_ref_list, new_nb_data            
 
 
-def remove_duplication_coor(coor, weight):
+def remove_duplication_coor(coor, weight,ref_list,file_n = ''):
     l = coor.tolist()
     
     # We will have to delete the repeated rows and add weights according to that.
@@ -147,6 +149,34 @@ def remove_duplication_coor(coor, weight):
     #unique = [x for i, x in enumerate(l) if not i or x != b[l-1]]
     #a_unique = np.asarray(unique) 
     #print a_unique
+
+
+    """
+    # Plot frequency of terms
+    freq = np.sum(new_weight,axis=0)
+    e = sorted((e,i) for i,e in enumerate(freq))
+    
+    labels = []
+    values = []
+    label_name = []    
+    term_freq = []
+    for i in e:
+        labels.append(i[1])
+        values.append(i[0])
+        label_name.append(ref_list[i[1]])
+        term_freq.append([ref_list[i[1]],i[0]])
+    width = 0.2
+    plt.bar(labels, values,width)
+    plt.show()
+    f = open(file_n,'w')
+    l_t = list(reversed(term_freq))
+    for i in l_t:
+        f.write(i[0])
+        f.write('  ')
+        f.write(str(i[1]))
+        f.write("\n")
+    f.close    
+    """
     return new_coor, new_weight
 
 def func(z,i,j):
@@ -347,9 +377,10 @@ def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, o
     json.dump(geojson_2, output_2)
 
 
-def cluster_with_several_max(new_coor, new_weight, ref_list, nb_data):
+def cluster_with_several_max(new_coor, new_weight, ref_list, nb_data,bool_file):
     # give ew eights and new ref list for pysal maxp
     # Just retrieve the most frequent element of each area
+
 
     print "cluster with several max"
     new_ref_list = []
@@ -370,7 +401,6 @@ def cluster_with_several_max(new_coor, new_weight, ref_list, nb_data):
                 v = new_weight[i][j]       
                 weight[i][(idx_list.index(j))] = v
 
-
     return new_ref_list, weight
         
 def multi_delete(list_, args):
@@ -382,8 +412,6 @@ def multi_delete(list_, args):
 def PCA_use(new_weight, new_ref_list):
     print "Feature selection"
     #freq = np.zeros(shape=(1,new_weight.shape[1]))
-    print new_weight.shape
-    print len(new_ref_list)
     freq = np.sum(new_weight,axis=0)
    
     column_idx = []
@@ -393,6 +421,8 @@ def PCA_use(new_weight, new_ref_list):
             column_idx.append(i)
     weight = np.delete(new_weight,np.s_[column_idx],axis=1)
     ref_list = multi_delete(new_ref_list,column_idx)
+    print weight.shape
+
     return weight, ref_list    
     """
     X = new_weight
@@ -423,6 +453,8 @@ def cluster_with_max(new_coor, new_weight, ref_list, nb_data, list_coor, out_fil
     for i in new_weight:
         if i[np.argmax(i)] != 0:
             id_clust_p.append(str(np.argmax(i)))
+        else:
+            id_clust_p.append(str(-1))
 
     ### Create geoson file for the map
     nb_cluster = len(set(id_clust_p))
@@ -448,7 +480,7 @@ def cluster_with_max(new_coor, new_weight, ref_list, nb_data, list_coor, out_fil
     for feat in new_coor:
         food_list = []
         #for f in range(new_weight.shape[0]):
-        if int(id_clust_p[idx]) != 0:
+        if int(id_clust_p[idx]) > 0:
             food_list.append(ref_list[int(id_clust_p[idx])])
         elif int(id_clust_p[idx]) == 0 and new_weight[idx][0] != 0:
             food_list.append(ref_list[int(id_clust_p[idx])])
@@ -525,8 +557,7 @@ def grid_creation(coor, weight):
     #OffsetPosition, decimal degrees
     lat_add = 0.001 #dLat * 180/math.pi
     lon_add = dLon * 180/math.pi 
-    print lat_add
-    print lon_add
+
     i = lon
     j = lat
     nb_data = 0
@@ -549,7 +580,6 @@ def grid_creation(coor, weight):
         nb_i = nb_i + 1
     print len(list_coor)
     list_centroid = np.delete(list_centroid, (0), axis=0)
-    print nb_i, nb_j
 
     print list_centroid.shape
     print "preparation of weights"
@@ -588,11 +618,16 @@ def grid_creation(coor, weight):
 
 
 def unique_food(coor, weight, ref_list, term):
-    idx = ref_list.index(term)
+    idx_f = ref_list.index(term)
     coor_list = []
+    int_list = []
+    nb_p = 0
     for i in range(weight.shape[0]):
-        if weight[i][idx] > 0:
+        if weight[i][idx_f] > 0:
             coor_list.append(coor[i])
+            int_list.append(weight[i][idx_f])
+            if nb_p < weight[i][idx_f]:
+                nb_p = weight[i][idx_f]
     # DBSCAN use
     db = DBSCAN(eps=0.003, min_samples=2).fit(coor_list)        
     labels = db.labels_
@@ -619,7 +654,6 @@ def unique_food(coor, weight, ref_list, term):
     polygon_list = []
     idx = 0
     food_list = [term]
-
     for feat in coor_list:
         if labels[idx] >= 0:
             feature_list.append({
@@ -630,7 +664,8 @@ def unique_food(coor, weight, ref_list, term):
                     },
                 "properties" : {
                         "category": food_list,
-                        "cluster": labels[idx]
+                        "cluster": labels[idx],
+                        "intensity":int_list[idx]/nb_p*10
                     }
              })
         idx = idx + 1
@@ -665,30 +700,141 @@ def unique_food(coor, weight, ref_list, term):
     
 
 
+def remove_outliers(coor, weight, ref_list):
+    removed = 0
+    for term in ref_list:
+        idx_f = ref_list.index(term)
+        coor_list = []
+        for i in range(weight.shape[0]):
+            if weight[i][idx_f] > 0:
+                coor_list.append(coor[i])
+        #print "term: ", term, "idx: ", idx_f, " nb points: ", len(coor_list)  
+        if len(coor_list) > 0:      
+            # DBSCAN use
+            db = DBSCAN(eps=0.003, min_samples=3).fit(coor_list)        
+            labels = db.labels_
+            unique_labels = set(labels)
+            n_clusters_ = len(set(labels)) - (1 if -1 in labels else 0)
+
+            #print('Estimated number of clusters: %d' % n_clusters_)
+
+            list_list = []
+            for k in range(len(unique_labels)):
+                list_list.append([])
+            idx = -1    
+            for k in labels:
+                idx = idx + 1
+                if k >= 0:
+                    list_list[k].append([coor[idx][0], coor[idx][1]])
+                if k < 0:
+                    removed = removed + 1
+                    weight[idx][idx_f] = 0
+    print "removed " , removed                
+    return weight            
+
+
+def add_category(weight, ref_list, cat_file):
+    food_cat = []
+    with open(cat_file,'r') as f:
+        next(f)
+        for line in f:
+            currentline = line.split(",")
+            food_cat.append([currentline[0],currentline[1].rstrip('\n')])
+
+
+    cat_list = []
+    # List of different categories
+    for i in food_cat:
+        if i[1] not in cat_list:
+            cat_list.append(i[1])
+
+    # Array of weights for the categories        
+    weight_category = np.zeros(shape=(weight.shape[0],len(cat_list)))
+    idx_coor = 0
+    for i in weight:
+        idx_food = 0
+        for j in i:
+            if j>0:
+                food = ref_list[idx_food]
+                for sublist in food_cat:
+                    if sublist[0] == food:
+                        cat = sublist[1]
+                        weight_category[idx_coor][cat_list.index(cat)] += 1
+                        break
+            idx_food += 1            
+        idx_coor += 1  
+
+    return cat_list , weight_category, food_cat      
+
+
+def select_category(cat_term, corres_list, ref_list ,point_weight):
+    list_idx = []
+    new_ref_list = []
+    for i in corres_list:
+        if i[0] == cat_term:
+            idx_t = ref_list.index(i[1])
+            list_idx.append(idx_t)
+            new_ref_list.append(i[1])
+    # Eliminate all terms which are not in the category.
+    new_weight = np.zeros(shape=(point_weight.shape[0], len(new_ref_list)))
+    idx_coor = 0
+    for i in point_weight:
+        idx_t = 0
+        for j in list_idx:
+            new_weight[idx_coor][idx_t] = point_weight[idx_coor][j]
+            idx_t += 1
+        idx_coor += 1
+        
+    return new_ref_list, new_weight        
+
 nb_data_1, nb_type_1, ref_list_1, coor_1, weight_1 = pre_info_tweets(in_file1)
 nb_data_2, nb_type_2, ref_list_2, coor_2, weight_2 = pre_info_insta(in_file2)
 
 new_coor, new_weight, new_ref_list, new_nb_data = merge_datasets(ref_list_1,ref_list_2, nb_data_1,nb_data_2,nb_type_1, nb_type_2, coor_1, coor_2, weight_1, weight_2)
 
-new_coor, new_weight = remove_duplication_coor(new_coor,new_weight)
-print new_coor.shape, new_weight.shape
+new_coor, new_weight = remove_duplication_coor(new_coor,new_weight,new_ref_list)
 new_nb_data = new_coor.shape[0]
 
-#new_weight, new_ref_list = PCA_use(new_weight, new_ref_list)
-#new_ref_list, new_weight = cluster_with_several_max(new_coor, new_weight, new_ref_list, new_nb_data)
+# Categories
 
+cat_list, weight_category, corres_list = add_category(new_weight,new_ref_list,cat_file)
+
+## Cluster by categories:
+
+
+# 2 to test
+new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, weight_category)
+new_weight = remove_outliers(list_centroid, new_weight, cat_list)
+return_cluster_pysal(list_centroid,new_weight, cat_list, new_nb_data,list_coor, out_file, out_file_2)
+#cluster_with_clusterpy(list_centroid,new_weight, cat_list, new_nb_data,list_coor, out_file, out_file_2)
+
+
+## Cluster inside category:
+"""
+new_ref_list, new_weight = select_category(cat_term, corres_list, ref_list ,point_weight)
 new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, new_weight)
 
-#cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
+return_cluster_pysal(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
+cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
+"""
+#new_weight, new_ref_list = PCA_use(new_weight, new_ref_list)
 
+#new_weight = remove_outliers(list_centroid, new_weight, new_ref_list)
 
+# 1
+#new_ref_list, new_weight = cluster_with_several_max(list_centroid, new_weight, new_ref_list, new_nb_data,True)
+
+# 2
+#new_weight = remove_outliers(list_centroid, new_weight, new_ref_list)
 
 #return_cluster_pysal(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
+
+# 3
 #cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
 #cluster_with_max(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
-unique_food(list_centroid, new_weight, new_ref_list, 'coffee')
+#unique_food(list_centroid, new_weight, new_ref_list, 'coffee')
 
 
 
