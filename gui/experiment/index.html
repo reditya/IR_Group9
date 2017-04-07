@@ -17,16 +17,26 @@
     <link rel="stylesheet" href="../css/easy-autocomplete.min.css" />
     <link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css" />
     <link rel="stylesheet" href="../css/leaflet-sidebar.css" />       
+  <script src="../javascript/chosen.jquery.min.js"></script> 
+  <link rel="stylesheet" href="../css/chosen.min.css">
+
     <script src="../leaflet/leaflet.js"></script>
+    <script src="../javascript/leaflet-heat.js"></script>
+
     <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
     <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
 </head>
 <body>
-    <div id="floating-panel">
-        <input id="countries" placeholder="Type food here"/>
+    <div id="select-panel" class="card" style="width: 30rem;">
+      <div class="card-block">
+        <h4 class="card-title">Search Food!</h4>
+        <p class="card-text">Type one up to five food term here to see layered heatmap of food preferences across Amsterdam</p>
+        <div id="select-panel-form"></div>
+        <br>
+        <button type="button" class="btn btn-primary btn-sm" id="buttonSearch">Search</button>
+      </div>
     </div>
-    <div id="select-panel">
-    </div>
+    
     <div id="feedback">
         <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
             <p class="feedback"><img src="../images/thumb.png" height="10%"> our app?</p>
