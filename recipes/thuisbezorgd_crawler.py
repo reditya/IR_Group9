@@ -59,6 +59,7 @@ class ThuisbezorgdSpider(scrapy.Spider):
 			'address': address,
 			'restaurant_type': restaurant_type,
 			'categoryTitle': categoryTitle,
+			'productTitle': productTitle,
 			'descTitle': descTitle
 		}
 

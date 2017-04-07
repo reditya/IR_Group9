@@ -1,9 +1,7 @@
 cheese
 vegetarian
-sauce
 beef
 meat
-cream
 avocado
 fish
 wine
@@ -22,19 +20,14 @@ banana
 potato
 vegetables
 fruit
-water
 coconut
-butter
 bitterballen
 tomato
-onion
 chips
 lemon
-nuts
 mushrooms
 beans
 honey
-sugar
 spinach
 tuna
 lobster
@@ -43,7 +36,6 @@ ginger
 potatoes
 sausage
 pumpkin
-garlic
 goat
 latte
 herring
@@ -51,36 +43,29 @@ frites
 yoghurt
 syrup
 duck
-mayonnaise
 noodles
 cucumber
 lamb
 mango
-mustard
 spareribs
 strawberry
 carrot
 beetroot
-mint
-pepper
 quinoa
 berry
 champagne
 crab
 ham
 lime
-oil
 oyster
 sesame
 cinnamon
-pesto
 shrimp
 cocktail
 cauliflower
 mozzarella
 sashimi
 tartare
-vanilla
 cherry
 dim sum
 veal
@@ -90,16 +75,12 @@ carpaccio
 chorizo
 gin
 olives
-almond
 aubergine
 croquette
 lettuce
-jam
 pear
-pine nuts
 raspberry
 bean
-hazelnut
 milk
 miso
 mussels
@@ -122,8 +103,6 @@ cabbage
 chilli
 churros
 kimchi
-peanut
-pistachio
 sprouts
 sweet potato
 tofu
@@ -140,7 +119,6 @@ kiwi
 smoothies
 tempeh
 fig
-ketchup
 parfait
 peas
 pineapple
@@ -228,7 +206,6 @@ jaffas
 red bull
 candy
 salad
-custard
 trifle
 caramel
 tamale
@@ -250,7 +227,6 @@ aquafina
 jolt cola
 sandwich
 pita
-peeps
 marshmallow
 cognac
 blt
@@ -314,7 +290,6 @@ hot dog
 margarine
 oatmeal
 ginger ale
-chutney
 wyborowa
 absolut vodka
 waldorf salad
@@ -334,7 +309,6 @@ graham cracker
 black pudding
 borscht
 akashiyaki
-bubblegum
 bratwurst
 galliano 
 chocolate-coated marshmallow treats
@@ -355,7 +329,6 @@ schaefer beer
 finlandia 
 sliced bread
 yoo-hoo
-sambal
 triple sec
 coca wine
 tango 
@@ -372,9 +345,7 @@ potato pancake
 frappuccino
 croquembouche
 chewing gum
-tahini
 gumbo
-peanut butter
 fajita
 chicken fried steak
 sukiyaki
@@ -598,7 +569,6 @@ feijoada
 pho
 lavash
 fruit cake
-butterscotch
 buccellato
 avgolemono
 tart
@@ -640,7 +610,6 @@ nata de coco
 consomm%c3%a9
 clam chowder
 gingerbread
-sprinkles
 red bean cake
 gianduiotto
 red curry
@@ -688,7 +657,6 @@ koeksister
 lapin kulta
 p%c3%a2t%c3%a9
 josta
-balsamic vinegar
 churrasco
 rice pudding
 snow cone
@@ -1031,7 +999,6 @@ solo
 chermoula
 gado-gado
 bigilla
-apple butter
 sealed crustless sandwich
 penta water
 coyotas
@@ -1042,7 +1009,6 @@ chip butty
 stroopwafel
 pease pudding
 rivella
-bonbon
 pot pie
 sugar cookie
 crown royal
@@ -1373,7 +1339,6 @@ potato scone
 tteokguk
 strela candy
 kiev cake
-nut butter
 flatbread
 lucky lager
 kaju barfi
@@ -1711,7 +1676,6 @@ evoca cola
 bubba cola
 peaches and cream
 salmagundi
-buttercream
 cream stew
 mississippi mud pie
 teem
@@ -1854,7 +1818,6 @@ chorley cake
 bavarian cream
 bhajji
 kachori
-whipped cream
 chinsuko
 b%c3%a1nh ch%c6%b0ng
 b%c3%ban b%c3%b2 hu%e1%ba%bf
@@ -2148,7 +2111,6 @@ vienna bread
 ice pop
 polmos %c5%81a%c5%84cut
 polonaise 
-pistou
 botamochi
 nos 
 lakhamari
@@ -2179,7 +2141,6 @@ sata andagi
 coca-cola with lemon
 qottab
 mint chocolate
-melona
 saltah
 hirayachi
 figgy duff 
@@ -2320,7 +2281,6 @@ kuih kochi
 aachener printen
 jibarito
 partan bree
-hazelnut butter
 mendiant
 filh%c3%b3s
 motsunabe
@@ -2640,7 +2600,6 @@ cottage pudding
 funkaso
 cintron energy enhancer
 jau gok
-vinaigrette
 corzetti
 chikkolee
 piadina
@@ -2737,7 +2696,6 @@ sowans
 yumilgwa
 croxetti
 pastina
-chili oil
 lukhmi
 namak para
 coconut bar
@@ -2764,7 +2722,6 @@ flourless chocolate cake
 cocol
 rosca de reyes
 crisp 
-happy faces
 pan de pascua
 porotos con rienda
 pastel de choclo
@@ -3859,7 +3816,6 @@ sambali
 lofenalac
 chakodi
 harcos laboratories
-ginger dressing
 caldillo de congrio
 hedgehog slice
 jelly slice
@@ -4239,3 +4195,32 @@ crab puff
 cream delight
 puits d'amour
 vegetable handva
+butternut
+bitterballen
+blueberries
+broccoli
+burger
+burgers
+butternut
+butternut squash
+cakes
+cheddar
+chicken
+cocoa
+cookies
+crepes
+croquettes
+doughnuts
+dragon fruit
+dumplings
+fries
+juice
+marshmallows
+ribs
+salads
+sandwiches
+shrimps
+strawberries
+stroopwaffels
+waffles
+watermelon

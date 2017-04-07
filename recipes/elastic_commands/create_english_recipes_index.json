@@ -3,7 +3,8 @@
 		"recipe" : {
 			"properties" : {
 				"step_by_step" : { "type" : "string", "analyzer" : "english"},
-				"rating" : { "type" : "string"},
+				"description" : { "type" : "string", "analyzer" : "english"},
+				"rating" : { "type" : "float"},
 				"image_link" : { "type" : "string", "analyzer" : "keyword"},
 				"count_rating" : { "type" : "integer" },
 				"title" : { "type" : "string", "analyzer" : "english"},
