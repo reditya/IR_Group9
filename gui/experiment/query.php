@@ -39,7 +39,7 @@
 		$twitter_results = $client->search($params);
 		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
 
-		exec('python clustering/food_term_cluster.py "pizza" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
+		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
 
 		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
 		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
@@ -49,8 +49,8 @@
 			'clusters' => $clusters
 		];
 		
-		//echo json_encode($merge);	
-
+		echo json_encode($merge);	
+		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
 
 		$coordinate = array();
@@ -61,6 +61,7 @@
 		}
 
 		echo json_encode($coordinate);
+		*/
 
 	}
 
@@ -92,7 +93,7 @@
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
-			$recipes[] = array('title' => $r['title'], '');
+			$recipes[] = array('title' => $r['title'], 'description' => $r['description']);
 		}
 
 		echo json_encode($recipes);	
@@ -139,7 +140,9 @@
 								        </button>
 								      </div>
 								      <div class="modal-body">
-								      	' . $r["step_by_step"] . '
+								      	<img src="http:'. $r['image_link'] .'" class="img-rounded"> <br>
+								      	<b>Cooking time: </b>' . $r['finish_time'] . ' mins<br>
+								      	<b>Preparation time: </b>' . $r['preparation_time'] . ' mins<br> 
 								      </div>
 								      <div class="modal-footer">
 								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

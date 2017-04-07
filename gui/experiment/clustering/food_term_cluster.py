@@ -645,7 +645,7 @@ def unique_food(coor, weight, ref_list, term):
                 "type": "Feature",
                 "geometry" : {
                     "type": "Polygon",
-                    "coordinates": [[list_list[i]]],
+                    "coordinates": [list_list[i]],
                     },
                 "properties" : {
                         "category": food_list,

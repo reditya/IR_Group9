@@ -21,99 +21,35 @@ L.control.zoom({
 
 // add Amsterdam border
 $.getJSON("Amsterdam_AL8.GeoJson",function(data){
-  L.geoJSON(data).addTo(map);
+  var geojsonMarkerOptions = {
+      fillOpacity: 0
+  };
+
+  L.geoJSON(data, geojsonMarkerOptions).addTo(map);
 });
 
 var pointMarker = new Array();
 
-var options = {
-  url: 'food.json',
-  getValue: "name",
-  list: { 
-    match: {
-      enabled: true
-    },
-    onChooseEvent : function() {
-
-      for(i=0; i<pointMarker.length; i++)
-      {
-        map.removeLayer(pointMarker[i]);
-      }
-
-      var foodterm = $("#countries").getSelectedItemData().name;
-      foodterm = foodterm.toLowerCase();
-
-      var geojsonMarkerOptions = {
-        radius: 8,
-        fillColor: "#ff7800",
-        color: "#000",
-        weight: 1,
-        opacity: 1,
-        fillOpacity: 0.8
-      };
-
-      alert(foodterm);
-
-      var food_query = 'query.php?query=food&food='+foodterm;
-      $.getJSON(food_query,function(data){
-        for(var i=0; i < data.length; i++)
-        {
-          var latlng = L.latLng(data[i][0], data[i][1]);
-          marker = new L.circleMarker(latlng, geojsonMarkerOptions);
-          pointMarker.push(marker);
-          map.addLayer(marker);
-        }
-      });
-
-      var detail_query = 'query.php?query=recipesDetail&food='+foodterm;
-      $.get(detail_query,function(data){
-        $('#modalCollection').html('');
-        $('#modalCollection').html(data);
-        console.log(data);
-        var recipes_query = 'query.php?query=recipes&food='+foodterm;
-        $.getJSON(recipes_query,function(data){
-          //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
-          var recipes_html = '<p>';
-          //recipes_html = recipes_html + '<ul>';
-          for(var i=0; i < data.length; i++)
-          {
-            recipes_html = recipes_html 
-              + "<div class='card w-100'>" +
-                  "<div class='card-block'>" + 
-                    "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
-                    "<p class='card-text'>description of recipes here</p>" + 
-                    "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
-                  "</div>" + 
-                "</div><br>";          
-            console.log(recipes_html);
-            //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
-          }
-          recipes_html = recipes_html + '</p>';
-          //recipes_html = recipes_html + '</ul>';
-          $("#span_recipes").html('');
-          $("#span_recipes").html(recipes_html);        
-        });
-
-      });
-    }
-  },
-  theme: "square"
-};
-
-$("#countries").easyAutocomplete(options);
 var sidebar = L.control.sidebar('sidebar').addTo(map);
 
-// chosen select panel
 var selectHtml = '';
 selectHtml += "<select id=foodSelection style='width:350px;'>";
-selectHtml += "<option value='" + "pizza" + "'" + ">" + "Pizza" + "</option>";
-selectHtml += "<option value='" + "chocolate" + "'" + ">" + "Chocolate" + "</option>";
-selectHtml += "<option value='" + "banana" + "'" + ">" + "Banana" + "</option>";
-selectHtml += "</select>";
+selectHtml += "<option value=''></option>";
+// chosen select panel
 
-$("#select-panel").append(selectHtml);
-$("#foodSelection").chosen();
-$('#foodSelection').on('change', function(e) {
+$.getJSON("food.json", function(data){
+  for(i=0; i<data.length; i++)
+  {
+    console.log(data[i]);
+    selectHtml += "<option value='" + data[i]['name'] + "'" + ">" + data[i]['name'] + "</option>";
+  }
+  selectHtml += "</select>";
+  $("#select-panel-form").append(selectHtml);
+  $("#foodSelection").chosen();
+});
+
+
+$('#buttonSearch').on('click', function(e) {
   for(i=0; i<pointMarker.length; i++)
   {
     map.removeLayer(pointMarker[i]);
@@ -134,22 +70,41 @@ $('#foodSelection').on('change', function(e) {
 
   alert(foodterm);
 
+  // this needs to be changed
   var food_query = 'query.php?query=food&food='+foodterm;
   $.getJSON(food_query,function(data){
-    for(var i=0; i < data.length; i++)
+    var pointData = data['points'];
+    var clusterData = data['clusters'];
+    marker_point = L.geoJSON(pointData);
+    marker_cluster = L.geoJSON(clusterData);
+    //pointMarker.push(marker_point);
+    //pointMarker.push(marker_cluster);    
+    //map.addLayer(marker_point);
+    //console.log(marker_cluster);
+    //map.addLayer(marker_cluster);
+
+    var data_heat = [];
+
+    var datapoint = pointData['features'];
+    for(i=0;i<datapoint.length;i++)
     {
-      var latlng = L.latLng(data[i][0], data[i][1]);
-      marker = new L.circleMarker(latlng, geojsonMarkerOptions);
-      pointMarker.push(marker);
-      map.addLayer(marker);
+      console.log(datapoint[i]);
+      data_heat.push([datapoint[i]['geometry']['coordinates'][1], datapoint[i]['geometry']['coordinates'][0], datapoint[i]['properties']['intensity']]);
     }
+
+    console.log(data_heat);
+
+    var heat_layer = L.heatLayer(data_heat, {radius: 30, maxZoom: 15});
+    pointMarker.push(heat_layer);
+    map.addLayer(heat_layer);
   });
 
+  // recipes detail in the sidebar
   var detail_query = 'query.php?query=recipesDetail&food='+foodterm;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
-    console.log(data);
+    //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm;
     $.getJSON(recipes_query,function(data){
       //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
@@ -161,11 +116,11 @@ $('#foodSelection').on('change', function(e) {
           + "<div class='card w-100'>" +
               "<div class='card-block'>" + 
                 "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
-                "<p class='card-text'>description of recipes here</p>" + 
+                "<p class='card-text'>" + data[i]['description'] + "</p>" + 
                 "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
               "</div>" + 
             "</div><br>";          
-        console.log(recipes_html);
+        //console.log(recipes_html);
         //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
       }
       recipes_html = recipes_html + '</p>';
