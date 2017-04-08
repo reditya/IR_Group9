@@ -45,6 +45,7 @@ if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset(
 		'type' => 'FeatureCollection',
 		'features' => []
 	];
+	$i = 0;
 	foreach($result['hits']['hits'] as $hit) {
 		$geoJson['features'][] = [
 			'geometry' => [
@@ -55,11 +56,10 @@ if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset(
                         	]
                		 ],
 			'type' => 'Feature',
-			'properties' => [
-				'name' => $hit['_source']['name'],
-				'category' => $hit['_source']['category']
-			]
 		];
+		unset($hit['_source']['location']);
+		$geoJson['features'][$i]['properties'] = $hit['_source'];
+		$i += 1;
 	}
 
 
