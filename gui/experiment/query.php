@@ -16,21 +16,48 @@
 	{
 		$food = $_GET['food'];
 
-		$params = [
-		    'type' => 'post',
-		    'body' => [
-		        'size' => '10000',
-		        'query' => [
-		        	'match' => [
-		        		'food' => $food
-		        	]
-		        ]
-		    ]
-		];
+		/*$params = [
+                    'type' => 'post',
+                    'body' => [
+                        'size' => '10000',
+                        'query' => [
+				'filtered' => [
+					'query' => [
+						'match' => [
+                                        		'food' => $food
+                                		]
+					],
+					'filter' => [
+                                        		'script' => [
+                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
+                                                        	'params' => [
+                                                        		'min' => 8,
+                                                                	'max' => 10
+                                                       		]
+                                               	 	]
+						]
+				]
+			]	
+                    ]
+                ];*/
 
+		$params = [
+                    'type' => 'post',
+                    'body' => [
+                        'size' => '10000',
+                        'query' => [
+                        	'match' => [
+                                	'food' => $food
+                                ]
+                        ] 
+                    ]
+                ];
+		
 		// instagram
 		$params['index'] = 'instagram';
+		//die(json_encode($params));
 		$instagram_results = $client->search($params);
+		//die('no error!!!!!');
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 
 		// tweets
@@ -128,8 +155,37 @@
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
-			// print_r($r);
-			// create a div class of modal
+			//print_r($r);
+
+			// Logic for ingredients view
+			$ingredients_div = "<b>Ingredients</b><br>";
+			$ingredients = explode("|",$r['ingredients']);			
+			$ingredients_div = $ingredients_div . '<table class="table table-condensed"><tbody>';
+			$c = 1;
+			foreach($ingredients as $j)
+			{
+				if($c % 2 != 0)
+				{
+					$ingredients_div .= "<tr><td>".$j."</td>";
+				}
+				else
+				{
+					$ingredients_div .= "<td>".$j."</td></tr>";
+				}
+				$c++;
+			}
+			$ingredients_div .= "</tbody></table>";
+
+			// Logic for step by step view
+			$step_div = "<b>How to Cook : </b><br>";
+			$step = explode("|",$r['step_by_step']);			
+			$step_div .= '<ol>';
+			foreach($step as $j)
+			{
+				$step_div .= "<li>".$j."</li>";
+			}
+			$step_div .= "</ol>";
+
 			$output = $output . '<div class="modal fade" id="recipeModal' . $counter . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 								  <div class="modal-dialog" role="document">
 								    <div class="modal-content">
@@ -143,6 +199,8 @@
 								      	<img src="http:'. $r['image_link'] .'" class="img-rounded"> <br>
 								      	<b>Cooking time: </b>' . $r['finish_time'] . ' mins<br>
 								      	<b>Preparation time: </b>' . $r['preparation_time'] . ' mins<br> 
+								      	' . $ingredients_div . '<br>
+								      	' . $step_div . '<br>
 								      </div>
 								      <div class="modal-footer">
 								        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
