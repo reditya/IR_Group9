@@ -22,12 +22,12 @@ var icon3 = L.icon({
 });
 
 
-// attaching function on map click
+// attaching function on map click and drag
 map.on('click', onMapClick);
-
 // Script for adding marker on map click
 function onMapClick(e) {
     markerGroup.clearLayers();
+    var marker;
     var geojsonFeature = {
         "type": "Feature",
             "properties": {},
@@ -36,9 +36,6 @@ function onMapClick(e) {
                 "coordinates": [e.latlng.lat, e.latlng.lng]
         }
     }
-
-    var marker;
-
     L.geoJson(geojsonFeature, { 
         pointToLayer: function(feature, latlng){
             marker = L.marker(e.latlng, {
@@ -48,6 +45,10 @@ function onMapClick(e) {
                 draggable: true,
             }).bindPopup("Your Selected Location");
             marker.on("popupopen", onPopupOpen);
+            marker.on('dragend', function(e) {
+                console.log('marker dragend event');
+                populateRestaurants(marker.getLatLng().lat, marker.getLatLng().lng);
+            });
             return marker;
         }
     }).addTo(markerGroup);
