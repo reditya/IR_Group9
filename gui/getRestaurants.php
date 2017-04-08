@@ -19,7 +19,7 @@ if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset(
 	    ->build();
 
 	$params = [
-	    'index' => 'restaurants',
+	    'index' => 'thuisbezorgd',
 	    'type' => 'restaurant',
 	    'body' => [
 		'size' => $_GET['size'],

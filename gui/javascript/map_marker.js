@@ -81,8 +81,8 @@ function populateRestaurants(lat, lng){
         {
             restaurant_html = restaurant_html + '<div class="card w-100"><div class="card-block"><h3 class="card-title">'
                 + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
-                + data['features'][i]['properties']['category'] + '</p><a href="#" class="btn btn-primary">Button</a></div></div>';
-
+                + data['features'][i]['properties']['restaurant_type'] + '</p><a href="#" class="btn btn-primary">Detail</a></div></div>';
+            console.log(data['features'][i]);
             L.geoJson(data, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
