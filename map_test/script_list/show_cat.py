@@ -21,7 +21,7 @@ def show_all_cat(cat_file, out_file, out_file_2):
 	new_weight, list_centroid, new_nb_data, list_coor = grid_creation(new_coor, weight_category)
 	new_weight = remove_outliers(list_centroid, new_weight, cat_list)
 	#return_cluster_pysal(list_centroid,new_weight, cat_list, new_nb_data,list_coor, out_file, out_file_2)
-	cluster_with_clusterpy(list_centroid,new_weight, cat_list, new_nb_data,list_coor, out_file, out_file_2)
+	cluster_with_clusterpy(list_centroid,new_weight, cat_list, new_nb_data,list_coor, out_file, out_file_2,'True')
 
 
 
@@ -41,7 +41,7 @@ def show_cat_term(category, cat_file, out_file, out_file_2):
 	new_nb_data = new_weight.shape[0]
 	# Create the clusters inside the category
 	#return_cluster_pysal(list_centroid,new_weight, term_list, new_nb_data,list_coor, out_file, out_file_2)
-	cluster_with_clusterpy(list_centroid,new_weight, term_list, new_nb_data,list_coor, out_file, out_file_2)
+	cluster_with_clusterpy(list_centroid,new_weight, term_list, new_nb_data,list_coor, out_file, out_file_2,'False')
 	
 def show_cat_heatmap(category, cat_file, out_file, out_file_2):
 	nb_data_1, nb_type_1, ref_list_1, coor_1, weight_1 = pre_info_tweets(in_file1)

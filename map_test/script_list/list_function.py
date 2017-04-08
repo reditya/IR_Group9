@@ -14,7 +14,9 @@ import sklearn.decomposition as sc
 from sklearn.feature_selection import SelectKBest
 from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
-
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.neighbors import kneighbors_graph
+from collections import Counter
 
 #script, in_file1, in_file2, out_file, out_file_2 , cat_file = argv
 
@@ -305,34 +307,117 @@ def return_cluster_pysal(new_coor, new_weight, ref_list, nb_data, list_coor, out
     
 
 
+def hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroid):
+    # Preparation of the contiguity matrix
+    X = np.zeros(shape=(len(centroid),2))
+    for key, value in centroid.iteritems():
+        X[key] = value
+    knn_graph = kneighbors_graph(X, 8, include_self=False)
+    linkage = 'ward'
+    dataModel = np.zeros(shape=(len(centroid),nb_feat))
+    for key, value in dataCentroid.iteritems():
+        dataModel[key] = value[1:(nb_feat+1)]
+        #dataModel[key] = value
+    
+    model = AgglomerativeClustering(linkage=linkage, connectivity=knn_graph, n_clusters=nb_clust)
+    model.fit(dataModel)
+    new_id_clust = []
+    for row in cluster_init:
+        clust = model.labels_[row]
+        new_id_clust.append(clust)
+        print clust
+    return new_id_clust
 
-
-def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, out_file, out_file_2):
+def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, out_file, out_file_2, hierarchi='False'):
     # GeoSOM
     data = cp.importArcData("map_test/test_big_grid")
     var = data.fieldNames
     var_algo = var[0:len(var)-1]
-    print len(var)
-    nRow = 25
-    nCol = 25
-    data.cluster('geoSom', var_algo,wType='queen', nRows = nRow, nCols = nCol,iters=100)
-    data.exportRegions2area("test.csv")
-
-    id_clust = []
+    
+    if hierarchi == 'False':
+        it = 100
+        nRow = 22
+        nCol = 22
+    else:
+        it = 300
+        nRow = 30
+        nCol = 30
+    data.cluster('geoSom', var_algo,wType='queen', nRows = nRow, nCols = nCol,iters=it)
+    #data.exportRegions2area("test.csv")
+    
+    """
     with open('test.csv','rb') as csvfile:
         reader = csv.reader(csvfile,delimiter=';')
         for row in reader:
             id_clust.append(int(row[1]))
+    """
+    cluster_init = data.region2areas
+    id_clust = []
 
+    for row in cluster_init:
+        id_clust.append(row)
     ### Create geoson file for the map
-    nb_cluster = nRow*nCol
-    print nb_cluster
-    
+    nb_clust = nRow*nCol
+    print nb_clust
+    print new_weight.shape
     # Centroid points
     # Polygon preparation
 
+    # Preparation of hierarchical clustering
+    centroid = data.oCentroid
+    dataCentroid = data.dataCentroid
+    nb_feat = new_weight.shape[1]
+    
+    if hierarchi == 'True':
+        nb_clust = 800
+        id_clust = hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroid)
+    else:
+        nb_clust = 380
+        id_clust = hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroid)
+    
     feature_list = []
     polygon_list = []
+    idx = 0
+
+
+    # Creation of the food list for each cluster (we take only the term with the highest frequency inside the cluster)
+    term_list = []
+    for i in range(nb_clust):
+        term_list.append([])
+    cor_idx = 0
+    for i in new_weight:
+        idx = 0
+        for j in i:
+            if j > 0:
+                term_list[id_clust[cor_idx]].append(ref_list[idx])
+            idx += 1
+        cor_idx += 1   
+            
+    final_term_list = []
+    for i in range(nb_clust):
+        c = Counter(term_list[i])
+        print c
+        if c.values():
+            m = max(c.values())
+            r = [k for k in c if c[k] == m]
+        else:
+            r = []
+        final_term_list.append(r)
+        print "r: ", r            
+
+
+
+    # Modify cluster numbers so that they are consecutive
+    new_clust_id = []
+    list_clust = []
+    for i in id_clust:
+        if i not in list_clust:
+            list_clust.append(i)
+    print len(list_clust)
+    for i in id_clust:
+        new_clust_id.append(list_clust.index(i))
+
+
     idx = 0
     for feat in new_coor:
         food_list = []
@@ -349,7 +434,7 @@ def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, o
                 },
             "properties" : {
                     "category": food_list,
-                    "cluster": id_clust[idx]
+                    "cluster": new_clust_id[idx]
                 }
          })
         polygon_list.append({
@@ -359,8 +444,8 @@ def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, o
                 "coordinates": [[list_coor[idx]]],
                 },
             "properties" : {
-                    "category": food_list,
-                    "cluster": id_clust[idx]
+                    "category": final_term_list[id_clust[idx]],
+                    "cluster": new_clust_id[idx]
                 }
 
             })
@@ -561,7 +646,7 @@ def grid_creation(coor, weight):
     #OffsetPosition, decimal degrees
     lat_add = 0.001 #dLat * 180/math.pi
     lon_add = dLon * 180/math.pi 
-
+    print lat_add, lon_add
     i = lon
     j = lat
     nb_data = 0
@@ -582,12 +667,8 @@ def grid_creation(coor, weight):
             nb_j = nb_j + 1
         i = i + lon_add  
         nb_i = nb_i + 1
-    print len(list_coor)
     list_centroid = np.delete(list_centroid, (0), axis=0)
 
-    print list_centroid.shape
-    print "preparation of weights"
-    print weight.shape[1]
     new_weight = np.zeros(shape=(nb_data,weight.shape[1]))
     idx_coor = 0
     for coordinate in coor:

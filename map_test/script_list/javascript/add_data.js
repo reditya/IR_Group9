@@ -47,7 +47,8 @@
   function onEachFeature_poly(feature, layer) {
     
     if (feature.properties.category) {
-      layer.bindPopup(feature.properties.category);
+      layer.bindPopup("coucou" + feature.properties.category);
+      //layer.bindPopup(feature.properties.category);
     }   
   }
 
@@ -160,12 +161,12 @@
                if (color_clust[d] != 'no'){
 
       L.geoJson(turf.convex(collection_cluster[d]),{
-        onEachFeature: onEachFeature_poly,
         style: function(feature) {
-                      return {color: color_clust[d]};       
-        }
-
+          return {color: color_clust[d]};       
+        },
+        onEachFeature: onEachFeature_poly
       }).addTo(map);
+      
     }
     }
     
@@ -250,17 +251,18 @@
   $.getJSON("new_point.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
+    console.log("cluster prepared")
     //show_cluster(data);          
 
   })
   $.getJSON("new_poly.geojson",function(data){
     show_cluster(data);          
-        
+    console.log("clster shown")    
   })
 
     $.getJSON("new_point.geojson",function(data){
           map_points_insta(data);
-
+          console.log("points shown")
 })
 
   
