@@ -1,0 +1,20 @@
+{
+	"mappings" : {
+		"restaurant" : {
+			"properties" : {
+				"productTitle" : { "type" : "string", "analyzer" : "dutch"},
+				"telephone" : { "type" : "string", "analyzer" : "keyword"},
+				"review_rating" : { "type" : "float"},
+				"descTitle" : { "type" : "string", "analyzer" : "dutch"},
+				"address" : { "type" : "string", "analyzer" : "dutch"},
+				"review_count" : { "type" : "integer"},
+				"name" : { "type" : "string", "analyzer" : "dutch"},
+				"url" : { "type" : "string", "analyzer" : "keyword"},
+				"restaurant_type" : { "type" : "string", "analyzer" : "dutch"},
+				"categoryTitle" : { "type" : "string", "analyzer" : "dutch"},
+				"location" : { "type" : "geo_point"}
+			}
+		}	
+
+	}
+}
