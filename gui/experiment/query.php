@@ -12,6 +12,41 @@
 	if($query == "food")
 	{
 		$food = $_GET['food'];
+
+		$params = {
+			"query": {
+				"filtered": {
+					"query": {
+						"match": {
+							"message": "error"
+						}
+					},
+					"filter": {
+						"bool": {
+							"must": [
+								{
+									"range": {
+										"$params =": {
+											"gte": "14-11-01",
+											"lte": "17-11-30"
+										}
+									}
+								},
+								{
+									"range": {
+										"time": {
+											"gte": "10:00:00",
+											"lte": "12:00:00"
+										}
+									}
+								}
+							]
+						}
+					}
+				}
+			}
+		}
+
 		/*$params = [
                     'type' => 'post',
                     'body' => [
@@ -36,17 +71,17 @@
 			]	
                     ]
                 ];*/
-		$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-                        	'match' => [
-                                	'food' => $food
-                                ]
-                        ] 
-                    ]
-                ];
+		// $params = [
+  //                   'type' => 'post',
+  //                   'body' => [
+  //                       'size' => '10000',
+  //                       'query' => [
+  //                       	'match' => [
+  //                               	'food' => $food
+  //                               ]
+  //                       ] 
+  //                   ]
+  //               ];
 		
 		// instagram
 		$params['index'] = 'instagram';
