@@ -28,7 +28,22 @@
 							'match' => [
 								'food' => $food
 							]
-						]
+						],
+						"filter": {
+							"bool": {
+								"must": [
+									{
+										"script": {
+											"script": "doc.createdTime.getHourOfDay() >= min && doc.createdTime.getHourOfDay() <= max",
+											"params": {
+												"min": 8,
+												"max": 10
+											}
+										}
+									}
+								]
+							}
+						}
 					]
 				]
 			]
