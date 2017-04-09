@@ -50,6 +50,10 @@ $.getJSON("food.json", function(data){
 
 
 $('#buttonSearch').on('click', function(e) {
+  searchPoints(0,23);
+});
+
+function searchPoints(start, end){
   for(i=0; i<pointMarker.length; i++)
   {
     map.removeLayer(pointMarker[i]);
@@ -71,7 +75,7 @@ $('#buttonSearch').on('click', function(e) {
   alert(foodterm);
 
   // this needs to be changed
-  var food_query = 'query.php?query=food&food='+foodterm;
+  var food_query = 'query.php?query=food&food='+foodterm+'&start='+start+'&end='+end;
   $.getJSON(food_query,function(data){
     var pointData = data['points'];
     var clusterData = data['clusters'];
@@ -100,12 +104,12 @@ $('#buttonSearch').on('click', function(e) {
   });
 
   // recipes detail in the sidebar
-  var detail_query = 'query.php?query=recipesDetail&food='+foodterm;
+  var detail_query = 'query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
     //console.log(data);
-    var recipes_query = 'query.php?query=recipes&food='+foodterm;
+    var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
       //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
       var recipes_html = '<p>';
@@ -128,6 +132,5 @@ $('#buttonSearch').on('click', function(e) {
       $("#span_recipes").html('');
       $("#span_recipes").html(recipes_html);        
     });
-
   });
-});
+}

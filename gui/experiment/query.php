@@ -10,48 +10,50 @@
 	    ->build();
 
 	$query = $_GET['query'];
+	$start = $_GET['start'];
+	$end = $_GET['end'];
 	
 	// query for food
 	if($query == "food")
 	{
 		$food = $_GET['food'];
 
-		/*$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-				'filtered' => [
-					'query' => [
-						'match' => [
-                                        		'food' => $food
-                                		]
-					],
-					'filter' => [
-                                        		'script' => [
-                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
-                                                        	'params' => [
-                                                        		'min' => 8,
-                                                                	'max' => 10
-                                                       		]
-                                               	 	]
-						]
-				]
-			]	
-                    ]
-                ];*/
-
 		$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-                        	'match' => [
-                                	'food' => $food
-                                ]
-                        ] 
-                    ]
-                ];
+			'type' => 'post',
+			'body' => [
+				'size' => '10000',
+				'query' => [
+					'filtered' => [
+						'query' => [
+							'match' => [
+								'food' => $food
+							]
+						],
+						'filter' => [
+							'script' => [
+								'inline' => "doc['createdTime'].getHourOfDay() >= start && doc['createdTime'].getHourOfDay() <= end",
+								'params' => [
+									'min' => $start,
+									'max' => $end
+								]
+							]
+						]
+					]
+				]
+			]
+		];
+
+		// $params = [
+  //                   'type' => 'post',
+  //                   'body' => [
+  //                       'size' => '10000',
+  //                       'query' => [
+  //                       	'match' => [
+  //                               	'food' => $food
+  //                               ]
+  //                       ] 
+  //                   ]
+  //               ];
 		
 		// instagram
 		$params['index'] = 'instagram';
