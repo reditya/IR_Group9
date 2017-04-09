@@ -13,10 +13,10 @@
 	$start = $_GET['start'];
 	$end = $_GET['end'];
 	
-	// query for food
-	// if($query == "food")
-	// {
-	// 	$food = $_GET['food'];
+	query for food
+	if($query == "food")
+	{
+		$food = $_GET['food'];
 
 	// 	$params = [
 	// 		'type' => 'post',
@@ -63,7 +63,7 @@
                         ] 
                     ]
                 ];
-		
+
 		// instagram
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
