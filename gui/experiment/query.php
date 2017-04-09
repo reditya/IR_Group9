@@ -10,6 +10,8 @@
 	    ->build();
 
 	$query = $_GET['query'];
+	$start = $_GET['start'];
+	$end = $_GET['end'];
 	
 	// query for food
 	if($query == "food")
@@ -31,8 +33,8 @@
                                         		'script' => [
                                                 		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
                                                         	'params' => [
-                                                        		'min' => 8,
-                                                                	'max' => 10
+                                                        		'min' => $start,
+                                                                	'max' => $end
                                                        		]
                                                	 	]
 						]
