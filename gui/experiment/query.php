@@ -19,29 +19,20 @@
 		$food = $_GET['food'];
 
 		$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-				'filtered' => [
-					'query' => [
-						'match' => [
-                                        		'food' => $food
-                                		]
-					],
-					'filter' => [
-                                        		'script' => [
-                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
-                                                        	'params' => [
-                                                        		'min' => $start,
-                                                                	'max' => $end
-                                                       		]
-                                               	 	]
+			'type' => 'post',
+			'body' => [
+				'size' => '10000',
+				'query' => [
+					'filtered' => [
+						'query' => [
+							'match' => [
+								'food' => $food
+							]
 						]
+					]
 				]
-			]	
-                    ]
-                ];
+			]
+		];
 
 		// $params = [
   //                   'type' => 'post',
