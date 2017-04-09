@@ -22,30 +22,33 @@
 			'type' => 'post',
 			'body' => [
 				'size' => '10000',
-				'query' => [
-					'filtered' => [
-						'query' => [
-							'match' => [
-								'food' => $food
-							]
-						],
-						"filter": [
-							"bool": [
+				"query": {
+					"filtered": {
+						"filter": {
+							"bool": {
 								"must": [
-									[
-										"script": [
-											"script": "doc.createdTime.date.getHourOfDay() >= min && doc.createdTime.date.getHourOfDay() <= max",
-											"params": [
+									{
+										"range": {
+											"date": {
+												"gte": "2015-11-01",
+												"lte": "2015-11-30"
+											}
+										}
+									},
+									{
+										"script": {
+											"script": "doc.date.date.getHourOfDay() >= min && doc.date.date.getHourOfDay() <= max",
+											"params": {
 												"min": 8,
 												"max": 10
-											]
-										]
-									]
+											}
+										}
+									}
 								]
-							]
-						]
-					]
-				]
+							}
+						}
+					}
+				}
 			]
 		];
 
