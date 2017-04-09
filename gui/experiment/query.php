@@ -14,21 +14,25 @@
 		$food = $_GET['food'];
 
 		$params = [
-			"query"=> [
-				"filtered"=> [
-					"query"=> [
-						"match"=> [
-							"food"=> $food
-						]
-					],
-					"filter"=> [
-						"bool"=> [
-							"must"=> [
-								[
-									"range"=> [
-										"createdTime"=> [
-											"gte"=> "14-11-01",
-											"lte"=> "17-11-30"
+			'type' => 'post',
+			'body' => [
+				'size' => '10000',
+				"query"=> [
+					"filtered"=> [
+						"query"=> [
+							"match"=> [
+								"food"=> $food
+							]
+						],
+						"filter"=> [
+							"bool"=> [
+								"must"=> [
+									[
+										"range"=> [
+											"createdTime"=> [
+												"gte"=> "14-11-01",
+												"lte"=> "17-11-30"
+											]
 										]
 									]
 								]
