@@ -1,57 +1,41 @@
 <?php
 	// query for list of recipes
 	require '../vendor/autoload.php';
-
 	use Elasticsearch\ClientBuilder;
-
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
 	    ->build();
-
 	$query = $_GET['query'];
-	$start = $_GET['start'];
-	$end = $_GET['end'];
 	
-	query for food
+	// query for food
 	if($query == "food")
 	{
 		$food = $_GET['food'];
-
-	// 	$params = [
-	// 		'type' => 'post',
-	// 		'body' => [
-	// 			'size' => '10000',
-	// 			"query": {
-	// 				"filtered": {
-	// 					"filter": {
-	// 						"bool": {
-	// 							"must": [
-	// 								{
-	// 									"range": {
-	// 										"createdTime": {
-	// 											"gte": "2015-11-01",
-	// 											"lte": "2017-11-30"
-	// 										}
-	// 									}
-	// 								},
-	// 								{
-	// 									"script": {
-	// 										"script": "doc.createdTime.date.getHourOfDay() >= min && doc.createdTime.date.getHourOfDay() <= max",
-	// 										"params": {
-	// 											"min": 8,
-	// 											"max": 10
-	// 										}
-	// 									}
-	// 								}
-	// 							]
-	// 						}
-	// 					}
-	// 				}
-	// 			}
-	// 		]
-	// 	];
-
+		/*$params = [
+                    'type' => 'post',
+                    'body' => [
+                        'size' => '10000',
+                        'query' => [
+				'filtered' => [
+					'query' => [
+						'match' => [
+                                        		'food' => $food
+                                		]
+					],
+					'filter' => [
+                                        		'script' => [
+                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
+                                                        	'params' => [
+                                                        		'min' => 8,
+                                                                	'max' => 10
+                                                       		]
+                                               	 	]
+						]
+				]
+			]	
+                    ]
+                ];*/
 		$params = [
                     'type' => 'post',
                     'body' => [
@@ -63,22 +47,19 @@
                         ] 
                     ]
                 ];
-
+		
 		// instagram
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
 		//die('no error!!!!!');
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
-
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
 		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
-
 		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
-
 		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
 		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
 	
@@ -90,24 +71,19 @@
 		echo json_encode($merge);	
 		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
-
 		$coordinate = array();
 		foreach($ar_results as $i)
 		{
 			//print_r($i['_source']);
 			$coordinate[] = array($i['_source']['coordinate']['lat'], $i['_source']['coordinate']['lon']);
 		}
-
 		echo json_encode($coordinate);
 		*/
-
 	}
-
 	// query for recipes
 	else if($query == "recipes")
 	{
 		$food = $_GET['food'];
-
 		$params = [
 		    'index' => 'english_recipes',
 		    'type' => 'recipe',
@@ -120,24 +96,17 @@
 		        ]
 		    ]
 		];
-
 		$results = $client->search($params);
 		$ar_results = $results['hits']['hits'];
-
 		//print_r($ar_results);
-
 		$recipes = array();
-
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
 			$recipes[] = array('title' => $r['title'], 'description' => $r['description']);
 		}
-
 		echo json_encode($recipes);	
-
 	}
-
 	// query for recipes detail
 	else if($query == "recipesDetail")
 	{
@@ -154,20 +123,15 @@
 		        ]
 		    ]
 		];
-
 		$results = $client->search($params);
 		$ar_results = $results['hits']['hits'];
-
 		//print_r($ar_results);
-
 		$output = "";
 		$counter = 0;
-
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
 			//print_r($r);
-
 			// Logic for ingredients view
 			$ingredients_div = "<b>Ingredients</b><br>";
 			$ingredients = explode("|",$r['ingredients']);			
@@ -186,7 +150,6 @@
 				$c++;
 			}
 			$ingredients_div .= "</tbody></table>";
-
 			// Logic for step by step view
 			$step_div = "<b>How to Cook : </b><br>";
 			$step = explode("|",$r['step_by_step']);			
@@ -196,7 +159,6 @@
 				$step_div .= "<li>".$j."</li>";
 			}
 			$step_div .= "</ol>";
-
 			$output = $output . '<div class="modal fade" id="recipeModal' . $counter . '" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 								  <div class="modal-dialog" role="document">
 								    <div class="modal-content">
