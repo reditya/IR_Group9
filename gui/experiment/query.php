@@ -23,20 +23,6 @@
 							"match"=> [
 								"food"=> $food
 							]
-						],
-						"filter"=> [
-							"bool"=> [
-								"must"=> [
-									[
-										"range"=> [
-											"createdTime"=> [
-												"gte"=> "14-11-01",
-												"lte"=> "17-11-30"
-											]
-										]
-									]
-								]
-							]
 						]
 					]
 				]
