@@ -72,7 +72,7 @@ function searchPoints(start, end){
     fillOpacity: 0.8
   };
 
-  alert(foodterm);
+  //alert(foodterm);
 
   // this needs to be changed
   var food_query = 'query.php?query=food&food='+foodterm+'&start='+start+'&end='+end;
