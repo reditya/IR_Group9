@@ -4,8 +4,6 @@
 
 	use Elasticsearch\ClientBuilder;
 
-	echo "TEST";
-
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
@@ -14,8 +12,6 @@
 	$query = $_GET['query'];
 	$start = $_GET['start'];
 	$end = $_GET['end'];
-
-	echo $start;
 	
 	// query for food
 	// if($query == "food")
