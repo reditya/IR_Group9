@@ -29,15 +29,15 @@
 								"must": [
 									{
 										"range": {
-											"date": {
+											"createdTime": {
 												"gte": "2015-11-01",
-												"lte": "2015-11-30"
+												"lte": "2017-11-30"
 											}
 										}
 									},
 									{
 										"script": {
-											"script": "doc.date.date.getHourOfDay() >= min && doc.date.date.getHourOfDay() <= max",
+											"script": "doc.createdTime.date.getHourOfDay() >= min && doc.createdTime.date.getHourOfDay() <= max",
 											"params": {
 												"min": 8,
 												"max": 10
