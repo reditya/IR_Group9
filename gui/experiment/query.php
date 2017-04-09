@@ -4,6 +4,8 @@
 
 	use Elasticsearch\ClientBuilder;
 
+	echo "TEST";
+
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
@@ -12,57 +14,59 @@
 	$query = $_GET['query'];
 	$start = $_GET['start'];
 	$end = $_GET['end'];
+
+	echo $start;
 	
 	// query for food
-	if($query == "food")
-	{
-		$food = $_GET['food'];
+	// if($query == "food")
+	// {
+	// 	$food = $_GET['food'];
+
+	// 	$params = [
+	// 		'type' => 'post',
+	// 		'body' => [
+	// 			'size' => '10000',
+	// 			"query": {
+	// 				"filtered": {
+	// 					"filter": {
+	// 						"bool": {
+	// 							"must": [
+	// 								{
+	// 									"range": {
+	// 										"createdTime": {
+	// 											"gte": "2015-11-01",
+	// 											"lte": "2017-11-30"
+	// 										}
+	// 									}
+	// 								},
+	// 								{
+	// 									"script": {
+	// 										"script": "doc.createdTime.date.getHourOfDay() >= min && doc.createdTime.date.getHourOfDay() <= max",
+	// 										"params": {
+	// 											"min": 8,
+	// 											"max": 10
+	// 										}
+	// 									}
+	// 								}
+	// 							]
+	// 						}
+	// 					}
+	// 				}
+	// 			}
+	// 		]
+	// 	];
 
 		$params = [
-			'type' => 'post',
-			'body' => [
-				'size' => '10000',
-				"query": {
-					"filtered": {
-						"filter": {
-							"bool": {
-								"must": [
-									{
-										"range": {
-											"createdTime": {
-												"gte": "2015-11-01",
-												"lte": "2017-11-30"
-											}
-										}
-									},
-									{
-										"script": {
-											"script": "doc.createdTime.date.getHourOfDay() >= min && doc.createdTime.date.getHourOfDay() <= max",
-											"params": {
-												"min": 8,
-												"max": 10
-											}
-										}
-									}
-								]
-							}
-						}
-					}
-				}
-			]
-		];
-
-		// $params = [
-  //                   'type' => 'post',
-  //                   'body' => [
-  //                       'size' => '10000',
-  //                       'query' => [
-  //                       	'match' => [
-  //                               	'food' => $food
-  //                               ]
-  //                       ] 
-  //                   ]
-  //               ];
+                    'type' => 'post',
+                    'body' => [
+                        'size' => '10000',
+                        'query' => [
+                        	'match' => [
+                                	'food' => $food
+                                ]
+                        ] 
+                    ]
+                ];
 		
 		// instagram
 		$params['index'] = 'instagram';
