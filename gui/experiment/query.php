@@ -23,6 +23,14 @@
 							"match"=> [
 								"food"=> $food
 							]
+						],
+						'filter' => [
+							'range' => [
+								'createdTime' => [
+									'gte' => 4,
+									'lte' => 8
+								]
+							]
 						]
 					]
 				]
