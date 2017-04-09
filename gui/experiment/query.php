@@ -13,39 +13,39 @@
 	{
 		$food = $_GET['food'];
 
-		$params = {
-			"query": {
-				"filtered": {
-					"query": {
-						"match": {
-							"message": "error"
-						}
-					},
-					"filter": {
-						"bool": {
+		$params = [
+			"query": [
+				"filtered": [
+					"query": [
+						"match": [
+							"food": $food
+						]
+					],
+					"filter": [
+						"bool": [
 							"must": [
-								{
-									"range": {
-										"$params =": {
+								[
+									"range": [
+										"$createdTime": [
 											"gte": "14-11-01",
 											"lte": "17-11-30"
-										}
-									}
-								},
-								{
-									"range": {
-										"time": {
+										]
+									]
+								],
+								[
+									"range": [
+										"createdTime": [
 											"gte": "10:00:00",
 											"lte": "12:00:00"
-										}
-									}
-								}
+										]
+									]
+								]
 							]
-						}
-					}
-				}
-			}
-		}
+						]
+					]
+				]
+			]
+		]
 
 		/*$params = [
                     'type' => 'post',
