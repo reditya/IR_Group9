@@ -76,13 +76,35 @@ function onEachFeature(feature, layer) {
 function populateRestaurants(lat, lng){
     restaurantGroup.clearLayers();
     $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10", function(data, status) {
+        var name, restaurantType, address, phone, rating, review_count;
         var restaurant_html = '';
+        var restaurant_detail = '';
+        console.log(data['features']);
+        
         for(var i=0; i < data['features'].length; i++)
         {
-            restaurant_html = restaurant_html + '<div class="card w-100"><div class="card-block"><h3 class="card-title">'
-                + data['features'][i]['properties']['name'] + '</h3><p class="card-text">'
-                + data['features'][i]['properties']['restaurant_type'] + '</p><a href="#" class="btn btn-primary">Detail</a></div></div>';
-            console.log(data['features'][i]);
+            name = data['features'][i]['properties']['name'];
+            restaurantType = data['features'][i]['properties']['restaurant_type'];
+            rating = data['features'][i]['properties']['review_rating'];
+            review_count = data['features'][i]['properties']['review_count'];
+            phone = data['features'][i]['properties']['telephone'];
+            address = data['features'][i]['properties']['address'];
+            URL = data['features'][i]['properties']['url'];
+            restaurant_detail = restaurant_detail +'<div class="modal fade" id="restaurantModal'+ i +'" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true"><div class="modal-dialog" role="document"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="exampleModalLabel">'+ name +'</h5><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></div>'+
+            '<div class="modal-body">'+
+            '<b>Type: </b>'+ restaurantType +'<br>'+
+            '<b>Rating: </b>'+ rating +' of 5 ('+review_count+' reviews)<br>'+
+            '<b>Address: </b>'+ address +'<br>'+ 
+            '<b>Telephone: </b>'+ phone +'<br>'+ 
+            '</div><div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button></div></div></div></div>';
+            restaurant_html = restaurant_html +
+            "<div class='card w-100'>" +
+              "<div class='card-block'>" + 
+                "<h4 class='card-title'>" + name + "</h4>" + 
+                "<p class='card-text'>" + restaurantType + "</p>" + 
+                "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#restaurantModal" + i + "'>Detail</button>" +  
+              "</div>" + 
+            "</div><br>";  
             L.geoJson(data, {
                 pointToLayer: function(feature, latlng) {
                     return L.marker(latlng, {
@@ -91,9 +113,10 @@ function populateRestaurants(lat, lng){
                 },
                 onEachFeature: onEachFeature
             }).addTo(restaurantGroup);
-        }
-        
+        }      
         $("#restaurant_cards").html('');
         $("#restaurant_cards").html(restaurant_html);
+        $("#modalCollection").html('');
+        $("#modalCollection").html(restaurant_detail);
     });
 }
