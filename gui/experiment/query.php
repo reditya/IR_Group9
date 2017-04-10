@@ -42,7 +42,7 @@
                         'size' => '10000',
                         'query' => [
                         	'match' => [
-                                	'food' => $food
+					'food' => $food           	
                                 ]
                         ] 
                     ]
@@ -52,14 +52,15 @@
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		//die('no error!!!!!');
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
+		//echo (json_encode($twitter_results));
 		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
 		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
+		//die('no error 2!!!!!');
 		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
 		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
 	
