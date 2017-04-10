@@ -64,12 +64,10 @@ with open(in_file) as f:
                         if food[i]==",":
                             bool_c = True
                     if bool_c:  
-                        print food
                         food = [x.strip() for x in food.split(',')]    
-                        print food  
                         term_list.extend(food)
                     else:
-                        term_list.extend(food)
+                        term_list.append(food)
         else:
             # Q1
             nb_judge += j_content['judgments_count']
@@ -108,21 +106,29 @@ with open(in_file) as f:
                             if food[i]==",":
                                 bool_c = True
                         if bool_c:   
-                            print food     
                             food = [x.strip() for x in food.split(',')]      
                             term_list.extend(food)
-                            print food
                         else:
-                            term_list.extend(food)
-                            print food
+                            term_list.append(food)
 
 
 print "nb judgement: ", nb_judge, "nb not forgotten terms: ", nb_not_forgotten
 print "% total correct food: ", (nb_correct_food/nb_judge) , " % correct food among agreed data: ", nb_correct_food_a/nb_judge , " nb agreement: ", agree_corr_term                       
 print "% total correct sentiment: ", nb_correct_sentiment/nb_judge , " % correct sentiment among agreed data: ", nb_correct_sentiment_a/nb_judge, " nb agreement: ", agree_corr_sentiment
 
-term_counts = Counter(term_list)
-print term_counts
-df = pandas.DataFrame.from_dict(term_counts, orient='index')
-df.plot(kind='bar')                     
-print df
+term_counts = Counter(term_list) 
+new_list = []
+for i in term_counts.items():
+    if i[1] > 1:
+        new_list.append(i[0])
+term_list2 = []
+for i in term_list:
+    if i in new_list:
+        term_list2.append(i)
+term_count2 = Counter(term_list2)        
+df = pandas.DataFrame.from_dict(term_count2, orient='index')
+df.plot(kind='bar')      
+plt.title('Histogram of missing food terms in the dictionary')
+plt.xlabel('Food term')
+plt.ylabel('Frequency')               
+plt.show()
