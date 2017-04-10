@@ -1,7 +1,8 @@
 <?php
 
 /*
-Parameters are: lon, lat, size and range
+Mandatory parameters are: 	lon, lat, size and range
+Optional parameters are:	keyword
 Return JSON
 */
 
@@ -12,20 +13,35 @@ use Elasticsearch\ClientBuilder;
 header('Content-type: application/json');
 
 if(isset($_GET['range']) && isset($_GET['lon']) && isset($_GET['lat']) && isset($_GET['size'])) {
-	
+		
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
 	    ->build();
+
+	$query = [];
+	if(isset($_GET['keyword'])) {
+		$query = [
+			'multi_match' => [
+                    		'query' => $_GET['keyword'],
+                    		'fields' => [
+                      			'restaurant_type',
+                      			'descTitle'
+                    		]
+                  	]
+		];
+	} else {
+		$query = [
+			'match_all' => new \stdClass()
+		];
+	}	
 
 	$params = [
 	    'index' => 'thuisbezorgd',
 	    'type' => 'restaurant',
 	    'body' => [
 		'size' => $_GET['size'],
-		'query' => [
-		  'match_all' => new \stdClass()
-		],
+		'query' => $query,
 		'filter' => [
 		  'geo_distance' => [
 			'distance' => $_GET['range'],
