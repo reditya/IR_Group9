@@ -23,15 +23,6 @@
 							'match' => [
 								'food' => $food
 							]
-						],
-						'filter' => [
-							'script' => [
-								'inline' => "doc['createdTime'].date.getHourOfDay() >= min && doc['createdTime'].date.getHourOfDay() <= max",
-								'params' => [
-									'min' => 8,
-									'max' => 10
-								]
-							]
 						]
 					]
 				]
