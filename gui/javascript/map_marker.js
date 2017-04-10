@@ -8,13 +8,6 @@ var icon1 = L.icon({
 });
 
 var icon2 = L.icon({
-    iconUrl: 'https://cdn4.iconfinder.com/data/icons/home3/102/Untitled-12-512.png',
-    iconSize:     [40,50], // size of the icon
-    iconAnchor:   [20,45], // point of the icon which will correspond to marker's location
-    popupAnchor:  [0,-10] // point from which the popup should open relative to the iconAnchor
-});
-
-var icon3 = L.icon({
     iconUrl: 'https://cdn4.iconfinder.com/data/icons/location-vol-4/128/location-03-512.png',
     iconSize:     [40,50], // size of the icon
     iconAnchor:   [20,45], // point of the icon which will correspond to marker's location
@@ -75,7 +68,11 @@ function onEachFeature(feature, layer) {
 // Populate restaurants data into sidebar
 function populateRestaurants(lat, lng){
     restaurantGroup.clearLayers();
-    $.get("http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10", function(data, status) {
+    var uri = "http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10";
+    if($('#foodSelection').val() != '' ) {
+	uri += "&keyword=" + $('#foodSelection').val();
+    }
+    $.get(uri, function(data, status) {
         var name, restaurantType, address, phone, rating, review_count;
         var restaurant_html = '';
         var restaurant_detail = '';
@@ -107,9 +104,10 @@ function populateRestaurants(lat, lng){
             "</div><br>";  
             L.geoJson(data, {
                 pointToLayer: function(feature, latlng) {
-                    return L.marker(latlng, {
-                        icon: icon1
+                    marker = L.marker(latlng, {
+                        icon: icon2
                     });
+                    return marker;
                 },
                 onEachFeature: onEachFeature
             }).addTo(restaurantGroup);
