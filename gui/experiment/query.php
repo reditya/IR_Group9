@@ -12,31 +12,6 @@
 	if($query == "food")
 	{
 		$food = $_GET['food'];
-
-		// $params = [
-		// 	'type' => 'post',
-		// 	'body' => [
-		// 		'size' => '10000',
-		// 		"query"=> [
-		// 			"filtered"=> [
-		// 				"query"=> [
-		// 					"match"=> [
-		// 						"food"=> $food
-		// 					]
-		// 				],
-		// 				'filter' => [
-		// 					'range' => [
-		// 						'createdTime' => [
-		// 							'gte' => 400,
-		// 							'lte' => 800
-		// 						]
-		// 					]
-		// 				]
-		// 			]
-		// 		]
-		// 	]
-		// ];
-
 		/*$params = [
                     'type' => 'post',
                     'body' => [
