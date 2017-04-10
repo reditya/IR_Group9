@@ -23,14 +23,6 @@
 							'match' => [
 								'food' => $food
 							]
-						],
-						'filter' => [
-							'range' => [
-								'createdTime' => [
-									'gte' => 400,
-									'lte' => 800
-								]
-							]
 						]
 					]
 				]
