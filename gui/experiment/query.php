@@ -42,9 +42,17 @@
                         'size' => '10000',
                         'query' => [
                         	'match' => [
-					'food' => $food           	
+								'food' => $food           	
                                 ]
-                        ] 
+                        ],
+                        'filter' => [
+							'range' => [
+								'createdTime' => [
+									'gte' => 400,
+									'lte' => 800
+								]
+							]
+						]
                     ]
                 ];
 		
