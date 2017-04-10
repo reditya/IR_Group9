@@ -12,6 +12,23 @@
 	if($query == "food")
 	{
 		$food = $_GET['food'];
+
+		$params = [
+			'type' => 'post',
+			'body' => [
+				'size' => '10000',
+				'query'=> [
+					'filtered' => [
+						'query' => [
+							'match' => [
+								'food' => $food
+							]
+						]
+					]
+				]
+			]
+		];
+
 		/*$params = [
                     'type' => 'post',
                     'body' => [
@@ -36,30 +53,33 @@
 			]	
                     ]
                 ];*/
-		$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-                        	'match' => [
-                                	'food' => $food
-                                ]
-                        ] 
-                    ]
-                ];
+		// $params = [
+  //                   'type' => 'post',
+  //                   'body' => [
+  //                       'size' => '10000',
+  //                       'query' => [
+  //                       	'match' => [
+		// 						'food' => $food           	
+  //                               ]
+  //                       ]
+  //                   ]
+  //               ];
 		
 		// instagram
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		//die('no error!!!!!');
+		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
+		// echo $insta_json;
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
+		//echo (json_encode($twitter_results));
 		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
 		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
+		//die('no error 2!!!!!');
 		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
 		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
 	
@@ -185,4 +205,23 @@
 		}		
 		echo $output;
 	}
+
+	// function dateFilter(data, start, end){
+	// 	var startDate = new Date("2015-08-04");
+ //        var endDate = new Date("2015-08-12");
+
+ //        var resultProductData = data.filter(function (a) {
+ //            var hitDates = data.hits.hits._source.createdTime || {};
+ //            // extract all date strings
+ //            hitDates = Object.keys(hitDates);
+ //            // improvement: use some. this is an improment because .map()
+ //            // and .filter() are walking through all elements.
+ //            // .some() stops this process if one item is found that returns true in the callback function and returns true for the whole expression
+ //            hitDateMatchExists = hitDates.some(function(dateStr) {
+ //                var date = new Date(dateStr);
+ //                return date >= startDate && date <= endDate
+ //            });
+ //            return hitDateMatchExists;
+ //        });
+	// }
 ?>
