@@ -69,8 +69,8 @@
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		$insta_json = dateFilter(json_encode($instagram_results,0,0));
-		echo $insta_json;
+		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
+		// echo $insta_json;
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 		// tweets
 		$params['index']  = 'english_tweets';
@@ -206,22 +206,22 @@
 		echo $output;
 	}
 
-	function dateFilter(data, start, end){
-		var startDate = new Date("2015-08-04");
-        var endDate = new Date("2015-08-12");
+	// function dateFilter(data, start, end){
+	// 	var startDate = new Date("2015-08-04");
+ //        var endDate = new Date("2015-08-12");
 
-        var resultProductData = data.filter(function (a) {
-            var hitDates = data.hits.hits._source.createdTime || {};
-            // extract all date strings
-            hitDates = Object.keys(hitDates);
-            // improvement: use some. this is an improment because .map()
-            // and .filter() are walking through all elements.
-            // .some() stops this process if one item is found that returns true in the callback function and returns true for the whole expression
-            hitDateMatchExists = hitDates.some(function(dateStr) {
-                var date = new Date(dateStr);
-                return date >= startDate && date <= endDate
-            });
-            return hitDateMatchExists;
-        });
-	}
+ //        var resultProductData = data.filter(function (a) {
+ //            var hitDates = data.hits.hits._source.createdTime || {};
+ //            // extract all date strings
+ //            hitDates = Object.keys(hitDates);
+ //            // improvement: use some. this is an improment because .map()
+ //            // and .filter() are walking through all elements.
+ //            // .some() stops this process if one item is found that returns true in the callback function and returns true for the whole expression
+ //            hitDateMatchExists = hitDates.some(function(dateStr) {
+ //                var date = new Date(dateStr);
+ //                return date >= startDate && date <= endDate
+ //            });
+ //            return hitDateMatchExists;
+ //        });
+	// }
 ?>
