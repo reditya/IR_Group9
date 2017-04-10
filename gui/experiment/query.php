@@ -17,11 +17,11 @@
 			'type' => 'post',
 			'body' => [
 				'size' => '10000',
-				"query"=> [
-					"filtered"=> [
-						"query"=> [
-							"match"=> [
-								"food"=> $food
+				'query'=> [
+					'filtered' => [
+						'query' => [
+							'match' => [
+								'food' => $food
 							]
 						],
 						'filter' => [
