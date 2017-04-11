@@ -7,27 +7,29 @@
 	    ->setRetries(0)
 	    ->build();
 	$query = $_GET['query'];
-	
+
+	$ret = [];
 	// query for food
 	if($query == "food")
-	{
-		$food = $_GET['food'];
-
-		$params = [
-			'type' => 'post',
-			'body' => [
-				'size' => '10000',
-				'query'=> [
-					'filtered' => [
-						'query' => [
-							'match' => [
-								'food' => $food
+	{	
+		$food_list = $_GET['food'];
+		$food_list = explode(',', $food_list);
+		foreach($food_list as $food) {
+			$params = [
+				'type' => 'post',
+				'body' => [
+					'size' => '10000',
+					'query'=> [
+						'filtered' => [
+							'query' => [
+								'match' => [
+									'food' => $food
+								]
 							]
 						]
 					]
 				]
-			]
-		];
+			];
 
 		/*$params = [
                     'type' => 'post',
@@ -65,30 +67,30 @@
   //                   ]
   //               ];
 		
-		// instagram
-		$params['index'] = 'instagram';
-		//die(json_encode($params));
-		$instagram_results = $client->search($params);
-		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
-		// echo $insta_json;
-		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
-		// tweets
-		$params['index']  = 'english_tweets';
-		$params['type'] = 'tweet';
-		$twitter_results = $client->search($params);
-		//echo (json_encode($twitter_results));
-		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
-		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
-		//die('no error 2!!!!!');
-		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
-		$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
+			// instagram
+			$params['index'] = 'instagram';
+			//die(json_encode($params));
+			$instagram_results = $client->search($params);
+			// $insta_json = dateFilter(json_encode($instagram_results,0,0));
+			// echo $insta_json;
+			file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
+			// tweets
+			$params['index']  = 'english_tweets';
+			$params['type'] = 'tweet';
+			$twitter_results = $client->search($params);
+			//echo (json_encode($twitter_results));
+			file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
+			exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
+			//die('no error 2!!!!!');
+			$points = json_decode(file_get_contents('clustering/points.geojson'), true);
+			$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
 	
-		$merge = [
-			'points' => $points,
-			'clusters' => $clusters
-		];
+			$ret['points'][$food] = $points;
+			$ret['clusters'][$food] = $clusters;
+
+		}
 		
-		echo json_encode($merge);	
+		echo json_encode($ret);	
 		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
 		$coordinate = array();
@@ -208,8 +210,6 @@
 
 	else if($query == "category")
 	{
-		$food = $_GET['food'];
-
 		$params = [
 			'type' => 'post',
 			'body' => [
@@ -273,17 +273,20 @@
 		$twitter_results = $client->search($params);
 		//echo (json_encode($twitter_results));
 		file_put_contents('clustering_category/ES_english_tweets.json', json_encode($twitter_results));
-		exec('python clustering_category/show_cat.py clustering_category/ES_instagram.json clustering_category/ES_english_tweets.json clustering_category/points.geojson clustering_category/polygons.geojson clustering_category/food_category.csv "'.$food.'" True');
+		$food_list = $_GET['food'];
+		$food_list = explode(',', $food_list);
+		$ret = [];
+		foreach($food_list as $food) {
+			exec('python clustering_category/show_cat.py clustering_category/ES_instagram.json clustering_category/ES_english_tweets.json clustering_category/points.geojson clustering_category/polygons.geojson clustering_category/food_category.csv "'.$food.'" True');
 		//die('no error 2!!!!!');
-		$points = json_decode(file_get_contents('clustering_category/points.geojson'), true);
-		$clusters = json_decode(file_get_contents('clustering_category/polygons.geojson'), true);
-	
-		$merge = [
-			'points' => $points,
-			'clusters' => $clusters
-		];
+			$points = json_decode(file_get_contents('clustering_category/points.geojson'), true);
+			$clusters = json_decode(file_get_contents('clustering_category/polygons.geojson'), true);
+			
+			$ret['points'][$food] = $points;
+			$ret['clusters'][$food] = $clusters;
+		}
 		
-		echo json_encode($merge);	
+		echo json_encode($ret);	
 		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
 		$coordinate = array();
