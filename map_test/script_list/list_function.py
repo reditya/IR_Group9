@@ -1021,8 +1021,11 @@ cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_
 #unique_food(list_centroid, new_weight, new_ref_list, 'coffee')
 
 
-
-
-
+def eval_cluster(feat, labels):
+    # Compute the mean Silhouette Coefficient of all samples
+    SS = metrics.silhouette_score(feat, labels, metric='euclidean')
+    # Compute the Calinski and Harabaz score
+    CHS = metrics.calinski_harabaz_score(X, labels)
+    print SS, CHS    
 
 
