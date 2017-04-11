@@ -296,33 +296,33 @@
 		*/
 	}	
 
-	function dateFilter($data, $start, $end){
-        $tempProductData = data;
-        $resultProductData = array_filter($data, function ($a) {
-            $upperHits = $a['hits'];
-            $hits = $upperHits['hits'] || {};
-            $max = -1;
-            $hits = array_filter($hits, function($data){
-            	$date = $data['_source']['createdTime'];
-            	$date = new Date($date*1000);
-            	$hours = $date.getHours();
+	// function dateFilter($data, $start, $end){
+ //        $tempProductData = data;
+ //        $resultProductData = array_filter($data, function ($a) {
+ //            $upperHits = $a['hits'];
+ //            $hits = $upperHits['hits'] || {};
+ //            $max = -1;
+ //            $hits = array_filter($hits, function($data){
+ //            	$date = $data['_source']['createdTime'];
+ //            	$date = new Date($date*1000);
+ //            	$hours = $date.getHours();
 
-            	if ($hours >= $start && $hours <= $end){
-            		if ($data['_score'] > $max) $max = $data['_score'];
-            		return true;
-            	}
+ //            	if ($hours >= $start && $hours <= $end){
+ //            		if ($data['_score'] > $max) $max = $data['_score'];
+ //            		return true;
+ //            	}
 
-            	return false;
-            });
+ //            	return false;
+ //            });
             
-            $upperHits['total'] = $hits.length;
-            $upperHits['max_score'] = $max;
-            $upperHits['hits'] = $hits;
-            $tempProductData[0]['hits'] = $upperHits;
+ //            $upperHits['total'] = $hits.length;
+ //            $upperHits['max_score'] = $max;
+ //            $upperHits['hits'] = $hits;
+ //            $tempProductData[0]['hits'] = $upperHits;
             
-            return true;
-        });
+ //            return true;
+ //        });
 
-        return $tempProductData;
-	}
+ //        return $tempProductData;
+	// }
 ?>
