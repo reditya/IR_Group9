@@ -3,41 +3,31 @@
 	require '../vendor/autoload.php';
 	use Elasticsearch\ClientBuilder;
 
-	function filterHits($value){
-		// $date = $value['_source']['createdTime'];
-  //   	$date = new Date($date*1000);
-  //   	$hours = $date.getHours();
-
-  //   	if ($hours >= $start && $hours <= $end){
-  //   		return true;
-  //   	}
-
-  //   	return false;
-	}
-
 	function dateFilter($data, $start, $end){
-        $tempProductData = $data;
-        $upperHits = $data[0]['hits'];
-        $hits = $upperHits['hits'];
-        $max = -1;
+	$tempData = json_decode($data, true);
+	$upperHits = $tempData['hits'];
+        $hits = $tempData['hits']['hits'];
+        $max = 0;
+	
+        $hitsFiltered = array_filter($hits, function ($val){
+		$source = $val['_source'];
+		$date = $source['createdTime'];
+        	$hours = intval(date('H', $date));
 
-        $hits = array_filter($hits, function ($val, $key){
-        	$date = $val['_source']['createdTime'];
-        	$date = new Date($date*1000);
-        	$hours = $date.getHours();
-
-        	if ($hours >= $start && $hours <= $end){
+         	if ($hours >= $start && $hours <= $end){
+			if ($val['_score'] > $max) $max = $val['_score'];
         		return true;
     	}
 
     	return false;
         });
+       
+	$upperHits['total'] = count($hitsFiltered);
+	$upperHits['hits'] = $hitsFiltered;
+	$upperHits['max_score'] = $max;
         
-        $upperHits['total'] = $hits.length;
-        $upperHits['hits'] = $hits;
-        $tempProductData[0]['hits'] = $upperHits;
-
-        return $tempProductData;
+	$tempData['hits'] = $upperHits;
+        return json_encode($tempData);
 	}
 
 	$client = Elasticsearch\ClientBuilder::create()
@@ -107,9 +97,9 @@
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		$insta_json = dateFilter(json_encode($instagram_results),0,10);
-		echo $insta_json;
-		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
+		//die($instagram_results);
+		$insta_json = dateFilter(json_encode($instagram_results),0,23);
+		file_put_contents('clustering/ES_instagram.json', $insta_json);
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
@@ -125,7 +115,7 @@
 			'points' => $points,
 			'clusters' => $clusters
 		];
-		
+		//die('no error 3!');
 		echo json_encode($merge);	
 		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
