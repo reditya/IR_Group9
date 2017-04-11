@@ -95,12 +95,9 @@ $.getJSON("category.json", function(data){
 
 
 $('#buttonSearch').on('click', function(e) {
-  if(global_radio_selection == "foodterm")
-  {
+  if(global_radio_selection == "foodterm"){
     searchPoints(0,23);
-  }
-  else
-  {
+  }else if (global_radio_selection == "category"){
     searchCategory(0,23);
   }
 });
