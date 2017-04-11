@@ -2,6 +2,34 @@
 	// query for list of recipes
 	require '../vendor/autoload.php';
 	use Elasticsearch\ClientBuilder;
+
+	function filterHits($value){
+		$date = $value['_source']['createdTime'];
+    	$date = new Date($date*1000);
+    	$hours = $date.getHours();
+
+    	if ($hours >= $start && $hours <= $end){
+    		return true;
+    	}
+
+    	return false;
+	}
+
+	function dateFilter($data, $start, $end){
+        $tempProductData = $data;
+        $upperHits = $data[0]['hits'];
+        $hits = $upperHits['hits'];
+        $max = -1;
+
+        $hits = array_filter($hits, 'filterHits');
+        
+        $upperHits['total'] = $hits.length;
+        $upperHits['hits'] = $hits;
+        $tempProductData[0]['hits'] = $upperHits;
+
+        return $tempProductData;
+	}
+
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
@@ -69,8 +97,8 @@
 		$params['index'] = 'instagram';
 		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
-		// echo $insta_json;
+		$insta_json = dateFilter(json_encode($instagram_results),0,10);
+		echo $insta_json;
 		file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
 		// tweets
 		$params['index']  = 'english_tweets';
@@ -294,35 +322,5 @@
 		}
 		echo json_encode($coordinate);
 		*/
-	}	
-
-	// function dateFilter($data, $start, $end){
- //        $tempProductData = data;
- //        $resultProductData = array_filter($data, function ($a) {
- //            $upperHits = $a['hits'];
- //            $hits = $upperHits['hits'] || {};
- //            $max = -1;
- //            $hits = array_filter($hits, function($data){
- //            	$date = $data['_source']['createdTime'];
- //            	$date = new Date($date*1000);
- //            	$hours = $date.getHours();
-
- //            	if ($hours >= $start && $hours <= $end){
- //            		if ($data['_score'] > $max) $max = $data['_score'];
- //            		return true;
- //            	}
-
- //            	return false;
- //            });
-            
- //            $upperHits['total'] = $hits.length;
- //            $upperHits['max_score'] = $max;
- //            $upperHits['hits'] = $hits;
- //            $tempProductData[0]['hits'] = $upperHits;
-            
- //            return true;
- //        });
-
- //        return $tempProductData;
-	// }
+	}
 ?>
