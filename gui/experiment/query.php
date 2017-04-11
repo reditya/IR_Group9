@@ -296,22 +296,33 @@
 		*/
 	}	
 
-	// function dateFilter(data, start, end){
-	// 	var startDate = new Date("2015-08-04");
- //        var endDate = new Date("2015-08-12");
+	function dateFilter(data, start, end){
+        // var tempProductData = data;
+        // var resultProductData = data.filter(function (a) {
+        //     var upperHits = a.hits;
+        //     var hits = a.hits.hits || {};
+        //     var max = -1;
+        //     hits = hits.filter(function(data){
+        //     	date = data._source.createdTime;
+        //       date = new Date(date*1000);
+        //       var hours = date.getHours();
+              
+        //       if (hours >= start && hours <= end){
+        //       	if (data._score > max) max = data._score;
+        //         return true;
+        //       }
+              
+        //       return false;
+        //     });
+            
+        //     upperHits.total = hits.length;
+        //     upperHits.max_score = max;
+        //     upperHits.hits = hits;
+        //     tempProductData[0].hits = upperHits;
+            
+        //     return hits.length>0;
+        // });
 
- //        var resultProductData = data.filter(function (a) {
- //            var hitDates = data.hits.hits._source.createdTime || {};
- //            // extract all date strings
- //            hitDates = Object.keys(hitDates);
- //            // improvement: use some. this is an improment because .map()
- //            // and .filter() are walking through all elements.
- //            // .some() stops this process if one item is found that returns true in the callback function and returns true for the whole expression
- //            hitDateMatchExists = hitDates.some(function(dateStr) {
- //                var date = new Date(dateStr);
- //                return date >= startDate && date <= endDate
- //            });
- //            return hitDateMatchExists;
- //        });
-	// }
+        // return tempProductData;
+	}
 ?>
