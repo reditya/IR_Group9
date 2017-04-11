@@ -206,6 +206,96 @@
 		echo $output;
 	}
 
+	else if($query == "category")
+	{
+		$food = $_GET['food'];
+
+		$params = [
+			'type' => 'post',
+			'body' => [
+				'size' => '10000',
+				'query'=> [
+					'filtered' => [
+						'query' => [
+							'match_all' => new \stdClass()
+						]
+					]
+				]
+			]
+		];
+
+		/*$params = [
+                    'type' => 'post',
+                    'body' => [
+                        'size' => '10000',
+                        'query' => [
+				'filtered' => [
+					'query' => [
+						'match' => [
+                                        		'food' => $food
+                                		]
+					],
+					'filter' => [
+                                        		'script' => [
+                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
+                                                        	'params' => [
+                                                        		'min' => 8,
+                                                                	'max' => 10
+                                                       		]
+                                               	 	]
+						]
+				]
+			]	
+                    ]
+                ];*/
+		// $params = [
+  //                   'type' => 'post',
+  //                   'body' => [
+  //                       'size' => '10000',
+  //                       'query' => [
+  //                       	'match' => [
+		// 						'food' => $food           	
+  //                               ]
+  //                       ]
+  //                   ]
+  //               ];
+		
+		// instagram
+		$params['index'] = 'instagram';
+		//die(json_encode($params));
+		$instagram_results = $client->search($params);
+		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
+		// echo $insta_json;
+		file_put_contents('clustering_category/ES_instagram.json', json_encode($instagram_results));
+		// tweets
+		$params['index']  = 'english_tweets';
+		$params['type'] = 'tweet';
+		$twitter_results = $client->search($params);
+		//echo (json_encode($twitter_results));
+		file_put_contents('clustering_category/ES_english_tweets.json', json_encode($twitter_results));
+		exec('python clustering_category/show_cat.py clustering_category/ES_instagram.json clustering_category/ES_english_tweets.json clustering_category/points.geojson clustering_category/polygons.geojson clustering_category/food_category.csv "'.$food.'" True');
+		//die('no error 2!!!!!');
+		$points = json_decode(file_get_contents('clustering_category/points.geojson'), true);
+		$clusters = json_decode(file_get_contents('clustering_category/polygons.geojson'), true);
+	
+		$merge = [
+			'points' => $points,
+			'clusters' => $clusters
+		];
+		
+		echo json_encode($merge);	
+		/*
+		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
+		$coordinate = array();
+		foreach($ar_results as $i)
+		{
+			//print_r($i['_source']);
+			$coordinate[] = array($i['_source']['coordinate']['lat'], $i['_source']['coordinate']['lon']);
+		}
+		echo json_encode($coordinate);
+		*/
+	}	
+
 	// function dateFilter(data, start, end){
 	// 	var startDate = new Date("2015-08-04");
  //        var endDate = new Date("2015-08-12");

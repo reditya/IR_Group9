@@ -6,10 +6,12 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" type="text/css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>-->
     <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>    
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"> -->
     <link rel="stylesheet" href="../css/feedback.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/custom.css" />    
@@ -30,8 +32,17 @@
     <div id="select-panel" class="card" style="width: 30rem;">
       <div class="card-block">
         <h4 class="card-title">Search Food!</h4>
-        <p class="card-text">Type one up to five food term here to see layered heatmap of food preferences across Amsterdam</p>
-        <div id="select-panel-form"></div>
+        <p class="card-text">Choose whether you want to search based on food term or category : </p>
+        <form id="radio_search">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" id="category_search" value="category"> Category
+            </label>
+            <label class="radio-inline">
+              <input type="radio" name="optradio" id="foodterm_search" value="foodterm"> Food Term
+            </label>
+        </form>
+        <div id="foodterm-panel-form"></div>
+        <div id="category-panel-form"></div>        
         <br>
         <button type="button" class="btn btn-primary btn-sm" id="buttonSearch">Search</button>
       </div>
