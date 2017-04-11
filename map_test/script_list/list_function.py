@@ -16,6 +16,8 @@ from sklearn.cluster import DBSCAN
 import matplotlib.pyplot as plt
 from sklearn.cluster import AgglomerativeClustering
 from sklearn.neighbors import kneighbors_graph
+from sklearn import metrics
+from sklearn.metrics import pairwise_distances
 from collections import Counter
 
 #script, in_file1, in_file2, out_file, out_file_2 , cat_file = argv
@@ -309,9 +311,10 @@ def eval_cluster(feat, labels):
     # Compute the mean Silhouette Coefficient of all samples
     SS = metrics.silhouette_score(feat, labels, metric='euclidean')
     # Compute the Calinski and Harabaz score
-    CHS = metrics.calinski_harabaz_score(X, labels)
-    print SS, CHS    
-
+    CHS = metrics.calinski_harabaz_score(feat, labels)
+    print "Silhouette Coefficient :", SS    
+    print "Calinski and Harabaz Index :", CHS
+    
 def hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroid):
     # Preparation of the contiguity matrix
     X = np.zeros(shape=(len(centroid),2))
@@ -465,13 +468,11 @@ def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, o
         "type": "FeatureCollection",
         "features": polygon_list
         }
-    output = open(out_file, 'w')
-    json.dump(geojson, output)
-    output_2 = open(out_file_2, 'w')
-    json.dump(geojson_2, output_2)
-    print new_coor
-    print weight
-    #eval_cluster(feat, new_clust_id)
+    eval_cluster(new_weight, new_clust_id)
+    #output = open(out_file, 'w')
+    #json.dump(geojson, output)
+    #output_2 = open(out_file_2, 'w')
+    #json.dump(geojson_2, output_2)
 
 
 def cluster_with_several_max(new_coor, new_weight, ref_list, nb_data,bool_file):
@@ -1027,13 +1028,4 @@ cluster_with_clusterpy(list_centroid,new_weight, new_ref_list, new_nb_data,list_
 #cluster_with_max(list_centroid,new_weight, new_ref_list, new_nb_data,list_coor, out_file, out_file_2)
 
 #unique_food(list_centroid, new_weight, new_ref_list, 'coffee')
-
-
-def eval_cluster(feat, labels):
-    # Compute the mean Silhouette Coefficient of all samples
-    SS = metrics.silhouette_score(feat, labels, metric='euclidean')
-    # Compute the Calinski and Harabaz score
-    CHS = metrics.calinski_harabaz_score(X, labels)
-    print SS, CHS    
-
 
