@@ -296,33 +296,33 @@
 		*/
 	}	
 
-	function dateFilter(data, start, end){
-        // var tempProductData = data;
-        // var resultProductData = data.filter(function (a) {
-        //     var upperHits = a.hits;
-        //     var hits = a.hits.hits || {};
-        //     var max = -1;
-        //     hits = hits.filter(function(data){
-        //     	date = data._source.createdTime;
-        //       date = new Date(date*1000);
-        //       var hours = date.getHours();
-              
-        //       if (hours >= start && hours <= end){
-        //       	if (data._score > max) max = data._score;
-        //         return true;
-        //       }
-              
-        //       return false;
-        //     });
-            
-        //     upperHits.total = hits.length;
-        //     upperHits.max_score = max;
-        //     upperHits.hits = hits;
-        //     tempProductData[0].hits = upperHits;
-            
-        //     return hits.length>0;
-        // });
+	function dateFilter($data, $start, $end){
+        $tempProductData = data;
+        $resultProductData = array_filter($data, function ($a) {
+            $upperHits = $a['hits'];
+            $hits = $upperHits['hits'] || {};
+            $max = -1;
+            $hits = array_filter($hits, function($data){
+            	$date = $data['_source']['createdTime'];
+            	$date = new Date($date*1000);
+            	$hours = $date.getHours();
 
-        // return tempProductData;
+            	if ($hours >= $start && $hours <= $end){
+            		if ($data['_score'] > $max) $max = $data['_score'];
+            		return true;
+            	}
+
+            	return false;
+            });
+            
+            $upperHits['total'] = $hits.length;
+            $upperHits['max_score'] = $max;
+            $upperHits['hits'] = $hits;
+            $tempProductData[0]['hits'] = $upperHits;
+            
+            return true;
+        });
+
+        return $tempProductData;
 	}
 ?>
