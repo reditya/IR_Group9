@@ -305,7 +305,12 @@ def return_cluster_pysal(new_coor, new_weight, ref_list, nb_data, list_coor, out
     output_2 = open(out_file_2, 'w')
     json.dump(geojson_2, output_2)
     
-
+def eval_cluster(feat, labels):
+    # Compute the mean Silhouette Coefficient of all samples
+    SS = metrics.silhouette_score(feat, labels, metric='euclidean')
+    # Compute the Calinski and Harabaz score
+    CHS = metrics.calinski_harabaz_score(X, labels)
+    print SS, CHS    
 
 def hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroid):
     # Preparation of the contiguity matrix
@@ -327,7 +332,7 @@ def hierarchical_clustering(nb_clust,nb_feat, centroid,cluster_init, dataCentroi
         new_id_clust.append(clust)
         print clust
     return new_id_clust
-
+    
 def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, out_file, out_file_2, hierarchi='False'):
     # GeoSOM
     data = cp.importArcData("map_test/test_big_grid")
@@ -464,6 +469,9 @@ def cluster_with_clusterpy(new_coor, new_weight, ref_list, nb_data, list_coor, o
     json.dump(geojson, output)
     output_2 = open(out_file_2, 'w')
     json.dump(geojson_2, output_2)
+    print new_coor
+    print weight
+    #eval_cluster(feat, new_clust_id)
 
 
 def cluster_with_several_max(new_coor, new_weight, ref_list, nb_data,bool_file):
