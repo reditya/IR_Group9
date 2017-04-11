@@ -14,7 +14,7 @@
 			$date = $source['createdTime'];
 			$hours = intval(date('H', $date));
 
-			if ($hours >= $start && $hours <= $end){
+			if ($hours >= 0 && $hours <= 5){
 				if ($val['_score'] > $max) $max = $val['_score'];
 				return true;
 			}
@@ -23,10 +23,11 @@
 		});
 
 		$upperHits['total'] = count($hitsFiltered);
-		$upperHits['hits'] = $hitsFiltered;
+		$upperHits['hits'] = array_values($hitsFiltered);
 		$upperHits['max_score'] = $max;
 
 		$tempData['hits'] = $upperHits;
+		echo json_encode($tempData);
 		return json_encode($tempData);
 	}
 
