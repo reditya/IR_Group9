@@ -4,30 +4,30 @@
 	use Elasticsearch\ClientBuilder;
 
 	function dateFilter($data, $start, $end){
-	$tempData = json_decode($data, true);
-	$upperHits = $tempData['hits'];
-        $hits = $tempData['hits']['hits'];
-        $max = 0;
-	
-        $hitsFiltered = array_filter($hits, function ($val){
-		$source = $val['_source'];
-		$date = $source['createdTime'];
-        	$hours = intval(date('H', $date));
+		$tempData = json_decode($data, true);
+		$upperHits = $tempData['hits'];
+		$hits = $tempData['hits']['hits'];
+		$max = 0;
 
-         	if ($hours >= $start && $hours <= $end){
-			if ($val['_score'] > $max) $max = $val['_score'];
-        		return true;
-    	}
+		$hitsFiltered = array_filter($hits, function ($val){
+			$source = $val['_source'];
+			$date = $source['createdTime'];
+			$hours = intval(date('H', $date));
 
-    	return false;
-        });
-       
-	$upperHits['total'] = count($hitsFiltered);
-	$upperHits['hits'] = $hitsFiltered;
-	$upperHits['max_score'] = $max;
-        
-	$tempData['hits'] = $upperHits;
-        return json_encode($tempData);
+			if ($hours >= $start && $hours <= $end){
+				if ($val['_score'] > $max) $max = $val['_score'];
+				return true;
+			}
+
+			return false;
+		});
+
+		$upperHits['total'] = count($hitsFiltered);
+		$upperHits['hits'] = $hitsFiltered;
+		$upperHits['max_score'] = $max;
+
+		$tempData['hits'] = $upperHits;
+		return json_encode($tempData);
 	}
 
 	$client = Elasticsearch\ClientBuilder::create()
@@ -35,6 +35,8 @@
 	    ->setRetries(0)
 	    ->build();
 	$query = $_GET['query'];
+	$start = $_GET['start'];
+	$end = $_GET['end'];
 	
 	// query for food
 	if($query == "food")
@@ -56,56 +58,18 @@
 				]
 			]
 		];
-
-		/*$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-				'filtered' => [
-					'query' => [
-						'match' => [
-                                        		'food' => $food
-                                		]
-					],
-					'filter' => [
-                                        		'script' => [
-                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
-                                                        	'params' => [
-                                                        		'min' => 8,
-                                                                	'max' => 10
-                                                       		]
-                                               	 	]
-						]
-				]
-			]	
-                    ]
-                ];*/
-		// $params = [
-  //                   'type' => 'post',
-  //                   'body' => [
-  //                       'size' => '10000',
-  //                       'query' => [
-  //                       	'match' => [
-		// 						'food' => $food           	
-  //                               ]
-  //                       ]
-  //                   ]
-  //               ];
 		
 		// instagram
 		$params['index'] = 'instagram';
-		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		//die($instagram_results);
-		$insta_json = dateFilter(json_encode($instagram_results),0,23);
+		$insta_json = dateFilter(json_encode($instagram_results), $start, $end);
 		file_put_contents('clustering/ES_instagram.json', $insta_json);
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
-		//echo (json_encode($twitter_results));
-		file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
+		$twitter_json = dateFilter(json_encode($twitter_results), $start, $end);
+		file_put_contents('clustering/ES_english_tweets.json', $twitter_json);
 		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
 		//die('no error 2!!!!!');
 		$points = json_decode(file_get_contents('clustering/points.geojson'), true);
@@ -115,7 +79,6 @@
 			'points' => $points,
 			'clusters' => $clusters
 		];
-		//die('no error 3!');
 		echo json_encode($merge);	
 		/*
 		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
