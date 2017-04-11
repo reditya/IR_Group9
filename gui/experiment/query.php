@@ -4,15 +4,15 @@
 	use Elasticsearch\ClientBuilder;
 
 	function filterHits($value){
-		$date = $value['_source']['createdTime'];
-    	$date = new Date($date*1000);
-    	$hours = $date.getHours();
+		// $date = $value['_source']['createdTime'];
+  //   	$date = new Date($date*1000);
+  //   	$hours = $date.getHours();
 
-    	if ($hours >= $start && $hours <= $end){
-    		return true;
-    	}
+  //   	if ($hours >= $start && $hours <= $end){
+  //   		return true;
+  //   	}
 
-    	return false;
+  //   	return false;
 	}
 
 	function dateFilter($data, $start, $end){
@@ -21,7 +21,17 @@
         $hits = $upperHits['hits'];
         $max = -1;
 
-        $hits = array_filter($hits, 'filterHits');
+        $hits = array_filter($hits, function ($val, $key){
+        	$date = $val['_source']['createdTime'];
+        	$date = new Date($date*1000);
+        	$hours = $date.getHours();
+
+        	if ($hours >= $start && $hours <= $end){
+        		return true;
+    	}
+
+    	return false;
+        });
         
         $upperHits['total'] = $hits.length;
         $upperHits['hits'] = $hits;

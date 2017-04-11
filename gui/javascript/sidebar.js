@@ -99,7 +99,7 @@ $('#buttonSearch').on('click', function(e) {
     searchPoints(0,23);
   }else if (global_radio_selection == "category"){
     searchCategory(0,23);
-  }
+  }else{}
 });
 
 function searchPoints(start, end){
