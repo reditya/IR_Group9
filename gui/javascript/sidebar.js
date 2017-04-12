@@ -112,6 +112,10 @@ $.getJSON("category.json", function(data){
 
 var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
+    search();
+});
+
+function search(){
     var hour1 = document.getElementById("hour1Temp").value;
     var hour2 = document.getElementById("hour2Temp").value;
     foodterm = "";
@@ -127,8 +131,8 @@ $('#buttonSearch').on('click', function(e) {
     }else if (global_radio_selection == "category"){
         foodterm = $("#categorySelection").val();
         if (foodterm == ""){
-    	}
-   	else{
+      }
+    else{
         if (global_view_selection == "heatmap"){
             polygonGroup.clearLayers();
             searchCategory(hour1,hour2);
@@ -146,7 +150,7 @@ $('#buttonSearch').on('click', function(e) {
         }
     }
   }
-});
+}
 
 function clusterCategory(category){
     var pointfile = "clustering_category/new_point_"+category+".geojson";
