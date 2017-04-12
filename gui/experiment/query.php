@@ -3,18 +3,56 @@
 	require '../vendor/autoload.php';
 	use Elasticsearch\ClientBuilder;
 
-	function dateFilter($data, $start, $end){
+	function convert($str) {
+		if (strlen($str) == 1)
+			return getNumber($str);
+		else {
+			$num = getNumber($str[0]) * 10;
+			$num = $num + getNumber($str[1]);
+			return $num;
+		}
+	}
+
+	function getNumber($number){
+		if ($number == '0')
+			return 0;
+		else if ($number == '1')
+			return 1;
+		else if ($number == '2')
+			return 2;
+		else if ($number == '3')
+			return 3;
+		else if ($number == '4')
+			return 4;
+		else if ($number == '5')
+			return 5;
+		else if ($number == '6')
+			return 6;
+		else if ($number == '7')
+			return 7;
+		else if ($number == '8')
+			return 8;
+		else if ($number == '9')
+			return 9;
+	}
+	
+	function dateFilter($data, $starts, $ends){
 		$tempData = json_decode($data, true);
 		$upperHits = $tempData['hits'];
 		$hits = $tempData['hits']['hits'];
 		$max = 0;
-
+		
+		echo $starts . ' # ' . $ends . '  ';
 		$hitsFiltered = array_filter($hits, function ($val){
 			$source = $val['_source'];
 			$date = $source['createdTime'];
 			$hours = intval(date('H', $date));
-
-			if ($hours >= 0 && $hours <= 5){
+			$deltaS = $hours - $start;
+			$deltaE = $hours - $ends;
+			
+			echo 'ST: ' . convert($starts) . ' % EN: ' . convert($ends) . '   ';
+			echo $hours . '#' . $deltaS . '#' . $deltaE . '   ';
+			if ($deltaS >= 0 && $deltaE <= 0){
 				if ($val['_score'] > $max) $max = $val['_score'];
 				return true;
 			}
@@ -36,8 +74,8 @@
 	    ->setRetries(0)
 	    ->build();
 	$query = $_GET['query'];
-	$start = $_GET['start'];
-	$end = $_GET['end'];
+	$alpha = $_GET['start'];
+	$omega = $_GET['end'];
 	
 	// query for food
 	if($query == "food")
@@ -63,13 +101,13 @@
 		// instagram
 		$params['index'] = 'instagram';
 		$instagram_results = $client->search($params);
-		$insta_json = dateFilter(json_encode($instagram_results), $start, $end);
+		$insta_json = dateFilter(json_encode($instagram_results), $alpha, $omega);
 		file_put_contents('clustering/ES_instagram.json', $insta_json);
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
-		$twitter_json = dateFilter(json_encode($twitter_results), $start, $end);
+		$twitter_json = dateFilter(json_encode($twitter_results), $alpha, $omega);
 		file_put_contents('clustering/ES_english_tweets.json', $twitter_json);
 		exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
 		//die('no error 2!!!!!');
