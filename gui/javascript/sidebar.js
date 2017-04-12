@@ -37,20 +37,37 @@ $.getJSON("initial_clustering.geojson",function(data){
   //L.geoJSON(data, geojsonMarkerOptions).addTo(map);
 });
 
+var view_html = 'Show as: <br><label class="radio-inline"><input type="radio" name="optradio1" id="heatmap_view" value="heatmap"> Heatmap </label> <label class="radio-inline"><input type="radio" name="optradio1" id="cluster_view" value="cluster"> Cluster </label>'
+
 // ACTION FOR FOOD TERM OR CATEGORY SEARCH
 var global_radio_selection = "";
+var global_view_selection = "";
 $('#radio_search input').on('change', function() {
+   $("#layer_option").html('');
    var selected = $('input[name=optradio]:checked', '#radio_search').val();
    global_radio_selection = selected; 
    if(selected == "category")
    {
     $("#category-panel-form").show();
     $("#foodterm-panel-form").hide();
+    $("#radio-view").html('');
+    $("#radio-view").html(view_html);
+    $('#radio-view input').on('change', function(){
+        global_view_selection = $('input[name=optradio1]:checked', '#radio-view').val();
+        $("#layer_option").html('');
+        for(i=0; i<pointMarker.length; i++)
+        {
+        map.removeLayer(pointMarker[i]);
+        }
+    });
    }
    else if(selected == "foodterm")
    {
     $("#foodterm-panel-form").show();
     $("#category-panel-form").hide();
+    $("#radio-view").html('');
+    global_view_selection = "";
+    polygonGroup.clearLayers();
    }
 });
 
@@ -93,17 +110,52 @@ $.getJSON("category.json", function(data){
   $("#category-panel-form").hide();
 });
 
-
+var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
-  if(global_radio_selection == "foodterm")
-  {
-    searchPoints(0,23);
-  }
-  else
-  {
-    searchCategory(0,23);
+    foodterm = "";
+    $("#layer_option").html('');
+    if(global_radio_selection == "foodterm"){
+        foodterm = $("#foodSelection").val();  
+        if (foodterm == ""){
+        }
+        else{
+            console.log(foodterm);
+            searchPoints(0,23);
+        }   
+    }else if (global_radio_selection == "category"){
+        foodterm = $("#categorySelection").val();
+        if (foodterm == ""){
+    	}
+   	else{
+        if (global_view_selection == "heatmap"){
+            polygonGroup.clearLayers();
+            searchCategory(0,23);
+        }else if(global_view_selection == "cluster"){
+            console.log(foodterm);
+            var category = foodterm;
+            if (category == "alcoholic beverage"){
+                category = "alcohol";
+            }else if(category == "non-alcoholic beverage"){
+                category = "non_alcohol";
+            }else if(category == "fast-food"){
+                category = "fast";
+            }
+            clusterCategory(category);
+        }
+    }
   }
 });
+
+function clusterCategory(category){
+    var pointfile = "clustering_category/new_point_"+category+".geojson";
+    var polyfile = "clustering_category/new_poly_"+category+".geojson";
+    $.getJSON(pointfile,function(data){
+      prepare_cluster_color(data);
+      $.getJSON(polyfile,function(data){
+        show_cluster(data);    
+      });
+    });
+}
 
 var heat_dict;
 
@@ -115,10 +167,7 @@ function searchPoints(start, end){
   }
 
   //var foodterm = $("#countries").getSelectedItemData().name;
-  var foodterm = $("#foodSelection").val();  
-  //alert(foodterm);
-  //foodterm = foodterm.toLowerCase();
-
+  foodterm = $("#foodSelection").val();  
   var geojsonMarkerOptions = {
     radius: 8,
     fillColor: "#ff7800",
@@ -196,7 +245,6 @@ function searchPoints(start, end){
     $('#modalCollection').html(data);
     //alert(foodterm);
     //console.log(data);
-    //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
       //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
@@ -231,8 +279,7 @@ function searchCategory(start, end){
   }
 
   //var foodterm = $("#countries").getSelectedItemData().name;
-  var foodterm = $("#categorySelection").val();  
-  //foodterm = foodterm.toLowerCase();
+  foodterm = $("#categorySelection").val();  
 
   var geojsonMarkerOptions = {
     radius: 8,
@@ -304,37 +351,12 @@ function searchCategory(start, end){
     });    
   });
 
-  /*var food_query = 'query.php?query=category&food='+foodterm+'&start='+start+'&end='+end;
-  $.getJSON(food_query,function(data){
-    var pointData = data['points'];
-    var clusterData = data['clusters'];
-    console.log(pointData);
-    marker_point = L.geoJSON(pointData);
-    //marker_cluster = L.geoJSON(clusterData);
-
-    var data_heat = [];
-
-    var datapoint = pointData['features'];
-    for(i=0;i<datapoint.length;i++)
-    {
-      //console.log(datapoint[i]);
-      data_heat.push([datapoint[i]['geometry']['coordinates'][1], datapoint[i]['geometry']['coordinates'][0], datapoint[i]['properties']['intensity']]);
-    }
-
-    //console.log(data_heat);
-
-    var heat_layer = L.heatLayer(data_heat, {radius: 15, maxZoom: 15});
-    pointMarker.push(heat_layer);
-    map.addLayer(heat_layer);
-  });*/
-
   // recipes detail in the sidebar
   var detail_query = 'query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
     //alert(foodterm);
-    //console.log(data);
     //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
