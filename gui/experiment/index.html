@@ -32,18 +32,19 @@
     <div id="select-panel" class="card" style="width: 30rem;">
       <div class="card-block">
         <h4 class="card-title">Search Food!</h4>
-        <p class="card-text">Choose whether you want to search based on food term or category : </p>
+        <div id="foodterm-panel-form"></div>
+        <div id="category-panel-form"></div>  
+        Based on: <br>
         <form id="radio_search">
             <label class="radio-inline">
               <input type="radio" name="optradio" id="category_search" value="category"> Category
             </label>
             <label class="radio-inline">
-              <input type="radio" name="optradio" id="foodterm_search" value="foodterm"> Food Term
+                <input type="radio" name="optradio" id="foodterm_search" value="foodterm"> Food Term
             </label>
         </form>
-        <div id="foodterm-panel-form"></div>
-        <div id="category-panel-form"></div>        
-        <br>
+        <form id="radio-view">
+        </form>
         <button type="button" class="btn btn-primary btn-sm" id="buttonSearch">Search</button>
       </div>
     </div>
@@ -109,4 +110,5 @@
     <script src="../javascript/sidebar.js"></script> 
     <script src="../javascript/slider.js"></script> 
     <script src="../javascript/map_marker.js"></script> 
+    <script src="../experiment/clustering_category/javascript/add_data.js"></script> 
 </body>

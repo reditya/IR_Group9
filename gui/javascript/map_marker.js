@@ -75,7 +75,7 @@ function populateRestaurants(lat, lng){
     restaurantGroup.clearLayers();
     var uri = "http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10";
     if($('#foodSelection').val() != '' ) {
-	uri += "&keyword=" + $('#foodSelection').val();
+    uri += "&keyword=" + $('#foodSelection').val();
     }
     $.get(uri, function(data, status) {
         var name, restaurantType, address, phone, rating, review_count;

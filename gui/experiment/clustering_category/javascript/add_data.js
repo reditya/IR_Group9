@@ -2,11 +2,7 @@
   var southWest = L.latLng(52.29,4.73);
   var northEast = L.latLng(52.42,4.98);
   var bounds = L.latLngBounds(southWest, northEast)
-  var map = L.map('map', {
-    maxBounds: bounds
-  }).setView([52.3702, 4.8952], 13);
-
-
+  var polygonGroup = L.layerGroup().addTo(map);
   var geojsonMarkerOptions = {
       radius: 8,
       fillColor: "#ff7800",
@@ -45,7 +41,6 @@
     }   
   }
   function onEachFeature_poly(feature, layer) {
-    
     if (feature.properties.category) {
       layer.bindPopup("coucou" + feature.properties.category);
       //layer.bindPopup(feature.properties.category);
@@ -124,6 +119,7 @@
   }
 
   function show_cluster(data){
+    polygonGroup.clearLayers();
     cluster_list = new Array(nb_clust);
 
     for (i = 0; i < nb_clust; i++) {
@@ -134,7 +130,7 @@
     // var hull = turf.convex(data);
     //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);  
-     
+
     L.geoJson(data, {
       filter: function (feature, layer) {  
         //console.log(feature.geometry.coordinates[0][0][0])
@@ -143,7 +139,7 @@
         //}
         cluster_list[Math.floor(feature.properties.cluster)].push([feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][1][1]],[feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][1][1]]);
       }
-    })
+    });
   
     
     collection_cluster = new Array(nb_clust);
@@ -158,18 +154,15 @@
     for (d in collection_cluster){      
       //console.log((collection_cluster[d]))
      // var hull = turf.convex(collection_cluster[d]);   
-               if (color_clust[d] != 'no'){
-
-      L.geoJson(turf.convex(collection_cluster[d]),{
-        style: function(feature) {
-          return {color: color_clust[d]};       
-        },
-        onEachFeature: onEachFeature_poly
-      }).addTo(map);
-      
+        if (color_clust[d] != 'no'){
+            L.geoJson(turf.convex(collection_cluster[d]),{
+                style: function(feature) {
+                    return {color: color_clust[d]};       
+                },
+                onEachFeature: onEachFeature_poly
+            }).addTo(polygonGroup);
+        }
     }
-    }
-    
   }
 
   function show_cluster_max(data){
@@ -248,7 +241,7 @@
   
   
   // All categories
-  $.getJSON("new_point.geojson",function(data){
+/*  $.getJSON("new_point.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
     console.log("cluster prepared")
@@ -263,7 +256,7 @@
     $.getJSON("new_point.geojson",function(data){
           map_points_insta(data);
           console.log("points shown")
-})
+})*/
 
   
   // Foursquare data
