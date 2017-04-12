@@ -39,7 +39,6 @@ $.getJSON("initial_clustering.geojson",function(data){
 
 var view_html = 'Show as: <br><label class="radio-inline"><input type="radio" name="optradio1" id="heatmap_view" value="heatmap"> Heatmap </label> <label class="radio-inline"><input type="radio" name="optradio1" id="cluster_view" value="cluster"> Cluster </label>'
 
-
 // ACTION FOR FOOD TERM OR CATEGORY SEARCH
 var global_radio_selection = "";
 var global_view_selection = "";
@@ -113,7 +112,6 @@ var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
     if(global_radio_selection == "foodterm"){
         foodterm = $("#foodSelection").val();  
-        foodterm = foodterm.toLowerCase();
         if (foodterm == ""){
         }
         else{
@@ -121,11 +119,10 @@ $('#buttonSearch').on('click', function(e) {
             searchPoints(0,23);
         }   
     }else if (global_radio_selection == "category"){
-        foodterm = $("#categorySelection").val();  
-        foodterm = foodterm.toLowerCase();
+        foodterm = $("#categorySelection").val();
         if (foodterm == ""){
-    }
-    else{
+    	}
+   	else{
         if (global_view_selection == "heatmap"){
             polygonGroup.clearLayers();
             searchCategory(0,23);
@@ -209,7 +206,7 @@ function searchPoints(start, end){
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
-    alert(foodterm);
+    //alert(foodterm);
     //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
@@ -244,8 +241,7 @@ function searchCategory(start, end){
   }
 
   //var foodterm = $("#countries").getSelectedItemData().name;
-  var foodterm = $("#categorySelection").val();  
-  foodterm = foodterm.toLowerCase();
+  foodterm = $("#categorySelection").val();  
 
   var geojsonMarkerOptions = {
     radius: 8,
@@ -288,7 +284,7 @@ function searchCategory(start, end){
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
-    alert(foodterm);
+    //alert(foodterm);
     //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
