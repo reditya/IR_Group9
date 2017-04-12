@@ -58,6 +58,6 @@ $("#slider-range").slider({
         
         document.getElementById("hour1Temp").value = hours1temp;
         document.getElementById("hour2Temp").value = hours2temp;
-        searchPoints(hours1temp, hours2temp);
+        search();
     }
 });

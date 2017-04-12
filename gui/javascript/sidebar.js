@@ -112,6 +112,10 @@ $.getJSON("category.json", function(data){
 
 var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
+    search();
+});
+
+function search(){
     var hour1 = document.getElementById("hour1Temp").value;
     var hour2 = document.getElementById("hour2Temp").value;
     foodterm = "";
@@ -146,7 +150,7 @@ $('#buttonSearch').on('click', function(e) {
         }
     }
   }
-});
+}
 
 function clusterCategory(category){
     var pointfile = "clustering_category/new_point_"+category+".geojson";
