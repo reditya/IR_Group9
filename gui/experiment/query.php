@@ -2,13 +2,46 @@
 	// query for list of recipes
 	require '../vendor/autoload.php';
 	use Elasticsearch\ClientBuilder;
+
+	function dateFilter($data, $starts, $ends){
+		$tempData = json_decode($data, true);
+		$upperHits = $tempData['hits'];
+		$hits = $tempData['hits']['hits'];
+		$max = 0;
+			
+		$filtered = [];
+		foreach($hits as $hit) {
+			$source = $hit['_source'];
+			$date = intval($source['createdTime']);
+			$hours = intval(date('H', $date));
+		
+			if ($hours >= $starts && $hours <= $ends){
+				if ($val['_score'] > $max) {
+					$max = $val['_score'];
+				}
+
+				$filtered[] = $hit;
+			}
+		}
+
+		$upperHits['total'] = count($filtered);
+		$upperHits['hits'] = array_values($filtered);
+		$upperHits['max_score'] = $max;
+
+		$tempData['hits'] = $upperHits;
+		return json_encode($tempData);
+	}
+
 	$client = Elasticsearch\ClientBuilder::create()
 	    ->setHosts(["54.171.151.130:9200"])
 	    ->setRetries(0)
 	    ->build();
 	$query = $_GET['query'];
+	$start = $_GET['start'];
+	$end = $_GET['end'];
 
 	$ret = [];
+
 	// query for food
 	if($query == "food")
 	{	
@@ -30,77 +63,30 @@
 					]
 				]
 			];
-
-		/*$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-				'filtered' => [
-					'query' => [
-						'match' => [
-                                        		'food' => $food
-                                		]
-					],
-					'filter' => [
-                                        		'script' => [
-                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
-                                                        	'params' => [
-                                                        		'min' => 8,
-                                                                	'max' => 10
-                                                       		]
-                                               	 	]
-						]
-				]
-			]	
-                    ]
-                ];*/
-		// $params = [
-  //                   'type' => 'post',
-  //                   'body' => [
-  //                       'size' => '10000',
-  //                       'query' => [
-  //                       	'match' => [
-		// 						'food' => $food           	
-  //                               ]
-  //                       ]
-  //                   ]
-  //               ];
 		
 			// instagram
 			$params['index'] = 'instagram';
-			//die(json_encode($params));
 			$instagram_results = $client->search($params);
-			// $insta_json = dateFilter(json_encode($instagram_results,0,0));
-			// echo $insta_json;
-			file_put_contents('clustering/ES_instagram.json', json_encode($instagram_results));
+			$insta_json = dateFilter(json_encode($instagram_results), $start, $end);
+			file_put_contents('clustering/ES_instagram.json', $insta_json);
+			
 			// tweets
 			$params['index']  = 'english_tweets';
 			$params['type'] = 'tweet';
 			$twitter_results = $client->search($params);
-			//echo (json_encode($twitter_results));
-			file_put_contents('clustering/ES_english_tweets.json', json_encode($twitter_results));
+			$twitter_json = dateFilter(json_encode($twitter_results), $start, $end);
+			file_put_contents('clustering/ES_english_tweets.json', $twitter_json);
+			
 			exec('python clustering/food_term_cluster.py "'.$food.'" clustering/ES_english_tweets.json clustering/ES_instagram.json clustering/points.geojson clustering/clusters.geojson');
-			//die('no error 2!!!!!');
+			
 			$points = json_decode(file_get_contents('clustering/points.geojson'), true);
 			$clusters = json_decode(file_get_contents('clustering/clusters.geojson'), true);
 	
 			$ret['points'][$food] = $points;
 			$ret['clusters'][$food] = $clusters;
-
 		}
 		
-		echo json_encode($ret);	
-		/*
-		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
-		$coordinate = array();
-		foreach($ar_results as $i)
-		{
-			//print_r($i['_source']);
-			$coordinate[] = array($i['_source']['coordinate']['lat'], $i['_source']['coordinate']['lon']);
-		}
-		echo json_encode($coordinate);
-		*/
+		echo json_encode($ret);
 	}
 	// query for recipes
 	else if($query == "recipes")
@@ -124,7 +110,7 @@
 		];
 		$results = $client->search($params);
 		$ar_results = $results['hits']['hits'];
-		//print_r($ar_results);
+		
 		$recipes = array();
 		foreach($ar_results as $i)
 		{
@@ -156,13 +142,13 @@
 		
 		$results = $client->search($params);
 		$ar_results = $results['hits']['hits'];
-		//print_r($ar_results);
+		
 		$output = "";
 		$counter = 0;
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
-			//print_r($r);
+			
 			// Logic for ingredients view
 			$ingredients_div = "<b>Ingredients</b><br>";
 			$ingredients = explode("|",$r['ingredients']);			
@@ -232,62 +218,26 @@
 				]
 			]
 		];
-
-		/*$params = [
-                    'type' => 'post',
-                    'body' => [
-                        'size' => '10000',
-                        'query' => [
-				'filtered' => [
-					'query' => [
-						'match' => [
-                                        		'food' => $food
-                                		]
-					],
-					'filter' => [
-                                        		'script' => [
-                                                		'inline' => "doc['createdTime'].getHourOfDay() >= min && doc['createdTime'].getHourOfDay() <= max",
-                                                        	'params' => [
-                                                        		'min' => 8,
-                                                                	'max' => 10
-                                                       		]
-                                               	 	]
-						]
-				]
-			]	
-                    ]
-                ];*/
-		// $params = [
-  //                   'type' => 'post',
-  //                   'body' => [
-  //                       'size' => '10000',
-  //                       'query' => [
-  //                       	'match' => [
-		// 						'food' => $food           	
-  //                               ]
-  //                       ]
-  //                   ]
-  //               ];
 		
 		// instagram
 		$params['index'] = 'instagram';
-		//die(json_encode($params));
 		$instagram_results = $client->search($params);
-		// $insta_json = dateFilter(json_encode($instagram_results,0,0));
-		// echo $insta_json;
-		file_put_contents('clustering_category/ES_instagram.json', json_encode($instagram_results));
+		$insta_json = dateFilter(json_encode($instagram_results), $start, $end);
+		file_put_contents('clustering_category/ES_instagram.json', $insta_json);
+		
 		// tweets
 		$params['index']  = 'english_tweets';
 		$params['type'] = 'tweet';
 		$twitter_results = $client->search($params);
-		//echo (json_encode($twitter_results));
-		file_put_contents('clustering_category/ES_english_tweets.json', json_encode($twitter_results));
+		$twitter_json = dateFilter(json_encode($twitter_results), $start, $end);
+		file_put_contents('clustering_category/ES_english_tweets.json', $twitter_json);
+		
 		$food_list = $_GET['food'];
 		$food_list = explode(',', $food_list);
 		$ret = [];
+
 		foreach($food_list as $food) {
 			exec('python clustering_category/show_cat.py clustering_category/ES_instagram.json clustering_category/ES_english_tweets.json clustering_category/points.geojson clustering_category/polygons.geojson clustering_category/food_category.csv "'.$food.'" True');
-		//die('no error 2!!!!!');
 			$points = json_decode(file_get_contents('clustering_category/points.geojson'), true);
 			$clusters = json_decode(file_get_contents('clustering_category/polygons.geojson'), true);
 			
@@ -295,35 +245,6 @@
 			$ret['clusters'][$food] = $clusters;
 		}
 		
-		echo json_encode($ret);	
-		/*
-		$ar_results = array_merge($instagram_results['hits']['hits'], $twitter_results['hits']['hits']);
-		$coordinate = array();
-		foreach($ar_results as $i)
-		{
-			//print_r($i['_source']);
-			$coordinate[] = array($i['_source']['coordinate']['lat'], $i['_source']['coordinate']['lon']);
-		}
-		echo json_encode($coordinate);
-		*/
-	}	
-
-	// function dateFilter(data, start, end){
-	// 	var startDate = new Date("2015-08-04");
- //        var endDate = new Date("2015-08-12");
-
- //        var resultProductData = data.filter(function (a) {
- //            var hitDates = data.hits.hits._source.createdTime || {};
- //            // extract all date strings
- //            hitDates = Object.keys(hitDates);
- //            // improvement: use some. this is an improment because .map()
- //            // and .filter() are walking through all elements.
- //            // .some() stops this process if one item is found that returns true in the callback function and returns true for the whole expression
- //            hitDateMatchExists = hitDates.some(function(dateStr) {
- //                var date = new Date(dateStr);
- //                return date >= startDate && date <= endDate
- //            });
- //            return hitDateMatchExists;
- //        });
-	// }
+		echo json_encode($ret);
+	}
 ?>
