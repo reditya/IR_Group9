@@ -10,7 +10,7 @@ maxZoom: 20,
 ext: 'png'
 });
 var map = L.map('map', {
-  maxBounds: bounds,
+  //maxBounds: bounds,
   layers: default_map,
   zoomControl: false,
 }).setView([52.3702, 4.8952], 13);
@@ -60,36 +60,36 @@ var pointMarker = new Array();
 var sidebar = L.control.sidebar('sidebar').addTo(map);
 
 var selectHtml = '';
-selectHtml += "<select id=foodSelection style='width:350px;'>";
+selectHtml += "<select multiple id=foodSelection style='width:350px;'>";
 selectHtml += "<option value=''></option>";
 // chosen select panel
 
 $.getJSON("food.json", function(data){
   for(i=0; i<data.length; i++)
   {
-    console.log(data[i]);
+    //console.log(data[i]);
     selectHtml += "<option value='" + data[i]['name'] + "'" + ">" + data[i]['name'] + "</option>";
   }
   selectHtml += "</select>";
   $("#foodterm-panel-form").append(selectHtml);
-  $("#foodSelection").chosen();
+  $("#foodSelection").chosen({ max_selected_options: 5});
   $("#foodterm-panel-form").hide();
 });
 
 var selectCategory = '';
-selectCategory += "<select id=categorySelection style='width:350px;'>";
+selectCategory += "<select multiple id=categorySelection style='width:350px;'>";
 selectCategory += "<option value=''></option>";
 // chosen select panel
 
 $.getJSON("category.json", function(data){
   for(i=0; i<data.length; i++)
   {
-    console.log(data[i]);
+    //console.log(data[i]);
     selectCategory += "<option value='" + data[i]['name'] + "'" + ">" + data[i]['name'] + "</option>";
   }
   selectCategory += "</select>";
   $("#category-panel-form").append(selectCategory);
-  $("#categorySelection").chosen();
+  $("#categorySelection").chosen({ max_selected_options: 5});
   $("#category-panel-form").hide();
 });
 
@@ -105,7 +105,10 @@ $('#buttonSearch').on('click', function(e) {
   }
 });
 
+var heat_dict;
+
 function searchPoints(start, end){
+  $("#loading-panel").show();
   for(i=0; i<pointMarker.length; i++)
   {
     map.removeLayer(pointMarker[i]);
@@ -113,7 +116,8 @@ function searchPoints(start, end){
 
   //var foodterm = $("#countries").getSelectedItemData().name;
   var foodterm = $("#foodSelection").val();  
-  foodterm = foodterm.toLowerCase();
+  //alert(foodterm);
+  //foodterm = foodterm.toLowerCase();
 
   var geojsonMarkerOptions = {
     radius: 8,
@@ -129,30 +133,60 @@ function searchPoints(start, end){
   // this needs to be changed
   var food_query = 'query.php?query=food&food='+foodterm+'&start='+start+'&end='+end;
   $.getJSON(food_query,function(data){
+    var layer_radio = '<form id="layer_search">';
     var pointData = data['points'];
-    var clusterData = data['clusters'];
-    marker_point = L.geoJSON(pointData);
-    marker_cluster = L.geoJSON(clusterData);
-    //pointMarker.push(marker_point);
-    //pointMarker.push(marker_cluster);    
-    //map.addLayer(marker_point);
-    //console.log(marker_cluster);
-    //map.addLayer(marker_cluster);
-
-    var data_heat = [];
-
-    var datapoint = pointData['features'];
-    for(i=0;i<datapoint.length;i++)
+    var counter = 1;
+    heat_dict = {};
+    for(var key in pointData)
     {
-      console.log(datapoint[i]);
-      data_heat.push([datapoint[i]['geometry']['coordinates'][1], datapoint[i]['geometry']['coordinates'][0], datapoint[i]['properties']['intensity']]);
+      // add the radio button
+      if(counter == 1) 
+      {
+        layer_radio += '<label class="radio-inline active">';
+        layer_radio +=  '<input checked type="radio" name="layer_foodterm" value="' + key + '"> ' + key + ' ';
+      }
+      else 
+      {
+        layer_radio += '<label class="radio-inline">';
+        layer_radio +=  '<input type="radio" name="layer_foodterm" value="' + key + '"> ' + key + ' ';        
+      }
+      layer_radio += '</label>';
+      console.log(key);
+      marker_point = L.geoJSON(pointData[key]);
+      var data_heat = [];
+
+      var datapoint = pointData[key]['features'];
+      for(i=0;i<datapoint.length;i++)
+      {
+        //console.log(datapoint[i]);
+        data_heat.push([datapoint[i]['geometry']['coordinates'][1], datapoint[i]['geometry']['coordinates'][0], datapoint[i]['properties']['intensity']]);
+      }
+
+      //console.log(data_heat);
+      var heat_layer = L.heatLayer(data_heat, {radius: 30, maxZoom: 15});
+      heat_dict[key] = heat_layer;
+      pointMarker.push(heat_dict[key]);
+      if(counter == 1) map.addLayer(heat_dict[key]);      
+      counter += 1;
     }
+    layer_radio += '</form>';
+    $("#layer_option").html('');
+    $("#layer_option").html(layer_radio);   
+    $("#loading-panel").hide();
 
-    console.log(data_heat);
-
-    var heat_layer = L.heatLayer(data_heat, {radius: 30, maxZoom: 15});
-    pointMarker.push(heat_layer);
-    map.addLayer(heat_layer);
+    // add javascript event
+    $('#layer_search input').on('change', function() {
+       var selected = $('input[name=layer_foodterm]:checked', '#layer_search').val();
+       //alert(selected);
+       for(i=0; i<pointMarker.length; i++)
+      {
+        map.removeLayer(pointMarker[i]);
+      }
+      console.log(selected);
+      pointMarker.push(heat_dict[selected]);
+      console.log(heat_dict[selected]);
+      map.addLayer(heat_dict[selected]);
+    });    
   });
 
   // recipes detail in the sidebar
@@ -160,8 +194,8 @@ function searchPoints(start, end){
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
-    alert(foodterm);
-    console.log(data);
+    //alert(foodterm);
+    //console.log(data);
     //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
@@ -173,7 +207,7 @@ function searchPoints(start, end){
         recipes_html = recipes_html 
           + "<div class='card w-100'>" +
               "<div class='card-block'>" + 
-                "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+                "<h4 class='card-title'>" + data[i]['title'] + " [" + data[i]['rating'] + "/5]" + "</h4>" + 
                 "<p class='card-text'>" + data[i]['description'] + "</p>" + 
                 "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
               "</div>" + 
@@ -190,6 +224,7 @@ function searchPoints(start, end){
 }
 
 function searchCategory(start, end){
+  $("#loading-panel").show();  
   for(i=0; i<pointMarker.length; i++)
   {
     map.removeLayer(pointMarker[i]);
@@ -197,7 +232,7 @@ function searchCategory(start, end){
 
   //var foodterm = $("#countries").getSelectedItemData().name;
   var foodterm = $("#categorySelection").val();  
-  foodterm = foodterm.toLowerCase();
+  //foodterm = foodterm.toLowerCase();
 
   var geojsonMarkerOptions = {
     radius: 8,
@@ -212,6 +247,64 @@ function searchCategory(start, end){
 
   // this needs to be changed
   var food_query = 'query.php?query=category&food='+foodterm+'&start='+start+'&end='+end;
+  $.getJSON(food_query,function(data){
+    var layer_radio = '<form id="layer_search">';
+    var pointData = data['points'];
+    var counter = 1;
+    heat_dict = {};
+    for(var key in pointData)
+    {
+      // add the radio button
+      if(counter == 1) 
+      {
+        layer_radio += '<label class="radio-inline active">';
+        layer_radio +=  '<input checked type="radio" name="layer_foodterm" value="' + key + '"> ' + key + ' ';
+      }
+      else 
+      {
+        layer_radio += '<label class="radio-inline">';
+        layer_radio +=  '<input type="radio" name="layer_foodterm" value="' + key + '"> ' + key + ' ';        
+      }
+      layer_radio += '</label>';
+      console.log(key);
+      marker_point = L.geoJSON(pointData[key]);
+      var data_heat = [];
+
+      var datapoint = pointData[key]['features'];
+      for(i=0;i<datapoint.length;i++)
+      {
+        //console.log(datapoint[i]);
+        data_heat.push([datapoint[i]['geometry']['coordinates'][1], datapoint[i]['geometry']['coordinates'][0], datapoint[i]['properties']['intensity']]);
+      }
+
+      //console.log(data_heat);
+      var heat_layer = L.heatLayer(data_heat, {radius: 15, maxZoom: 15});
+      heat_dict[key] = heat_layer;
+      pointMarker.push(heat_dict[key]);
+      if(counter == 1) map.addLayer(heat_dict[key]);      
+      counter += 1;
+    }
+    layer_radio += '</form>';
+    $("#layer_option").html('');
+    $("#layer_option").html(layer_radio);  
+    $("#loading-panel").hide(); 
+
+    // add javascript event
+    $('#layer_search input').on('change', function() {
+       var selected = $('input[name=layer_foodterm]:checked', '#layer_search').val();
+       //alert(selected);
+       for(i=0; i<pointMarker.length; i++)
+      {
+        map.removeLayer(pointMarker[i]);
+      }
+      console.log(selected);
+      pointMarker.push(heat_dict[selected]);
+      console.log(heat_dict[selected]);
+      map.addLayer(heat_dict[selected]);
+    });    
+  });
+
+  /*var food_query = 'query.php?query=category&food='+foodterm+'&start='+start+'&end='+end;
   $.getJSON(food_query,function(data){
     var pointData = data['points'];
     var clusterData = data['clusters'];
@@ -233,15 +326,15 @@ function searchCategory(start, end){
     var heat_layer = L.heatLayer(data_heat, {radius: 15, maxZoom: 15});
     pointMarker.push(heat_layer);
     map.addLayer(heat_layer);
-  });
+  });*/
 
   // recipes detail in the sidebar
   var detail_query = 'query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
-    alert(foodterm);
-    console.log(data);
+    //alert(foodterm);
+    //console.log(data);
     //console.log(data);
     var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
@@ -253,7 +346,7 @@ function searchCategory(start, end){
         recipes_html = recipes_html 
           + "<div class='card w-100'>" +
               "<div class='card-block'>" + 
-                "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+                "<h4 class='card-title'>" + data[i]['title'] + " [" + data[i]['rating'] + "/5]" + "</h4>" + 
                 "<p class='card-text'>" + data[i]['description'] + "</p>" + 
                 "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
               "</div>" + 

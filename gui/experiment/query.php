@@ -115,6 +115,10 @@
 		        	'match' => [
 		        		'title' => $food
 		        	]
+		        ],
+		        'sort' => [
+		        	"_score" => ["order" => "desc"],
+		        	"rating" => ["order" => "desc"]
 		        ]
 		    ]
 		];
@@ -125,7 +129,7 @@
 		foreach($ar_results as $i)
 		{
 			$r = $i['_source'];
-			$recipes[] = array('title' => $r['title'], 'description' => $r['description']);
+			$recipes[] = array('title' => $r['title'], 'description' => $r['description'], 'rating' => $r['rating']);
 		}
 		echo json_encode($recipes);	
 	}
@@ -142,9 +146,14 @@
 		        	'match' => [
 		        		'title' => $food
 		        	]
+		        ],
+		        'sort' => [
+		        	"_score" => ["order" => "desc"],
+		        	"rating" => ["order" => "desc"]
 		        ]
 		    ]
 		];
+		
 		$results = $client->search($params);
 		$ar_results = $results['hits']['hits'];
 		//print_r($ar_results);
