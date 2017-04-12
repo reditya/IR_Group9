@@ -115,8 +115,8 @@ $('#buttonSearch').on('click', function(e) {
     foodterm = "";
     $("#layer_option").html('');
     if(global_radio_selection == "foodterm"){
-        foodterm = $("#foodSelection").val();  
-        if (foodterm == ""){
+        foodterm = $("#foodSelection").val(); 
+        if (foodterm == null){
         }
         else{
             console.log(foodterm);
@@ -124,7 +124,7 @@ $('#buttonSearch').on('click', function(e) {
         }   
     }else if (global_radio_selection == "category"){
         foodterm = $("#categorySelection").val();
-        if (foodterm == ""){
+        if (foodterm == null){
     	}
    	else{
         if (global_view_selection == "heatmap"){
