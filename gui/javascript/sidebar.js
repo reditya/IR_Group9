@@ -112,6 +112,8 @@ $.getJSON("category.json", function(data){
 
 var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
+    var hour1 = document.getElementById("hour1Temp").value;
+    var hour2 = document.getElementById("hour2Temp").value;
     foodterm = "";
     $("#layer_option").html('');
     if(global_radio_selection == "foodterm"){
@@ -120,7 +122,7 @@ $('#buttonSearch').on('click', function(e) {
         }
         else{
             console.log(foodterm);
-            searchPoints(0,23);
+            searchPoints(hour1,hour2);
         }   
     }else if (global_radio_selection == "category"){
         foodterm = $("#categorySelection").val();
@@ -129,7 +131,7 @@ $('#buttonSearch').on('click', function(e) {
    	else{
         if (global_view_selection == "heatmap"){
             polygonGroup.clearLayers();
-            searchCategory(0,23);
+            searchCategory(hour1,hour2);
         }else if(global_view_selection == "cluster"){
             console.log(foodterm);
             var category = foodterm;
