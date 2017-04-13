@@ -1,5 +1,5 @@
 /* The Modal (background) */
-.modalHelp {
+.modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
@@ -12,7 +12,7 @@
     background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 /* Modal Content/Box */
-.modalHelp-content {
+.modal-content {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -33,15 +33,15 @@
     cursor: pointer;
 }
  /* Modal Header */
-.modalHelp-header {
+.modal-header {
     padding: 2px 16px;
     background-color: #0074d9;
     color: white;
 }
 /* Modal Body */
-.modalHelp-body {padding: 2px 16px;}
+.modal-body {padding: 2px 16px;}
 /* Modal Content */
-.modalHelp-content {
+.modal-content {
     position: relative;
     background-color: #fefefe;
     margin: auto;
@@ -63,7 +63,7 @@
     from {top: -300px; opacity: 0}
     to {top: 0; opacity: 1}
 }
-#myBtnHelp {
+#myBtn {
   float: left;
   position: fixed;
   right: 0;
