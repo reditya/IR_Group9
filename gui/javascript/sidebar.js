@@ -131,25 +131,25 @@ function search(){
     }else if (global_radio_selection == "category"){
         foodterm = $("#categorySelection").val();
         if (foodterm == null){
-    	}
-   	else{
-        if (global_view_selection == "heatmap"){
-            polygonGroup.clearLayers();
-            searchCategory(hour1,hour2);
-        }else if(global_view_selection == "cluster"){
-            console.log(foodterm);
-            var category = foodterm;
-            if (category == "alcoholic beverage"){
-                category = "alcohol";
-            }else if(category == "non-alcoholic beverage"){
-                category = "non_alcohol";
-            }else if(category == "fast-food"){
-                category = "fast";
+        }
+        else{
+            if (global_view_selection == "heatmap"){
+                polygonGroup.clearLayers();
+                searchCategory(hour1,hour2);
+            }else if(global_view_selection == "cluster"){
+                console.log(foodterm);
+                var category = foodterm;
+                if (category == "alcoholic beverage"){
+                    category = "alcohol";
+                }else if(category == "non-alcoholic beverage"){
+                    category = "non_alcohol";
+                }else if(category == "fast-food"){
+                    category = "fast";
+                }
+                clusterCategory(category);
             }
-            clusterCategory(category);
         }
     }
-  }
 }
 
 function clusterCategory(category){
@@ -166,7 +166,10 @@ function clusterCategory(category){
 var heat_dict;
 
 function searchPoints(start, end){
-  $("#loading-panel").show();
+if (start > 23){
+	start = 23;
+}  
+$("#loading-panel").show();
   for(i=0; i<pointMarker.length; i++)
   {
     map.removeLayer(pointMarker[i]);
