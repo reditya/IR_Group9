@@ -74,8 +74,10 @@ function onEachFeature(feature, layer) {
 function populateRestaurants(lat, lng){
     restaurantGroup.clearLayers();
     var uri = "http://176.34.152.42/gui/getRestaurants.php?range=1km&lat=" + lat + "&lon=" + lng + "&size=10";
-    if($('#foodSelection').val() != '' ) {
+    if($('#foodSelection').val() != '' && $('#foodSelection').val() != null && $('#foodterm_search').is(':checked')) {
 	uri += "&keyword=" + $('#foodSelection').val();
+    } else if ($('#categorySelection').val() != '' && $('#categorySelection').val() != null && $('#category_search').is(':checked')) {
+    	uri += "&keyword=" + $('#categorySelection').val();
     }
     $.get(uri, function(data, status) {
         var name, restaurantType, address, phone, rating, review_count;
