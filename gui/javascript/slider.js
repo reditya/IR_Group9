@@ -51,6 +51,8 @@ $("#slider-range").slider({
             }
         } else {
             hours2 = hours2;
+            if (hours2 == 0)
+                hours2 = 12;
             minutes2 = minutes2 + " AM";
         }
 
