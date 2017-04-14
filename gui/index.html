@@ -1,0 +1,146 @@
+<html>
+<meta http-equiv="Cache-control" content="no-cache">
+<head>
+    <title>A Leaflet map!</title>
+    <link rel="stylesheet" href="leaflet/leaflet.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js" type="text/javascript"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>    
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/feedback.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/custom.css" />    
+    <link rel="stylesheet" href="css/slider.css" />    
+    <link rel="stylesheet" href="css/easy-autocomplete.min.css" />
+    <link rel="stylesheet" href="css/easy-autocomplete.themes.min.css" />
+    <link rel="stylesheet" href="css/leaflet-sidebar.css" />
+    <script src="javascript/chosen.jquery.min.js"></script> 
+    <link rel="stylesheet" href="css/chosen.min.css">
+    <script src="leaflet/leaflet.js"></script>
+    <script src="javascript/leaflet-heat.js"></script>
+    <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>  
+    <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script> 
+</head>
+<body>
+    <div id="title-panel">
+        <img src="images/amsterlicious.png" class="img-rounded">
+    </div>
+    <div id="loading-panel">
+        <img src="images/loader.gif">
+    </div>
+    <div id="select-panel" class="card" style="width: 30rem;">
+      <div class="card-block">
+        <h5 class="card-title">Search Food!</h5>
+        <p style="font-size: 80%" class="card-text">Choose whether you want to search based on food term or category : </p>
+        <form style="font-size: 80%" id="radio_search">
+            <label class="radio-inline">
+              <input type="radio" name="optradio" id="category_search" value="category"> Category
+          </label>
+          <label class="radio-inline">
+              <input type="radio" name="optradio" id="foodterm_search" value="foodterm"> Food Term
+          </label>
+      </form>
+      <div id="foodterm-panel-form"></div>
+      <div id="category-panel-form"></div>        
+      <br>
+      <form id="radio-view">
+      </form>
+      <button type="button" class="btn btn-primary btn-sm" id="buttonSearch">Search</button>
+      <div id="layer_option"></div>
+  </div>
+</div>
+
+<div id="feedback">
+    <div id="feedback-form" style='display:none;' class="col-xs-4 col-md-4 panel panel-default">
+        <p class="feedback"><img src="images/thumb.png" height="10%"> our app?</p>
+        <form method="POST" action="/feedback" class="form panel-body" role="form">
+            <label>
+                <input type="radio" name="optradio"> <font color="red">Yes</font>
+            </label>
+            <label>
+                <input type="radio" name="optradio"> <font color="red">No</font>
+            </label>
+        </form>
+    </div>
+    <div id="feedback-tab">Feedback</div>
+</div>
+<div id="helpButtonStyle"><button id="myBtn" class="btn btn-primary" data-toggle="modal" data-target="#helpShow">Need help?</button></div>
+<div class="modal fade" id="helpShow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+      </button>
+  </div>
+  <div class="modal-body">
+      <h3> Search for your favorite food:</h3>
+      <p>You can search for one food term and find the regions where this food is eaten in Amsterdam.</p>
+      <p>By clicking on the map, the nearby restaurants related to the searched term will appear.</p>
+      <p> You can open the side menu to see the <b>ranked list of restaurants</b> related to the term. </p>
+      <p> Additionally, this menu will also show you a <b>list of recipes</b> corresponding to the searched food. </p>
+      <p> Another possibility is to search by category name and visualize the distribution of this category or of the terms it contains.</p>
+      <h3> Get an idea of the food distribution in the city:</h3>
+      <p> You can also look at the distribution of all categories within Amsterdam.</p>
+      <p> You can select several categories and visualize them by layers. </p>
+
+  </div>
+</div>
+</div>
+</div>
+
+<div id="sidebar" class="sidebar collapsed">
+    <!-- Nav tabs -->
+    <div class="sidebar-tabs">
+        <ul role="tablist">
+            <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
+            <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
+        </ul>
+    </div>
+
+    <!-- Tab panes -->
+    <div class="sidebar-content">
+        <div class="sidebar-pane" id="home">
+            <h1 class="sidebar-header">Restaurant List<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            <span id='restaurant_cards'>
+
+            </span>
+        </div>
+
+        <div class="sidebar-pane" id="profile">
+            <h1 class="sidebar-header">Recipes List<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
+            <span id='span_recipes'>
+
+            </span>                
+        </div>
+
+    </div>
+</div>
+<div id="slider">
+    <div id="slider-form">
+        <div id="time-range">
+            <p>Time Range: <span class="slider-time">12:00 AM</span> - <span class="slider-time2">11:59 PM</span></p>
+            <div class="sliders_step1">
+                <div id="slider-range"></div>
+                <input type="hidden" id="hour1Temp" value="0" style="display: none;"/>
+                <input type="hidden" id="hour2Temp" value="23" style="display: none;"/>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="sidebar-map" id="map"></div>
+<div id="modalCollection" style="z-index:10000000"></div>
+
+<script src="javascript/jquery.easy-autocomplete.min.js"></script>    
+<script src="javascript/feedback.js"></script>
+<script src="javascript/leaflet.customsearchbox.min.js"></script>
+<script src="javascript/leaflet-sidebar.js"></script>
+<script src="javascript/sidebar.js"></script> 
+<script src="javascript/slider.js"></script> 
+<script src="javascript/map_marker.js"></script> 
+<script src="javascript/add_data.js"></script>
+</body>
