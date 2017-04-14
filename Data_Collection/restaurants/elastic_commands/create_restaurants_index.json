@@ -1,0 +1,14 @@
+{
+	"mappings" : {
+		"restaurant" : {
+			"properties" : {
+				"name" : { "type" : "string"},
+				"location" : { "type" : "geo_point"},
+				"category" : { "type" : "string"},
+				"url" : { "type" : "string", "analyzer" : "keyword"},
+				"address" : { "type" : "string"},
+				"phone" : { "type" : "string", "analyzer" : "keyword"}
+			}
+		}
+	}
+}
