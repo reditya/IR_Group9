@@ -1,5 +1,6 @@
 # Purpose
 This folder contains all the files used to crawl Twitter and preprocess the tweets.
+Moreover, it contains the mapping JSONs, which are used to create the mapping for the tweet indexes and the index script.
 
 # File description
 - **twitter_crawling.py**: python script to crawl Twitter within Amsterdam.
