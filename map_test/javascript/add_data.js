@@ -47,7 +47,8 @@
   function onEachFeature_poly(feature, layer) {
     
     if (feature.properties.category) {
-      layer.bindPopup(feature.properties.category);
+      layer.bindPopup("coucou" + feature.properties.category);
+      //layer.bindPopup(feature.properties.category);
     }   
   }
 
@@ -76,27 +77,46 @@
       },
           onEachFeature: onEachFeature_insta 
     }).addTo(map);
-      console.log(data_list)
+      //console.log(data_list)
   }
 
 
   function prepare_cluster_color(data){
     // Find number of clusters and create array of points with in clusters
     nb_clust = data['features'].map(function(value, index) {return value['properties']['cluster']});
+    bool_food_list = []
     var n = []; 
     for(var i = 0; i < nb_clust.length; i++) 
     {
+      bool_food_list.push([])
       if (n.indexOf(nb_clust[i]) == -1) n.push(nb_clust[i]);
     }
     nb_clust = n.length
-    console.log(nb_clust)
-    
+    //console.log(n)
+    for(var i = 0; i < data['features'].length; i++) {
+      //console.log(data['features'][i]['properties'])
+      /*
+      if (data['features'][i]['properties']['category'].length >0){
+      console.log(data['features'][i]['properties']['category'].length )
+          console.log(data['features'][i]['properties']['category'])
+}*/
+      if (data['features'][i]['properties']['category'].length != 0){
+        bool_food_list[ Math.floor(data['features'][i]['properties']['cluster'])] = 1
+      }
+    } 
     //console.log(nb_clust);
     color_clust = [];
     // Associate random colors to clusters
     for (i = 0; i < nb_clust; i++) {
       // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
-      color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
+      if (bool_food_list[i] > 0){
+              color_clust.push('#'+Math.floor(Math.random()*16777215).toString(16));
+      }
+      else
+      {
+              color_clust.push('no');
+      }
+
     }
     
 
@@ -105,10 +125,12 @@
 
   function show_cluster(data){
     cluster_list = new Array(nb_clust);
+
     for (i = 0; i < nb_clust; i++) {
       // Random color '#'+Math.floor(Math.random()*16777215).toString(16);
       cluster_list[i] = new Array;
     }
+    console.log(nb_clust);
     // var hull = turf.convex(data);
     //L.geoJson(hull).addTo(map);
     //  L.polygon(hull).addTo(map);  
@@ -116,7 +138,9 @@
     L.geoJson(data, {
       filter: function (feature, layer) {  
         //console.log(feature.geometry.coordinates[0][0][0])
-        console.log(Math.floor(feature.properties.cluster))
+        //if (Math.floor(feature.properties.cluster) === 1) {
+        //          console.log(Math.floor(feature.properties.cluster))
+        //}
         cluster_list[Math.floor(feature.properties.cluster)].push([feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][0][1]],[feature.geometry.coordinates[0][0][1][0],feature.geometry.coordinates[0][0][1][1]],[feature.geometry.coordinates[0][0][0][0],feature.geometry.coordinates[0][0][1][1]]);
       }
     })
@@ -133,13 +157,17 @@
      // Polygons
     for (d in collection_cluster){      
       //console.log((collection_cluster[d]))
-     // var hull = turf.convex(collection_cluster[d]);     
+     // var hull = turf.convex(collection_cluster[d]);   
+               if (color_clust[d] != 'no'){
+
       L.geoJson(turf.convex(collection_cluster[d]),{
-        onEachFeature: onEachFeature_poly,
         style: function(feature) {
           return {color: color_clust[d]};       
-        }
+        },
+        onEachFeature: onEachFeature_poly
       }).addTo(map);
+      
+    }
     }
     
   }
@@ -202,9 +230,10 @@
   }
 
 
-
+/*
+// Heatmap
   // For one specific food term
-  $.getJSON("new_mix_data.geojson",function(data){
+  $.getJSON("new_point.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
     map_points_insta(data);
@@ -213,27 +242,30 @@
     //show_cluster(data);          
 
   })
+*/
 
   // Instagram data    
   
-  /*
-  $.getJSON("new_mix_data.geojson",function(data){
+  
+  // All categories
+  $.getJSON("new_point.geojson",function(data){
     add_base_map();
     prepare_cluster_color(data);
+    console.log("cluster prepared")
     //show_cluster(data);          
 
   })
-  $.getJSON("new_poly_data.geojson",function(data){
-    //show_cluster(data);  
-    //     show_cluster(data);          
-        
+  $.getJSON("new_poly.geojson",function(data){
+    show_cluster(data);          
+    console.log("clster shown")    
   })
 
-    $.getJSON("new_mix_data.geojson",function(data){
+    $.getJSON("new_point.geojson",function(data){
           map_points_insta(data);
-
+          console.log("points shown")
 })
-  */
+
+  
   // Foursquare data
   /*
   $.getJSON("all_resto_geojson_k2_f1.geojson",function(data){
