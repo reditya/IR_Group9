@@ -3,11 +3,11 @@ var southWest = L.latLng(52.29,4.73);
 var northEast = L.latLng(52.42,4.98);
 var bounds = L.latLngBounds(southWest, northEast)
 var default_map = L.tileLayer('http://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png', {
-attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-subdomains: 'abcd',
-minZoom: 0,
-maxZoom: 20,
-ext: 'png'
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
+  subdomains: 'abcd',
+  minZoom: 0,
+  maxZoom: 20,
+  ext: 'png'
 });
 var map = L.map('map', {
   maxBounds: bounds,
@@ -22,7 +22,7 @@ L.control.zoom({
 // add Amsterdam border
 $.getJSON("Amsterdam_AL8.GeoJson",function(data){
   var geojsonMarkerOptions = {
-      fillOpacity: 0
+    fillOpacity: 0
   };
 
   L.geoJSON(data, geojsonMarkerOptions).addTo(map);
@@ -31,7 +31,7 @@ $.getJSON("Amsterdam_AL8.GeoJson",function(data){
 // add initial clustering
 $.getJSON("initial_clustering.geojson",function(data){
   var geojsonMarkerOptions = {
-      fillOpacity: 1
+    fillOpacity: 1
   };
 
   //L.geoJSON(data, geojsonMarkerOptions).addTo(map);
@@ -43,30 +43,30 @@ var view_html = 'Show as: <br><label class="radio-inline"><input type="radio" na
 var global_radio_selection = "";
 var global_view_selection = "";
 $('#radio_search input').on('change', function() {
-   var selected = $('input[name=optradio]:checked', '#radio_search').val();
-   global_radio_selection = selected; 
-   if(selected == "category")
-   {
-    $("#category-panel-form").show();
-    $("#foodterm-panel-form").hide();
-    $("#radio-view").html('');
-    $("#radio-view").html(view_html);
-    $('#radio-view input').on('change', function(){
-        global_view_selection = $('input[name=optradio1]:checked', '#radio-view').val();
-          for(i=0; i<pointMarker.length; i++)
-          {
-            map.removeLayer(pointMarker[i]);
-          }
-    });
-   }
-   else if(selected == "foodterm")
-   {
-    $("#foodterm-panel-form").show();
-    $("#category-panel-form").hide();
-    $("#radio-view").html('');
-    global_view_selection = "";
-    polygonGroup.clearLayers();
-   }
+ var selected = $('input[name=optradio]:checked', '#radio_search').val();
+ global_radio_selection = selected; 
+ if(selected == "category")
+ {
+  $("#category-panel-form").show();
+  $("#foodterm-panel-form").hide();
+  $("#radio-view").html('');
+  $("#radio-view").html(view_html);
+  $('#radio-view input').on('change', function(){
+    global_view_selection = $('input[name=optradio1]:checked', '#radio-view').val();
+    for(i=0; i<pointMarker.length; i++)
+    {
+      map.removeLayer(pointMarker[i]);
+    }
+  });
+}
+else if(selected == "foodterm")
+{
+  $("#foodterm-panel-form").show();
+  $("#category-panel-form").hide();
+  $("#radio-view").html('');
+  global_view_selection = "";
+  polygonGroup.clearLayers();
+}
 });
 
 
@@ -112,47 +112,47 @@ var foodterm = "";
 $('#buttonSearch').on('click', function(e) {
 	var hour1 = document.getElementById("hour1Temp").value;
 	var hour2 = document.getElementById("hour2Temp").value;
-    if(global_radio_selection == "foodterm"){
-        foodterm = $("#foodSelection").val();  
-        if (foodterm == ""){
+  if(global_radio_selection == "foodterm"){
+    foodterm = $("#foodSelection").val();  
+    if (foodterm == ""){
+    }
+    else{
+      console.log(foodterm);
+      searchPoints(hour1,hour2);
+    }   
+  }else if (global_radio_selection == "category"){
+    foodterm = $("#categorySelection").val();
+    if (foodterm == ""){
+    }
+    else{
+      if (global_view_selection == "heatmap"){
+        polygonGroup.clearLayers();
+        searchCategory(hour1,hour2);
+      }else if(global_view_selection == "cluster"){
+        console.log(foodterm);
+        var category = foodterm;
+        if (category == "alcoholic beverage"){
+          category = "alcohol";
+        }else if(category == "non-alcoholic beverage"){
+          category = "non_alcohol";
+        }else if(category == "fast-food"){
+          category = "fast";
         }
-        else{
-            console.log(foodterm);
-            searchPoints(hour1,hour2);
-        }   
-    }else if (global_radio_selection == "category"){
-        foodterm = $("#categorySelection").val();
-        if (foodterm == ""){
-    	}
-   	else{
-        if (global_view_selection == "heatmap"){
-            polygonGroup.clearLayers();
-            searchCategory(hour1,hour2);
-        }else if(global_view_selection == "cluster"){
-            console.log(foodterm);
-            var category = foodterm;
-            if (category == "alcoholic beverage"){
-                category = "alcohol";
-            }else if(category == "non-alcoholic beverage"){
-                category = "non_alcohol";
-            }else if(category == "fast-food"){
-                category = "fast";
-            }
-            clusterCategory(category);
-        }
+        clusterCategory(category);
+      }
     }
   }
 });
 
 function clusterCategory(category){
-    var pointfile = "clustering_category/new_point_"+category+".geojson";
-    var polyfile = "clustering_category/new_poly_"+category+".geojson";
-    $.getJSON(pointfile,function(data){
-      prepare_cluster_color(data);
-      $.getJSON(polyfile,function(data){
-        show_cluster(data);    
-      });
+  var pointfile = "clustering_category/new_point_"+category+".geojson";
+  var polyfile = "clustering_category/new_poly_"+category+".geojson";
+  $.getJSON(pointfile,function(data){
+    prepare_cluster_color(data);
+    $.getJSON(polyfile,function(data){
+      show_cluster(data);    
     });
+  });
 }
 
 
@@ -218,13 +218,13 @@ function searchPoints(start, end){
       for(var i=0; i < data.length; i++)
       {
         recipes_html = recipes_html 
-          + "<div class='card w-100'>" +
-              "<div class='card-block'>" + 
-                "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
-                "<p class='card-text'>" + data[i]['description'] + "</p>" + 
-                "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
-              "</div>" + 
-            "</div><br>";          
+        + "<div class='card w-100'>" +
+        "<div class='card-block'>" + 
+        "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+        "<p class='card-text'>" + data[i]['description'] + "</p>" + 
+        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
+        "</div>" + 
+        "</div><br>";          
         //console.log(recipes_html);
         //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
       }
@@ -296,13 +296,13 @@ function searchCategory(start, end){
       for(var i=0; i < data.length; i++)
       {
         recipes_html = recipes_html 
-          + "<div class='card w-100'>" +
-              "<div class='card-block'>" + 
-                "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
-                "<p class='card-text'>" + data[i]['description'] + "</p>" + 
-                "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
-              "</div>" + 
-            "</div><br>";          
+        + "<div class='card w-100'>" +
+        "<div class='card-block'>" + 
+        "<h4 class='card-title'>" + data[i]['title'] + "</h4>" + 
+        "<p class='card-text'>" + data[i]['description'] + "</p>" + 
+        "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
+        "</div>" + 
+        "</div><br>";          
         //console.log(recipes_html);
         //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
       }
