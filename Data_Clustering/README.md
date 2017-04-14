@@ -12,7 +12,7 @@ These are examples of files to visualize (input within the javascript):
 These are the data files required to run the scripts:
 - **food_category.csv**: File containing the association of retrieved food terms and their categories.
 - **instagram.json**: data file source for processing.
-- ** food_term_cluster.py**: python script to get the geojson files containing only one food term.
+- **food_term_cluster.py**: python script to get the geojson files containing only one food term.
 - **category.html**: main html file to open in the browser.
 
 Required javascript libraries and the javascript code:
