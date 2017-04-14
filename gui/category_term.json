@@ -1,0 +1,78 @@
+[
+    {
+		"name": "alcoholic beverage"
+        "term": ["beer","champagne","cocktail","cognac","cointreau","free beer","gin","guinness","heineken","johnnie walker","leffe","red bull","rolling rock","scotch whisky","wine"]
+	}, {
+		"name": "bread"
+        "term": ["bagel","banana bread","black bun","bread","bread bowl","bread roll","breakfast sandwich","brown bread","bun","cornbread","crisp bread","english muffin","flatbread","garlic bread","gingerbread","pastilla","piadina","pretzel","rice bread","roti","rye bread","shortbread","sourdough","toast","torta"]
+	}, {
+		"name": "cake"
+        "term": ["apple cake","apple pie","apple strudel","banoffee pie","biscuit","brownie","bundt cake","cake","caramel tart","carrot cake","cheesecake","chocolate cake","chocolate tart","christmas cake","coconut cake","coffee cake","cookie","crumble","cupcake","doughnut","fruit cake","fudge cake","lemon tart","marble cake","muffin","pancake","parfait","pastry","pie","puff pastry","pumpkin pie","royal icing","scone","shortcake","sponge cake","strudel","tart","torte","wafer","waffle","yorkshire pudding","pudding","black pudding","fondant","cakes","cookies","crepes","doughnuts","waffles"]
+	}, {
+		"name": "cheese"
+        "term": ["cheese","feta","kas","mozzarella","parmesan","cheddar"]
+	}, {
+		"name": "chinese"
+        "term": ["char siu","dim sum","dumpling","jiaozi","kimchi","mooncake","noodle soup","noodles","thai curry","tofu","tom yum","wok","wonton","pho","dumplings"]
+	}, {
+		"name": "coffee"
+        "term": ["cappuccino","coffee","espresso","frappuccino","latte"]
+	}, {
+		"name": "dutch"
+        "term": ["bitterballen","croquette","desem","herring","kruidnoten","kuchen","pannekoek","poffertjes","rijsttafel","spekkoek","stamppot","stroopwafel","bitterballen","croquettes","stroopwaffels"]
+	}, {
+		"name": "fast-food"
+        "term": ["sandwich wrap","cheese sandwich","cheeseburger","chicken sandwich","chips","club sandwich","french fries","frites","fritter","ham sandwich","hamburger","hot dog","salmon burger","sandwich","steak sandwich","veggie burger","burger","burgers","fries","sandwiches"]
+	}, {
+		"name": "fish"
+        "term": ["cod","fish","mackerel","salmon","tuna","crab","lobster","lobster roll","mussels","oyster","prawn","scallops","seafood","seaweed","shrimp","squid","shrimps"]
+	}, {
+		"name": "french"
+        "term": ["baguette","viennoiserie","beignet","bouillabaisse","brioche","croissant","frangipane","french toast","galette","macaron","nougat","quiche","ragout","ratatouille","rillettes","steak tartare","tarte tatin","foie gras","tartare","macaroon","meringue"]
+	}, {
+		"name": "fruit"
+        "term": ["apple","avocado","banana","berry","blueberry","cherry","cinnamon","compote","cranberry","fig","fruit","fruit salad","kiwi","lemon","lime","mango","orange","pear","pineapple","pomegranate","raspberry","strawberry","strawberry delight","tomato","blueberries","dragon fruit","strawberries","watermelon"]
+	}, {
+		"name": "grain"
+        "term": ["jeera rice","oatmeal","porridge","quinoa","rice"]
+	}, {
+		"name": "indian"
+        "term": ["chapati","chicken tikka","curry","curry ketchup","dal","dosa","laksa","masala chai","naan","papadum","red curry","tandoori chicken","yellow curry","lassi"]
+	}, {
+		"name": "indonesian"
+        "term": ["batagor","nasi goreng","nasi lemak","pempek","prawn cracker","rendang","satay","sayur lodeh","soto ayam","tempeh"]
+	}, {
+		"name": "italian"
+        "term": ["panna cotta","cannoli","carbonara","carpaccio","ciabatta","corzetti","focaccia","gnocchi","lasagne","linguine","macaroni","neapolitan pizza","orecchiette","pasta","pasta salad","penne","pizza","ravioli","risotto","spaghetti","tagliatelle","tiramisu","tortellini","vermicelli","gelato"]
+	}, {
+		"name": "japanese"
+        "term": ["miso","miso soup","oden","okonomiyaki","ramen","sashimi","sushi","taiyaki","takoyaki","tempura","wasabi"]
+	}, {
+		"name": "latin"
+        "term": ["churros","arepa","brigadeiro","burrito","cachapa","ceviche","churro","cucurucho","empanada","fajita","gazpacho","huevos rancheros","nachos","paella","polenta","quesadilla","taco","talo","tapas","tortilla","guacamole"]
+	}, {
+		"name": "meat"
+        "term": ["egg","eggs","eggs benedict","omelette","blt","bacon","beef","bratwurst","butter chicken","cheesesteak","chorizo","duck","fillet","fried chicken","goat","ham","lamb","meat","pork","sausage","smoked meat","spareribs","steak","turkey","veal","chicken","ribs"]
+	}, {
+		"name": "mediteranean"
+        "term": ["pita","baba ghanoush","baklava","couscous","halva","injera","korma","moussaka","pierogi","spanakopita","tajine","tiropita","tzatziki","hummus","tapenade"]
+	}, {
+		"name": "non-alcoholic beverage"
+        "term": ["aperol","coconut","cola","fresca","frozen yogurt","ginger","ginger ale","hot chocolate","milk","milkshake","pepsi","smoothies","syrup","tea","vla","yoghurt","yogurt","juice"]
+	}, {
+		"name": "salad"
+        "term": ["bean salad","caesar salad","chicken salad","egg salad","fattoush","salad","tuna salad","salads"]
+	}, {
+		"name": "soup"
+        "term": ["chicken soup","fish soup","goulash","harira","leek soup","minestrone","pea soup","pumpkin soup","soup","stew","tomato soup","vichyssoise"]
+	}, {
+		"name": "sweet"
+        "term": ["chocolate","chocolate almonds","chocolate balls","chocolate chip","ganache","napolitains","speculoos","white chocolate","caramel","nutella","ice cream","candy","cotton candy","fudge","honey","marshmallow","mousse","praline","sorbet","sundae","tartufo","toffee","trifle","cocoa","marshmallows"]
+	}, {
+		"name": "turkish"
+        "term": ["falafel","kebab","muhammara","patatas bravas","shawarma","turkish delight"]
+	}, {
+		"name": "vegetables"
+        "term": ["asparagus","aubergine","bean","beans","beetroot","cabbage","carrot","cauliflower","chilli","coleslaw","corn","courgette","cucumber","lettuce","mushrooms","olive","olives","paprika","peas","pickles","potato","potatoes","pumpkin","sesame","spinach","sprouts","sweet potato","vegetables","vegetarian","broccoli","butternut","butternut squash"]
+	}
+]

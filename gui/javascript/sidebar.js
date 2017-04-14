@@ -269,7 +269,7 @@ $("#loading-panel").show();
                 "<button type='button' class='btn btn-primary' data-toggle='modal' data-target='#recipeModal" + i + "'>Detail</button>" +  
               "</div>" + 
             "</div><br>";          
-        //console.log(recipes_html);
+        console.log(recipes_html);
         //recipes_html = recipes_html + '<li>' + data[i]['title'] + '</li>';
       }
       recipes_html = recipes_html + '</p>';

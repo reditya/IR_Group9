@@ -9,6 +9,17 @@
   z-index: 500;
 }
 
+#helpButtonStyle {
+  float: left;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 60px;
+  margin-left: 70px;
+  margin-bottom: 60px;
+  z-index: 500;
+}
+
 #slider-form {
   float: left;
   width: 250px;

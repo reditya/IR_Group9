@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="../css/easy-autocomplete.min.css" />
     <link rel="stylesheet" href="../css/easy-autocomplete.themes.min.css" />
     <link rel="stylesheet" href="../css/leaflet-sidebar.css" />
-    <link rel="stylesheet" href="../css/help-button.css" />
+    <!--link rel="stylesheet" href="../css/help-button.css" /-->
   <script src="../javascript/chosen.jquery.min.js"></script> 
   <link rel="stylesheet" href="../css/chosen.min.css">
 
@@ -72,13 +72,36 @@
         </div>
         <div id="feedback-tab">Feedback</div>
     </div>
+	<div id="helpButtonStyle"><button id="myBtn" class="btn btn-primary" data-toggle="modal" data-target="#helpShow">Need help?</button></div>
+<div class="modal fade" id="helpShow" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+								  <div class="modal-dialog" role="document">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <h5 class="modal-title" id="exampleModalLabel">Instructions</h5>
+								        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								          <span aria-hidden="true">&times;</span>
+								        </button>
+								      </div>
+								      <div class="modal-body">
+								                      <h3> Search for your favorite food:</h3>
+                <p>You can search for one food term and find the regions where this food is eaten in Amsterdam.</p>
+                <p>By clicking on the map, the nearby restaurants related to the searched term will appear.</p>
+                <p> You can open the side menu to see the <b>ranked list of restaurants</b> related to the term. </p>
+                <p> Additionally, this menu will also show you a <b>list of recipes</b> corresponding to the searched food. </p>
+                <p> Another possibility is to search by category name and visualize the distribution of this category or of the terms it contains.</p>
+                <h3> Get an idea of the food distribution in the city:</h3>
+                <p> You can also look at the distribution of all categories within Amsterdam.</p>
+                <p> You can select several categories and visualize them by layers. </p>
+
+									</div>
+								    </div>
+								  </div>
+								</div>
+
 <!-- Help --> 
-<div class="a2a_kit a2a_kit_size_32 a2a_floating_style a2a_vertical_style" style="left:0px; top:150px;">
-     <!-- Trigger/Open The Modal -->
+<!-- div class="a2a_kit a2a_kit_size_32 a2a_floating_style a2a_vertical_style" style="left:0px; top:150px;">
     <button id="myBtn">Need help?</button>
-    <!-- The Modal -->
     <div id="myModal" class="modal">
-        <!-- Modal content -->
         <div class="modal-content">
             <div class="modal-header">
                 <span class="close">&times;</span>
@@ -97,7 +120,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
     
     <div id="sidebar" class="sidebar collapsed">
         <!-- Nav tabs -->
@@ -149,5 +172,5 @@
     <script src="../javascript/slider.js"></script> 
     <script src="../javascript/map_marker.js"></script> 
     <script src="../javascript/add_data.js"></script>
-    <script src="../javascript/help_button.js"></script>
+    <!--script src="../javascript/help_button.js"></script->
 </body>
