@@ -189,7 +189,7 @@ $("#loading-panel").show();
   //alert(foodterm);
 
   // this needs to be changed
-  var food_query = 'query.php?query=food&food='+foodterm+'&start='+start+'&end='+end;
+  var food_query = '../query.php?query=food&food='+foodterm+'&start='+start+'&end='+end;
   $.getJSON(food_query,function(data){
     var layer_radio = '<form id="layer_search">';
     var pointData = data['points'];
@@ -248,13 +248,13 @@ $("#loading-panel").show();
   });
 
   // recipes detail in the sidebar
-  var detail_query = 'query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
+  var detail_query = '../query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
     //alert(foodterm);
     //console.log(data);
-    var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
+    var recipes_query = '../query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
       //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
       var recipes_html = '<p>';
@@ -302,7 +302,7 @@ function searchCategory(start, end){
   //alert(foodterm);
 
   // this needs to be changed
-  var food_query = 'query.php?query=category&food='+foodterm+'&start='+start+'&end='+end;
+  var food_query = '../query.php?query=category&food='+foodterm+'&start='+start+'&end='+end;
   $.getJSON(food_query,function(data){
     var layer_radio = '<form id="layer_search">';
     var pointData = data['points'];
@@ -361,13 +361,13 @@ function searchCategory(start, end){
   });
 
   // recipes detail in the sidebar
-  var detail_query = 'query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
+  var detail_query = '../query.php?query=recipesDetail&food='+foodterm+'&start='+start+'&end='+end;
   $.get(detail_query,function(data){
     $('#modalCollection').html('');
     $('#modalCollection').html(data);
     //alert(foodterm);
     //console.log(data);
-    var recipes_query = 'query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
+    var recipes_query = '../query.php?query=recipes&food='+foodterm+'&start='+start+'&end='+end;
     $.getJSON(recipes_query,function(data){
       //var recipes_html = '<h3>Top ' + foodterm + ' Recipes for you</h3><br>';
       var recipes_html = '<p>';
